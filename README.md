@@ -126,6 +126,23 @@ Each file's header comment says what to connect and what it prints. Run one with
 | `i2c_scan.py` | Finding I2C devices on SDA/SCL |
 | `uart_loopback.py` | UART0 with D1 jumpered to D0 |
 
+## Building the Phyduino Pico firmware
+
+The stock Raspberry Pi Pico firmware is built for that board's 2 MB flash, so it leaves 14 MB of
+the Phyduino Pico's 16 MB unused. `boards/PHYDUINO_PICO/` is a MicroPython board definition that
+uses the full 16 MB (about 15 MB for files), names the pins `Pin("D7")`, `Pin("LED")` (GPIO5), and
+has `phyduino.py` built in. A copy of `phyduino.py` on the board still takes priority over the
+built-in one.
+
+```
+tools/build_firmware.sh            # writes dist/phyduino_pico-<version>-micropython-<version>.uf2
+```
+
+The script clones MicroPython (unchanged, at the version pinned in the script) into `build/` and
+builds the board from this repository. It needs git, make, cmake, python3 and the Arm GNU toolchain;
+on Windows, run it in WSL (Ubuntu). Installing the new firmware erases the board's
+files, so copy them off first (`mpremote cp :main.py .`).
+
 ## Repository layout
 
 ```
@@ -133,6 +150,8 @@ phyduino.py          The library (the only file the board needs)
 examples/            Example scripts
 tests/               PC-side tests (pytest + a fake machine module), hardware checklist
 docs/                GitHub Pages site; the API reference is built into docs/wiki/
+boards/PHYDUINO_PICO/ MicroPython board definition (16 MB flash, pin names, phyduino.py frozen in)
+tools/               build_firmware.sh: builds the firmware UF2 into dist/
 Doxyfile             Doxygen settings for the API reference
 extras/doxygen/      API reference main page, topics, examples page, header, footer, layout, CSS
 .github/workflows/   CI (tests, mpy-cross, version check), docs build and GitHub Pages publishing

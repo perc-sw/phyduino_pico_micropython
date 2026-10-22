@@ -88,29 +88,24 @@
       </span>
     </li>
     <li class="step">
-      <span class="step-num">4a</span>
-      <span class="step-body">
-        <strong>VS Code</strong>: install the
-        <a href="https://marketplace.visualstudio.com/items?itemName=paulober.pico-w-go">MicroPico</a>
-        extension, right-click <code>phyduino.py</code> and choose <strong>Upload file to Pico</strong>,
-        then open <code>main.py</code> and click <strong>Run</strong>.
-      </span>
-    </li>
-    <li class="step">
-      <span class="step-num">4b</span>
-      <span class="step-body">
-        <strong>PyCharm</strong>: install the <strong>MicroPython Tools</strong> plugin, then upload
-        <code>phyduino.py</code> and run <code>main.py</code>.
-      </span>
-    </li>
-    <li class="step">
-      <span class="step-num">4c</span>
-      <span class="step-body">
-        <strong>Terminal</strong>: <code>mpremote cp phyduino.py :</code> then <code>mpremote run main.py</code>.
-      </span>
+      <span class="step-num">4</span>
+      <div class="step-body">
+        Upload <code>phyduino.py</code> and run <code>main.py</code>:
+        <ul>
+          <li><strong>VS Code</strong>: install the
+          <a href="https://marketplace.visualstudio.com/items?itemName=paulober.pico-w-go">MicroPico</a>
+          extension, right-click <code>phyduino.py</code> and choose <strong>Upload file to Pico</strong>,
+          then open <code>main.py</code> and click <strong>Run</strong>.</li>
+          <li><strong>PyCharm</strong>: install the <strong>MicroPython Tools</strong> plugin, then upload
+          <code>phyduino.py</code> and run <code>main.py</code>.</li>
+          <li><strong>Terminal</strong>: <code>mpremote cp phyduino.py :</code> then <code>mpremote run main.py</code>.</li>
+        </ul>
+      </div>
     </li>
   </ol>
 
+  <!-- Example -->
+  <div class="section-head"><h2>Example</h2></div>
   <div class="doc-text">
     <pre class="code">import phyduino as pd
 

@@ -11,5 +11,6 @@ First version.
   - `vbus_volts()` and `cpu_temperature()`.
   - `usb_pd()`: STUSB4500 USB-PD profiles, contract and renegotiation (working registers only, 10 W limit).
   - `i2c()`, `spi()` and `uart()` on the header pins.
+- `boards/PHYDUINO_PICO/`: MicroPython board definition (16 MB flash, board pin names, `phyduino.py` frozen in) and `tools/build_firmware.sh` to build it against a pinned MicroPython release.
 - Examples, host tests with a fake `machine` module, and a hardware checklist.
 - Documentation site (`docs/`) with a Doxygen API reference generated from the docstrings, published to GitHub Pages.

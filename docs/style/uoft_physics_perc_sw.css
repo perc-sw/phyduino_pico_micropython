@@ -455,6 +455,8 @@ h1 {
 
 .step-body          { font-size: 13.5px; line-height: 1.55; color: var(--text); }
 .step-body strong   { font-weight: 500; }
+.step-body ul       { padding-left: 1.2em; }
+.step-body ul li    { margin-top: 4px; }
 
 .step-body code {
   font-family: var(--mono);

@@ -7,6 +7,10 @@ __pycache__/
 # Compiled MicroPython
 *.mpy
 
+# Firmware build (tools/build_firmware.sh): MicroPython clone and UF2 output
+build/
+dist/
+
 # Editors and tools: keep only the recommended-extensions file
 .vscode/*
 !.vscode/extensions.json
