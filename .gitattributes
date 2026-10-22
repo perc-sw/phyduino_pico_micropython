@@ -1,0 +1,2 @@
+# Shell scripts run in WSL / Linux, so keep LF endings even with core.autocrlf=true
+*.sh text eol=lf

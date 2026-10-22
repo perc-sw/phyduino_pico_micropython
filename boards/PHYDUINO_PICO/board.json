@@ -1,0 +1,17 @@
+{
+    "deploy": [
+        "deploy.md"
+    ],
+    "docs": "",
+    "features": [
+        "Dual-core",
+        "External Flash",
+        "USB-C"
+    ],
+    "images": [],
+    "mcu": "rp2040",
+    "product": "Phyduino Pico",
+    "thumbnail": "",
+    "url": "https://github.com/perc-sw/phyduino_pico",
+    "vendor": "University of Toronto Physics"
+}
