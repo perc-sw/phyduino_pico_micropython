@@ -1,0 +1,62 @@
+# On each push / pull request:
+#   host-tests - PC-side tests: phyduino.py and every example against a fake
+#                machine module (tests/), with pytest
+#   compile    - phyduino.py and every example through mpy-cross for the
+#                RP2040 (armv6m), which catches syntax MicroPython rejects
+#   versions   - __version__ in phyduino.py matches the Doxyfile, the docs
+#                landing page and a CHANGELOG.md section
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  host-tests:
+    runs-on: ubuntu-24.04  # pinned; change deliberately (ubuntu-latest moves to 26.04 on 2026-10-19)
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install test tools
+        run: |
+          python3 -m venv .venv
+          .venv/bin/python -m pip install --quiet -r requirements-dev.txt
+      - name: PC-side tests
+        run: .venv/bin/python -m pytest -v tests
+
+  compile:
+    runs-on: ubuntu-24.04  # pinned; change deliberately (ubuntu-latest moves to 26.04 on 2026-10-19)
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install mpy-cross
+        run: |
+          python3 -m venv .venv
+          .venv/bin/python -m pip install --quiet -r requirements-dev.txt
+          .venv/bin/mpy-cross --version
+      - name: Compile for the RP2040
+        run: |
+          mkdir -p "$RUNNER_TEMP/mpy"
+          for f in phyduino.py examples/*.py; do
+            echo "$f"
+            .venv/bin/mpy-cross -march=armv6m -o "$RUNNER_TEMP/mpy/$(basename "$f" .py).mpy" "$f"
+          done
+
+  versions:
+    runs-on: ubuntu-24.04  # pinned; change deliberately (ubuntu-latest moves to 26.04 on 2026-10-19)
+    steps:
+      - uses: actions/checkout@v7
+      - name: Versions match
+        run: |
+          version=$(sed -n 's/^__version__ = "\(.*\)"$/\1/p' phyduino.py)
+          echo "phyduino.py: $version"
+          test -n "$version"
+          status=0
+          grep -qx "PROJECT_NUMBER *= *$version" Doxyfile ||
+            { echo "::error file=Doxyfile::PROJECT_NUMBER is not $version"; status=1; }
+          grep -q "<span class=\"spec-pill\">v$version</span>" docs/index.html ||
+            { echo "::error file=docs/index.html::version pill is not v$version"; status=1; }
+          grep -q "^## $version\b" CHANGELOG.md ||
+            { echo "::error file=CHANGELOG.md::no section for $version"; status=1; }
+          exit $status

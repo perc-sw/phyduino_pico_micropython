@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="https://www.physics.utoronto.ca/static/utphy_themes/favicon/favicon.ico">
+<title>Phyduino Pico MicroPython · U of T Physics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<!-- Shared stylesheet: copied unchanged from ../phyduino_pico/docs/style/ -->
+<link rel="stylesheet" href="./style/uoft_physics_perc_sw.css">
+<link rel="stylesheet" href="./style/doc_pages.css">
+</head>
+<body>
+
+<!-- ── U of T Physics site header ── -->
+<header class="site-header">
+  <div class="header-inner">
+    <a class="header-logo" href="https://www.physics.utoronto.ca/physics-at-uoft/services/plrs/">
+      <img class="header-logo-img" src="./images/uoft_physics_plrs_logo.png" alt="University of Toronto Department of Physics">
+    </a>
+    <span class="header-board-title">Phyduino Pico MicroPython</span>
+  </div>
+</header>
+
+<!-- breadcrumb -->
+<div class="breadcrumb-bar" aria-label="Breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="https://www.physics.utoronto.ca/">Physics</a>
+    <span class="sep" aria-hidden="true">›</span>
+    <a href="https://www.physics.utoronto.ca/physics-at-uoft/services/plrs/electronic-support-services/">Electronic Support Services</a>
+    <span class="sep" aria-hidden="true">›</span>
+    <a href="https://plrs.physics.utoronto.ca/course-listing/">Introduction to Electronics</a>
+  </div>
+</div>
+
+<!-- ── Page content ── -->
+<div class="page-wrap doc-page">
+
+  <div class="board-hero">
+    <div class="board-hero-text">
+      <span class="board-tag"><a href="https://plrs.physics.utoronto.ca/course-listing/">Introduction to Electronics</a> - MicroPython library</span>
+      <div class="board-img-panel">
+        <img src="./images/phyduino_pico.png" alt="Phyduino Pico board, top view">
+      </div>
+      <p class="board-desc">
+        A one-file MicroPython library for the Phyduino Pico. It runs on the standard
+        Raspberry Pi Pico firmware and adds what that firmware doesn't know about this board:
+        the pin names printed on the board ("D7", "A3"), the on-board LED,
+        A3&ndash;A5 on the on-board MAX11635 ADC, the USB-C supply voltage and USB-PD power.
+      </p>
+      <div class="spec-row">
+        <span class="spec-pill">MicroPython</span>
+        <span class="spec-pill">RP2040</span>
+        <span class="spec-pill">VS Code · PyCharm</span>
+        <span class="spec-pill">Windows · Linux · macOS</span>
+        <!-- Keep in step with __version__ in phyduino.py and PROJECT_NUMBER in Doxyfile -->
+        <span class="spec-pill">v0.1.0-rc.1</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Set up -->
+  <div class="section-head"><h2>Set up</h2></div>
+  <ol class="steps">
+    <li class="step">
+      <span class="step-num">1</span>
+      <span class="step-body">
+        Download the latest <strong>Raspberry Pi Pico</strong> (RP2040) MicroPython UF2 from
+        <a href="https://micropython.org/download/RPI_PICO/">micropython.org</a>.
+      </span>
+    </li>
+    <li class="step">
+      <span class="step-num">2</span>
+      <span class="step-body">
+        Slide <strong>SW1</strong> to <strong>GND</strong> (BOOTSEL) and press reset (<strong>SW2</strong>).
+        Copy the UF2 to the <strong>RPI-RP2</strong> drive that appears, then slide SW1 back to 3.3 V
+        and press reset.
+      </span>
+    </li>
+    <li class="step">
+      <span class="step-num">3</span>
+      <span class="step-body">
+        Download <code>phyduino.py</code> from the
+        <a href="https://github.com/perc-sw/phyduino_pico_micropython">repository</a> and put it in
+        your project folder, next to your own <code>main.py</code>.
+      </span>
+    </li>
+    <li class="step">
+      <span class="step-num">4</span>
+      <span class="step-body">
+        <p><strong>VS Code</strong>: install the
+        <a href="https://marketplace.visualstudio.com/items?itemName=paulober.pico-w-go">MicroPico</a>
+        extension, right-click <code>phyduino.py</code> and choose <strong>Upload file to Pico</strong>,
+        then open <code>main.py</code> and click <strong>Run</strong>.</p>
+        <p><strong>PyCharm</strong>: install the <strong>MicroPython Tools</strong> plugin, then upload
+        <code>phyduino.py</code> and run <code>main.py</code>.</p>
+        <p><strong>Terminal</strong>: <code>mpremote cp phyduino.py :</code> then <code>mpremote run main.py</code>.</p>
+      </span>
+    </li>
+  </ol>
+
+  <div class="doc-text">
+    <pre class="code">import phyduino as pd
+
+pd.led.on()
+print(pd.analog_volts("A3"))             # 0-2.048 V, on-board MAX11635
+button = pd.pin("D2", "in", pull="up")</pre>
+  </div>
+
+  <!-- Documentation: the API reference is built by Doxygen into ./wiki/ (git-ignored;
+       run "doxygen" in the repository root, or see .github/workflows/docs.yml) -->
+  <div class="section-head"><h2>Documentation</h2></div>
+  <div class="ds-table-wrap">
+    <table class="ds-table">
+      <tbody>
+        <tr>
+          <td>API reference</td>
+          <td>Every function, class and constant in phyduino.py (Doxygen)</td>
+          <td><a class="ds-link" href="./wiki/index.html">Open</a></td>
+        </tr>
+        <tr>
+          <td>Examples</td>
+          <td>The example scripts with their source, wiring and output</td>
+          <td><a class="ds-link" href="./wiki/example_scripts.html">Open</a></td>
+        </tr>
+        <tr>
+          <td>Pin map</td>
+          <td>Pin names, RP2040 GPIOs, buses and shared PWM channels</td>
+          <td><a class="ds-link" href="./wiki/group__pins.html">Open</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Library contents: one row per topic in extras/doxygen/api.dox -->
+  <div class="section-head"><h2>What the library provides</h2></div>
+  <div class="ds-table-wrap">
+    <table class="ds-table">
+      <tbody>
+        <tr>
+          <td>Pins</td>
+          <td>PINS, pin(), gpio(): the board's pin names as strings</td>
+          <td><a class="ds-link" href="./wiki/group__pins.html">API</a></td>
+        </tr>
+        <tr>
+          <td>On-board LED</td>
+          <td>led.on(), off(), toggle(), value() · example: blink</td>
+          <td><a class="ds-link" href="./wiki/group__led.html">API</a></td>
+        </tr>
+        <tr>
+          <td>Analogue inputs</td>
+          <td>A0&ndash;A5 as codes, millivolts or volts, averaging, differential · examples: analog_read, analog_millivolts, analog_averaging, analog_differential</td>
+          <td><a class="ds-link" href="./wiki/group__analog.html">API</a></td>
+        </tr>
+        <tr>
+          <td>Power and temperature</td>
+          <td>vbus_volts(), cpu_temperature(), USB-PD profiles and contract · examples: vbus_monitor, usb_pd_power</td>
+          <td><a class="ds-link" href="./wiki/group__power.html">API</a></td>
+        </tr>
+        <tr>
+          <td>Header buses</td>
+          <td>i2c(), spi(), uart() on the header pins · examples: i2c_scan, uart_loopback</td>
+          <td><a class="ds-link" href="./wiki/group__buses.html">API</a></td>
+        </tr>
+        <tr>
+          <td>External ADC</td>
+          <td>The MAX11635 behind A3&ndash;A5, by channel: scans and raw differential readings</td>
+          <td><a class="ds-link" href="./wiki/group__ext__adc.html">API</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Repo links -->
+  <div class="section-head"><h2>Course Repositories</h2></div>
+  <div class="repo-links">
+    <a class="repo-row" href="https://github.com/perc-sw/phyduino_pico_micropython">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      <span>
+        <span class="repo-row-label">GitHub · </span>
+        <span class="repo-row-name">Phyduino Pico MicroPython</span>
+      </span>
+      <svg class="repo-row-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    </a>
+    <a class="repo-row" href="https://github.com/perc-sw/phyduino_pico">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      <span>
+        <span class="repo-row-label">GitHub · </span>
+        <span class="repo-row-name">Phyduino Pico</span>
+      </span>
+      <svg class="repo-row-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    </a>
+    <a class="repo-row" href="https://github.com/perc-sw/phyduino_bsp">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      <span>
+        <span class="repo-row-label">GitHub · </span>
+        <span class="repo-row-name">Phyduino Board Support (Arduino)</span>
+      </span>
+      <svg class="repo-row-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    </a>
+  </div>
+
+</div><!-- end page-wrap -->
+
+<!-- ── Footer ── -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <a href="https://www.physics.utoronto.ca">
+    <img class="footer-logo" src="https://www.physics.utoronto.ca/static/utphy_themes/images/Physics-Logo-White.png" alt="University of Toronto Department of Physics">
+    </a>
+    <div class="social-media">
+      <ul class="footer-social-media-list">
+        <li title="send email">
+          <a href="mailto:physics.perc@utoronto.ca" aria-label="send email" class="dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-mail">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z"></path>
+              <path d="M3 7l9 6l9 -6"></path>
+            </svg>
+          </a>
+        </li>
+        <li title="facebook">
+          <a href="https://www.facebook.com/PhysicsUofT/" aria-label="visit facebook page" class="dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-facebook">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3"></path>
+            </svg>
+          </a>
+        </li>
+        <li title="X, formerly known as twitter">
+          <a href="https://twitter.com/uoftphysics" aria-label="visit x formerly known as twitter" class="dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-x">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M4 4l11.733 16h4.267l-11.733 -16z"></path>
+              <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path>
+            </svg>
+          </a>
+        </li>
+        <li title="instagram">
+          <a href="https://www.instagram.com/uoftphysics" aria-label="visit instagram" class="dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-instagram"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 8a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4z"></path><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path><path d="M16.5 7.5v.01"></path></svg>
+          </a>
+        </li>
+        <li title="youtube">
+          <a href="https://www.youtube.com//channel/UCH2J2YJx3nfN1KygnB1ub4w" aria-label="visit youtube" class="dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-youtube"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M2 8a4 4 0 0 1 4 -4h12a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-12a4 4 0 0 1 -4 -4v-8z"></path><path d="M10 9l5 3l-5 3z"></path></svg>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+</body>
+</html>

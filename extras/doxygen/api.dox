@@ -1,0 +1,73 @@
+/*
+ * Topics for the API reference. Each function, class and constant in
+ * phyduino.py joins one with @ingroup in its docstring or ## comment; keep the
+ * table on the main page (extras/doxygen/mainpage.md) in step.
+ */
+
+/**
+@defgroup pins Pins
+@brief Pin names, the pin map and digital pins.
+
+Pins use the names printed on the board, as strings: `"D0"`-`"D13"`,
+`"D18"`, `"D19"`, `"A0"`-`"A5"`, `"SDA"`, `"SCL"` and `"LED"`. Names are not
+case-sensitive. There are no D14-D17.
+
+| Name | RP2040 | Notes |
+|---|---|---|
+| D0, D1 | GPIO1, GPIO0 | UART0 RX, TX: uart(0) |
+| D2, D3 | GPIO6, GPIO7 | |
+| D4, D5 | GPIO8, GPIO9 | UART1 TX, RX: uart(1) |
+| D6, D7 | GPIO10, GPIO15 | |
+| D8, D9 | GPIO16, GPIO17 | |
+| D10-D13 | GPIO13, 11, 12, 14 | SPI1 CS, MOSI, MISO, SCK: spi() |
+| D18 / SDA, D19 / SCL | GPIO24, GPIO25 | I2C0: i2c(). No pull-ups on the board |
+| LED | GPIO5 | Green user LED: `led` |
+| A0-A2 | GPIO26-28 | RP2040 ADC, 0-3.3 V. Can also be used as digital pins |
+| A3-A5 | MAX11635 AIN0-2 | On-board ADC, 0-2.048 V. Analogue only |
+
+Some pairs of pins share a PWM channel, so they can't run different PWM
+signals at once: D1/D8, D0/D9, D4/D18, D5/D19, D6/A0, D11/A1, D12/A2.
+*/
+
+/**
+@defgroup led On-board LED
+@brief The green user LED on GPIO5.
+
+MicroPython's own `Pin("LED")` is GPIO25, which is the D19 pin on this board;
+use `led` instead.
+*/
+
+/**
+@defgroup analog Analogue inputs
+@brief Reading A0-A5, the same functions on every pin.
+
+A0-A2 are read by the RP2040's ADC (0-3.3 V). A3-A5 are read by the on-board
+MAX11635 (0-2.048 V), which is set up the first time one of them is read.
+Keep every pin between 0 V and its full scale.
+*/
+
+/**
+@defgroup power Power and temperature
+@brief The USB-C supply (VBUS), USB Power Delivery and the RP2040's temperature.
+
+A USB-PD charger can be asked for 9-20 V with usb_pd(). VBUS also feeds the
+header's VIN pin, so VIN follows the contract.
+*/
+
+/**
+@defgroup buses Header buses
+@brief I2C, SPI and UART set up on the header pins.
+
+Each function returns a standard MicroPython `machine.I2C`, `machine.SPI` or
+`machine.UART`; see the
+[MicroPython documentation](https://docs.micropython.org/en/latest/library/machine.html)
+for their methods.
+*/
+
+/**
+@defgroup ext_adc External ADC
+@brief The MAX11635 chip behind A3-A5, by channel.
+
+Most programs use the @ref analog functions instead. Use this for a scan of
+several channels or a differential reading in raw codes.
+*/

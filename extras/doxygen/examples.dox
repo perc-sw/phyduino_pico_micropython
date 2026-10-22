@@ -1,0 +1,187 @@
+/*
+ * The Examples page, and the scripts in examples/ registered for it, with the
+ * formatted description shown above each script's source. Doxygen does not
+ * read comments in the scripts themselves, so keep each block here in step
+ * with that script's header comment, with the list on the Examples page, with
+ * the scripts under Examples in DoxygenLayout.xml (the side menu) and with the
+ * Examples table in README.md.
+ *
+ * The Examples page replaces Doxygen's own list (hidden in DoxygenLayout.xml),
+ * which can only show file names such as analog_millivolts.py. For the same
+ * reason each script's page title is set by the hidden example-title span at
+ * the start of its block, which a script in footer.html moves into the title.
+ */
+
+/**
+@page example_scripts Examples
+
+Example scripts for the Phyduino Pico. Each page below explains what the script
+does, how to wire it and what it prints, followed by its source. Copy
+`phyduino.py` to the board first, then run a script from VS Code (MicroPico's
+**Run**), PyCharm, or with `mpremote run examples/<name>.py`.
+
+| Example | What it shows |
+|---|---|
+| @ref blink.py "Blink" | Blinking the on-board LED |
+| @ref analog_read.py "Analog Read" | All six analogue pins as 12-bit codes |
+| @ref analog_millivolts.py "Analog Millivolts" | All six analogue pins in millivolts |
+| @ref analog_averaging.py "Analog Averaging" | How averaging steadies a reading |
+| @ref analog_differential.py "Analog Differential" | The voltage between two pins |
+| @ref vbus_monitor.py "VBUS Monitor" | The USB-C supply voltage and the CPU temperature |
+| @ref usb_pd_power.py "USB-PD Power" | Asking a USB-PD charger for a higher voltage |
+| @ref i2c_scan.py "I2C Scan" | Finding the devices on the I2C bus |
+| @ref uart_loopback.py "UART Loopback" | Sending and receiving on UART0 |
+*/
+
+/**
+ * @example blink.py
+ * @htmlonly<span class="example-title" hidden>Blink example script</span>@endhtmlonly
+ * Blinks the on-board green LED once a second.
+ *
+ * @par Uses
+ * `led`: Led.toggle()
+ */
+
+/**
+ * @example analog_read.py
+ * @htmlonly<span class="example-title" hidden>Analog Read example script</span>@endhtmlonly
+ * Reads all six analogue pins as 12-bit codes (0-4095), twice a second.
+ *
+ * A0-A2: 0 = 0 V, 4095 = 3.3 V (RP2040 ADC). A3-A5: 0 = 0 V, 4095 = 2.048 V
+ * (on-board MAX11635 ADC).
+ *
+ * @par Wiring
+ * Connect a potentiometer wiper (ends on GND and 3.3 V) to any pin to see it
+ * change; keep A3-A5 at or below 2.048 V. Unconnected pins drift.
+ *
+ * @par Output
+ * @code{.unparsed}
+ * A0=2048  A1=   3  A2=   0  A3=2048  A4=   0  A5=   0
+ * @endcode
+ */
+
+/**
+ * @example analog_millivolts.py
+ * @htmlonly<span class="example-title" hidden>Analog Millivolts example script</span>@endhtmlonly
+ * Prints the voltage on every analogue pin, in millivolts, twice a second.
+ *
+ * The library scales each pin with its own full scale (3.3 V for A0-A2,
+ * 2.048 V for A3-A5), so the numbers can be compared directly.
+ *
+ * @par Output
+ * A0 to A5 in order:
+ * @code{.unparsed}
+ * 1650.0 2.4 0.0 1024.0 0.0 0.0
+ * @endcode
+ */
+
+/**
+ * @example analog_averaging.py
+ * @htmlonly<span class="example-title" hidden>Analog Averaging example script</span>@endhtmlonly
+ * Shows how averaging steadies a reading. For each setting, takes 100
+ * readings of A0 and A3 and prints the lowest, the highest and the spread
+ * between them (in ADC steps).
+ *
+ * analog_averaging() applies to every analogue pin: A3-A5 average in the
+ * external ADC itself, A0-A2 take the samples one after another.
+ *
+ * @par Wiring
+ * Connect a steady voltage, e.g. a potentiometer wiper, to A0 (0-3.3 V) and
+ * A3 (0-2.048 V), or leave them as they are.
+ *
+ * @par Output
+ * @code{.unparsed}
+ * averaging  1  A0  lowest 2040  highest 2056  spread  16
+ * averaging  1  A3  lowest 2046  highest 2050  spread   4
+ * ...
+ * averaging 32  A0  lowest 2047  highest 2049  spread   2
+ * @endcode
+ */
+
+/**
+ * @example analog_differential.py
+ * @htmlonly<span class="example-title" hidden>Analog Differential example script</span>@endhtmlonly
+ * Measures the voltage between two analogue pins, e.g. across a resistor or a
+ * sensor bridge, twice a second.
+ *
+ * - **A3 - A4**: true differential. The on-board ADC samples both pins at the
+ *   same instant, so noise common to both cancels. Range ±1024 mV in 0.5 mV
+ *   steps (a larger difference is measured as two separate readings).
+ * - **A0 - A1**: computed from readings taken one after the other. Fine for
+ *   slow signals, but noise on both pins does not cancel.
+ *
+ * @par Wiring
+ * Keep every pin between 0 V and its full scale (A0-A2: 3.3 V, A3-A5: 2.048 V).
+ *
+ * @par Output
+ * @code{.unparsed}
+ * A3 - A4:   100.0 mV    A0 - A1:    99.1 mV
+ * @endcode
+ */
+
+/**
+ * @example vbus_monitor.py
+ * @htmlonly<span class="example-title" hidden>VBUS Monitor example script</span>@endhtmlonly
+ * Prints the USB-C supply voltage (VBUS) and the RP2040's temperature once a
+ * second. VBUS is about 5 V from a computer; a USB-PD charger can raise it
+ * (see @ref usb_pd_power.py "USB-PD Power"). VBUS is also on the header's VIN pin.
+ *
+ * @par Output
+ * @code{.unparsed}
+ * VBUS 5.02 V    CPU 24.3 C
+ * @endcode
+ */
+
+/**
+ * @example usb_pd_power.py
+ * @htmlonly<span class="example-title" hidden>USB-PD Power example script</span>@endhtmlonly
+ * Asks a USB-PD charger for up to `MAX_VOLTS`, then prints the board's
+ * profiles, the contract and the measured VBUS once a second.
+ *
+ * A charger takes the only USB-C port, so there is no USB connection to the
+ * computer while it is plugged in. Save this file as `main.py` on the board so
+ * it runs by itself, and watch the output on UART0 (TX on D1, 115200 baud)
+ * with a USB-serial adapter. The green POK2 LED lights at 9 V, POK3 at 20 V.
+ *
+ * @warning VBUS also feeds the VIN pin, so VIN follows the contract:
+ * disconnect anything on VIN that can't take the voltage you ask for.
+ *
+ * The request lasts until the board loses power.
+ *
+ * @par Output
+ * @code{.unparsed}
+ * Profiles: 5 V 2 A, 9 V 1 A
+ * Contract: offer 2, 1.00 A    VBUS 9.01 V
+ * @endcode
+ */
+
+/**
+ * @example i2c_scan.py
+ * @htmlonly<span class="example-title" hidden>I2C Scan example script</span>@endhtmlonly
+ * Lists the addresses of the I2C devices on SDA (D18) and SCL (D19).
+ *
+ * @par Wiring
+ * The board has no pull-up resistors on these pins. Most sensor modules
+ * include them; otherwise fit 4.7 kOhm resistors from SDA and SCL to 3.3 V.
+ * The on-board USB-PD controller is on a separate bus and does not appear.
+ *
+ * @par Output
+ * @code{.unparsed}
+ * Found: 0x3C, 0x76
+ * @endcode
+ */
+
+/**
+ * @example uart_loopback.py
+ * @htmlonly<span class="example-title" hidden>UART Loopback example script</span>@endhtmlonly
+ * Sends a message out of UART0 and reads it back.
+ *
+ * @par Wiring
+ * Connect a jumper wire from D1 (TX) to D0 (RX) first; without it, nothing
+ * comes back.
+ *
+ * @par Output
+ * @code{.unparsed}
+ * sent 'hello 0', received 'hello 0'
+ * @endcode
+ */

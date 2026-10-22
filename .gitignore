@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+# Compiled MicroPython
+*.mpy
+
+# Editors and tools: keep only the recommended-extensions file
+.vscode/*
+!.vscode/extensions.json
+.micropico
+.idea/
+.claude/
+CLAUDE.md
+
+# Temporary files
+*.tmp
+*.log
+*.bak
+*.swp
+*~
+
+# Development notes
+notes/
+
+# Doxygen output; built and published by .github/workflows/docs.yml
+docs/wiki/
