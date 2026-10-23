@@ -3,11 +3,11 @@
 
 Copy this file to the board next to your own main.py, then:
 @code
-import phyduino as pd
+import phyduino as mcu
 
-pd.led.on()
-print(pd.analog_volts("A3"))
-button = pd.pin("D2", "in", pull="up")
+mcu.led.on()
+print(mcu.analog_volts("A3"))
+button = mcu.pin("D2", "in", pull="up")
 @endcode
 
 Pins use the names printed on the board: "D0"-"D13", "D18", "D19", "A0"-"A5",
@@ -23,7 +23,7 @@ Licence: GPL-3.0.
 
 import time
 
-from machine import ADC, I2C, Pin, SPI, UART, mem32
+from machine import ADC, I2C, PWM, Pin, SPI, UART, mem32
 from micropython import const
 
 ## Library version, MAJOR.MINOR.PATCH.
@@ -134,9 +134,9 @@ def pin(name, mode="in", pull=None, value=None):
 
     @par Example
     @code
-    led = pd.pin("D7", "out")
+    led = mcu.pin("D7", "out")
     led.value(1)
-    button = pd.pin("D2", "in", pull="up")
+    button = mcu.pin("D2", "in", pull="up")
     @endcode
     @ingroup pins
     """
@@ -155,6 +155,59 @@ def pin(name, mode="in", pull=None, value=None):
     p = Pin(number, _MODES[mode], _PULLS[pull], **kwargs)
     if number == _D19_GPIO:
         _set_d19_drive_12ma()
+    output = _pwm_output(number)
+    if output in _pwm_users and PINS[_pwm_users[output]] == number:
+        del _pwm_users[output]  # this pin is no longer a PWM output
+    return p
+
+
+# --- PWM --------------------------------------------------------------------------
+
+# RP2040 PWM: GPIOn is output A (even n) or B (odd n) of slice (n >> 1) & 7.
+# Two pins on the same output give the same signal; the two outputs of a slice
+# share one frequency.
+_pwm_users = {}  # (slice, output) -> name of the pin last given to pwm()
+
+
+def _pwm_output(number):
+    return (number >> 1) & 7, number & 1
+
+
+def pwm(name, freq=1000, duty_u16=0):
+    """@brief A machine.PWM on a header pin or the LED.
+
+    Pairs of pins share a PWM output and can't run different signals at once:
+    D1/D8, D0/D9, D4/D18, D5/D19, D6/A0, D11/A1, D12/A2. Pins next to each
+    other on a slice (e.g. D2/D3) can have different duty cycles but share a
+    frequency: setting one sets both. Calling pin() on a pin frees its output.
+
+    @param name     Pin name: "D0"-"D13", "D18", "D19", "A0"-"A2", "SDA", "SCL" or "LED".
+    @param freq     Frequency in Hz, 8 Hz and up.
+    @param duty_u16 Starting duty cycle, 0 (always low) to 65535 (always high).
+    @return A machine.PWM; change it with .freq(hz) and .duty_u16(duty).
+    @exception ValueError Unknown name, an analogue-only pin (A3-A5), or the
+                          pin shares its PWM output with one already in use.
+
+    @par Example
+    @code
+    glow = mcu.pwm("LED")
+    glow.duty_u16(32768)  # half brightness
+    buzzer = mcu.pwm("D3", freq=440, duty_u16=32768)
+    @endcode
+    @ingroup pins
+    """
+    key = _name(name)
+    number = gpio(key)
+    output = _pwm_output(number)
+    other = _pwm_users.get(output)
+    if other is not None and PINS[other] != number:
+        raise ValueError(
+            key + " and " + other + " share a PWM output and " + other
+            + " is already PWM; use another pin, or call pin('" + other + "') to free it")
+    p = PWM(pin(key, "out"))
+    p.freq(freq)
+    p.duty_u16(duty_u16)
+    _pwm_users[output] = key
     return p
 
 
@@ -166,8 +219,8 @@ class Led:
     Use the ready-made `led` object rather than making another. The pin is
     set up on first use.
     @code
-    pd.led.on()
-    pd.led.toggle()
+    mcu.led.on()
+    mcu.led.toggle()
     @endcode
     @ingroup led
     """
@@ -553,7 +606,7 @@ class STUSB4500:
 
     @par Example
     @code
-    usb = pd.usb_pd()
+    usb = mcu.usb_pd()
     usb.request(9)          # ask for up to 9 V
     print(usb.contract())   # (volts, amps)
     @endcode
@@ -723,7 +776,7 @@ def i2c(freq=100_000):
     @return A machine.I2C.
     @par Example
     @code
-    bus = pd.i2c()
+    bus = mcu.i2c()
     print(bus.scan())
     @endcode
     @ingroup buses
@@ -744,8 +797,8 @@ def spi(baudrate=1_000_000, polarity=0, phase=0):
     @return A machine.SPI.
     @par Example
     @code
-    bus = pd.spi()
-    cs = pd.pin("D10", "out", value=1)
+    bus = mcu.spi()
+    cs = mcu.pin("D10", "out", value=1)
     cs.value(0)
     bus.write(b"\x01\x02")
     cs.value(1)
