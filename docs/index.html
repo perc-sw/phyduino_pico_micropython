@@ -67,8 +67,11 @@
     <li class="step">
       <span class="step-num">1</span>
       <span class="step-body">
-        Download the latest <strong>Raspberry Pi Pico</strong> (RP2040) MicroPython UF2 from
-        <a href="https://micropython.org/download/RPI_PICO/">micropython.org</a>.
+        Download a MicroPython UF2, one of:
+        <strong>Phyduino Pico firmware</strong> (recommended), <code>phyduino_pico-&lt;version&gt;-micropython-&lt;version&gt;.uf2</code>
+        from the repository's <a href="https://github.com/perc-sw/phyduino_pico_micropython/releases">Releases</a> page: the full 16&nbsp;MB flash, the board's
+        pin names and <code>phyduino.py</code> built in; or the standard <strong>Raspberry Pi Pico</strong>
+        (RP2040) UF2 from <a href="https://micropython.org/download/RPI_PICO/">micropython.org</a>.
       </span>
     </li>
     <li class="step">
@@ -82,7 +85,8 @@
     <li class="step">
       <span class="step-num">3</span>
       <span class="step-body">
-        Download <code>phyduino.py</code> from the
+        Standard Pico firmware only (the Phyduino Pico firmware has it built in): download
+        <code>phyduino.py</code> from the
         <a href="https://github.com/perc-sw/phyduino_pico_micropython">repository</a> and put it in
         your project folder, next to your own <code>main.py</code>.
       </span>
@@ -90,7 +94,7 @@
     <li class="step">
       <span class="step-num">4</span>
       <div class="step-body">
-        Upload <code>phyduino.py</code> and run <code>main.py</code>:
+        Upload <code>phyduino.py</code> (standard Pico firmware only) and run <code>main.py</code>:
         <ul>
           <li><strong>VS Code</strong>: install the
           <a href="https://marketplace.visualstudio.com/items?itemName=paulober.pico-w-go">MicroPico</a>

@@ -29,18 +29,35 @@ print(button.value())
 
 ## Set up
 
-You need two files on the board: `phyduino.py` (this library) and your own `main.py`. The board
-runs `main.py` each time it starts.
+The board runs `main.py` each time it starts. It also needs the library, `phyduino.py`: either
+built into the Phyduino Pico firmware, or copied onto the board next to your `main.py`.
 
 ### 1. Put MicroPython on the board (once)
 
-1. Download the latest **Raspberry Pi Pico** (RP2040) UF2 from
-   <https://micropython.org/download/RPI_PICO/>.
-2. Slide the boot switch (SW1) to the boot position and press RESET (SW2). The board appears as a
+Choose one firmware:
+
+- **Phyduino Pico firmware (recommended).** Download
+  `phyduino_pico-<version>-micropython-<version>.uf2` from this repository's
+  [Releases](https://github.com/perc-sw/phyduino_pico_micropython/releases) page. It uses the board's full 16 MB flash (about 15 MB for your files),
+  knows the board's pin names (`Pin("D7")`, `Pin("LED")`), and has `phyduino.py` built in, so there
+  is nothing to copy in step 2.
+- **Standard Raspberry Pi Pico firmware.** Download the latest **Raspberry Pi Pico** (RP2040) UF2
+  from <https://micropython.org/download/RPI_PICO/>, then copy `phyduino.py` to the board in step 2.
+  It only uses 2 MB of the flash (about 1.4 MB for files).
+
+Then, for either one:
+
+1. Slide the boot switch (SW1) to the boot position and press RESET (SW2). The board appears as a
    drive named `RPI-RP2`.
-3. Copy the UF2 onto that drive. Slide SW1 back and press RESET.
+2. Copy the UF2 onto that drive. Slide SW1 back and press RESET.
+
+Installing a firmware erases the files on the board, so copy off anything you want to keep first
+(`mpremote cp :main.py .`).
 
 ### 2. Copy the library and run your code
+
+On the Phyduino Pico firmware, skip copying `phyduino.py`: it is built in. A copy on the board
+takes priority over the built-in one, so delete any old copy to use the built-in version.
 
 **VS Code**
 
@@ -156,10 +173,26 @@ built in), then either:
 | `phyduino_pico/vbus_monitor/` | USB-C supply voltage and CPU temperature |
 | `phyduino_pico/usb_pd_power/` | Asking a USB-PD charger for 9-20 V (output on UART0, since the charger takes the USB port) |
 
-## Development
+## Building the firmware
 
-Notes for developing the library (building the firmware, documentation, tests, releases and the
-hardware checklists) are in `docs/notes/`. Start with `docs/notes/development.html`.
+The Phyduino Pico firmware is built from `boards/PHYDUINO_PICO/` (a MicroPython board definition)
+against a pinned MicroPython release, with `phyduino.py` built in:
+
+```
+tools/build_firmware.sh            # writes dist/phyduino_pico-<version>-micropython-<version>.uf2
+tools/build_firmware.sh clean      # the same, after removing the previous build
+```
+
+It runs on Linux, or in WSL (Ubuntu) on Windows, and needs git, make, cmake, python3 and the Arm GNU
+toolchain:
+
+```
+sudo apt install git make cmake python3 gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
+```
+
+The first build downloads MicroPython and the parts it needs (pico-sdk, TinyUSB, ...) into `build/`
+and takes several minutes; later builds only recompile what changed. Each release on GitHub has a
+UF2 built the same way.
 
 ## Licence
 
