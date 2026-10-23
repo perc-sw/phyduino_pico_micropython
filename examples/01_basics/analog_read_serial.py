@@ -1,4 +1,4 @@
-Re# Reads all six analogue pins as 12-bit codes (0-4095), twice a second.
+# Reads all six analogue pins as 12-bit codes (0-4095), twice a second.
 #
 # A0-A2: 0 = 0 V, 4095 = 3.3 V (RP2040 ADC).
 # A3-A5: 0 = 0 V, 4095 = 2.048 V (on-board MAX11635 ADC).
