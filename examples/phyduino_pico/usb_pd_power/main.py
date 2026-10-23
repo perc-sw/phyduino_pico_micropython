@@ -2,8 +2,8 @@
 # board's profiles, the contract and the measured VBUS once a second.
 #
 # A charger takes the only USB-C port, so there is no USB connection to the
-# computer while it is plugged in. Save this file as main.py on the board so
-# it runs by itself, and watch the output on UART0 (TX on D1, 115200 baud)
+# computer while it is plugged in. Copy this main.py to the board so it runs
+# by itself, and watch the output on UART0 (TX on D1, 115200 baud)
 # with a USB-serial adapter. The green POK2 LED lights at 9 V, POK3 at 20 V.
 #
 # VBUS also feeds the VIN pin, so VIN follows the contract: disconnect

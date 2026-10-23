@@ -2,7 +2,7 @@
 # noisy signal. Each new reading replaces the oldest one.
 #
 # Connect a potentiometer wiper or sensor to A0 (0-3.3 V). For averaging done
-# by the board itself, see phyduino_pico/analog_averaging.py.
+# by the board itself, see phyduino_pico/analog_averaging/.
 
 import time  # sleep_ms() for pauses
 
