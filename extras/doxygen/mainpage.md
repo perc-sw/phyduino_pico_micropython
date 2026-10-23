@@ -6,11 +6,11 @@ Physics Phyduino Pico. Set-up steps are on the [home page](../index.html).
 Copy `phyduino.py` to the board next to your own `main.py`, then:
 
 ```{.py}
-import phyduino as pd
+import phyduino as mcu
 
-pd.led.on()
-print(pd.analog_volts("A3"))
-button = pd.pin("D2", "in", pull="up")
+mcu.led.on()
+print(mcu.analog_volts("A3"))
+button = mcu.pin("D2", "in", pull="up")
 ```
 
 The library runs on the standard Raspberry Pi Pico (RP2040) MicroPython
@@ -22,7 +22,7 @@ use gpio() to find the RP2040 GPIO behind a pin name.
 
 | Topic | Use |
 |---|---|
-| @ref pins | `PINS`, pin(), gpio() |
+| @ref pins | `PINS`, pin(), gpio(), pwm() |
 | @ref led | `led`: Led.on(), Led.off(), Led.toggle(), Led.value() |
 | @ref analog | analog_read(), analog_millivolts(), analog_volts(), analog_averaging(), analog_differential_millivolts(), analog_full_scale_millivolts(), `ADC_FULL_SCALE_MILLIVOLTS`, `EXT_ADC_FULL_SCALE_MILLIVOLTS` |
 | @ref power | vbus_volts(), cpu_temperature(), usb_pd(): STUSB4500.request(), STUSB4500.set_profiles(), STUSB4500.profiles(), STUSB4500.contract(), STUSB4500.contract_position(), STUSB4500.renegotiate() |

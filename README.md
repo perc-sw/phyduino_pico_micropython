@@ -19,11 +19,11 @@ doesn't know about this board:
 - the USB-C supply voltage (VBUS) and the USB-PD controller.
 
 ```python
-import phyduino as pd
+import phyduino as mcu
 
-pd.led.on()
-print(pd.analog_volts("A3"))          # 0-2.048 V, on-board MAX11635
-button = pd.pin("D2", "in", pull="up")
+mcu.led.on()
+print(mcu.analog_volts("A3"))          # 0-2.048 V, on-board MAX11635
+button = mcu.pin("D2", "in", pull="up")
 print(button.value())
 ```
 
@@ -70,24 +70,25 @@ mpremote cp main.py :             # or copy it so it runs at start-up
 
 ## Pins
 
-Use these names as strings, e.g. `pd.pin("D7", "out")` or `pd.analog_read("A0")`. Names are not
-case-sensitive. `pd.PINS` holds the whole map.
+Use these names as strings, e.g. `mcu.pin("D7", "out")` or `mcu.analog_read("A0")`. Names are not
+case-sensitive. `mcu.PINS` holds the whole map.
 
 | Name | RP2040 | Notes |
 |---|---|---|
-| D0, D1 | GPIO1, GPIO0 | UART0 RX, TX: `pd.uart(0)` |
+| D0, D1 | GPIO1, GPIO0 | UART0 RX, TX: `mcu.uart(0)` |
 | D2, D3 | GPIO6, GPIO7 | |
-| D4, D5 | GPIO8, GPIO9 | UART1 TX, RX: `pd.uart(1)` |
+| D4, D5 | GPIO8, GPIO9 | UART1 TX, RX: `mcu.uart(1)` |
 | D6, D7 | GPIO10, GPIO15 | |
 | D8, D9 | GPIO16, GPIO17 | |
-| D10-D13 | GPIO13, 11, 12, 14 | SPI1 CS, MOSI, MISO, SCK: `pd.spi()` |
-| D18 / SDA, D19 / SCL | GPIO24, GPIO25 | I2C0: `pd.i2c()`. No pull-ups on the board |
-| LED | GPIO5 | Green user LED: `pd.led` |
+| D10-D13 | GPIO13, 11, 12, 14 | SPI1 CS, MOSI, MISO, SCK: `mcu.spi()` |
+| D18 / SDA, D19 / SCL | GPIO24, GPIO25 | I2C0: `mcu.i2c()`. No pull-ups on the board |
+| LED | GPIO5 | Green user LED: `mcu.led` |
 | A0-A2 | GPIO26-28 | RP2040 ADC, 0-3.3 V. Can also be used as digital pins |
 | A3-A5 | MAX11635 AIN0-2 | On-board ADC, 0-2.048 V. Analogue only |
 
 There are no D14-D17. Some pairs of pins share a PWM channel, so they can't run different PWM
-signals at once: D1/D8, D0/D9, D4/D18, D5/D19, D6/A0, D11/A1, D12/A2.
+signals at once: D1/D8, D0/D9, D4/D18, D5/D19, D6/A0, D11/A1, D12/A2. `pwm()` refuses the second
+pin of a pair until you call `pin()` on the first.
 
 ## Reference
 
@@ -95,6 +96,7 @@ signals at once: D1/D8, D0/D9, D4/D18, D5/D19, D6/A0, D11/A1, D12/A2.
 |---|---|
 | `pin(name, mode="in", pull=None, value=None)` | A `machine.Pin`; mode `"in"`, `"out"` or `"open_drain"`, pull `None`, `"up"` or `"down"` |
 | `gpio(name)` | RP2040 GPIO number for a pin name |
+| `pwm(name, freq=1000, duty_u16=0)` | A `machine.PWM`; change it with `.freq(hz)` and `.duty_u16(0-65535)` |
 | `led.on()`, `led.off()`, `led.toggle()`, `led.value()` | On-board LED |
 | `analog_read(name)` | A0-A5 as a 12-bit code, 0-4095 |
 | `analog_millivolts(name)`, `analog_volts(name)` | A0-A5 in mV or V |
@@ -111,20 +113,39 @@ Errors say what went wrong, e.g. `pin("A3")` reminds you that A3 is analogue onl
 
 ## Examples
 
-Each file's header comment says what to connect and what it prints. Run one with MicroPico's
-**Run**, or `mpremote run examples/blink.py` (after copying `phyduino.py` to the board).
+The examples are in folders named after the Arduino IDE's example categories, with
+board-specific ones in `phyduino_pico/`. Each is laid out like an Arduino sketch: `setup()` runs
+once, then `loop()` runs over and over; leave the `main()` at the end of each file as it is. Each file's header comment says what to connect and what it
+prints. Run one with MicroPico's **Run**, or `mpremote run examples/01_basics/blink.py` (after
+copying `phyduino.py` to the board).
 
 | Example | Shows |
 |---|---|
-| `blink.py` | Blinking the on-board LED |
-| `analog_read.py` | All six analogue pins as 12-bit codes |
-| `analog_millivolts.py` | All six analogue pins in millivolts |
-| `analog_averaging.py` | How averaging steadies a reading |
-| `analog_differential.py` | Voltage between two pins (A3-A4 true differential, A0-A1 computed) |
-| `vbus_monitor.py` | USB-C supply voltage and CPU temperature |
-| `usb_pd_power.py` | Asking a USB-PD charger for 9-20 V (output on UART0, since the charger takes the USB port) |
-| `i2c_scan.py` | Finding I2C devices on SDA/SCL |
-| `uart_loopback.py` | UART0 with D1 jumpered to D0 |
+| `01_basics/bare_minimum.py` | The empty setup() and loop() to start a program from |
+| `01_basics/blink.py` | Blinking the on-board LED |
+| `01_basics/analog_read_serial.py` | All six analogue pins as 12-bit codes |
+| `01_basics/digital_read_serial.py` | Printing the state of a pushbutton |
+| `01_basics/fade.py` | Fading the on-board LED with PWM |
+| `01_basics/read_analog_voltage.py` | All six analogue pins in millivolts |
+| `02_digital/blink_without_delay.py` | Timing with time.ticks_ms() instead of time.sleep() |
+| `02_digital/button.py` | Lighting the LED while a pushbutton is pressed |
+| `02_digital/debounce.py` | Ignoring contact bounce so each press counts once |
+| `02_digital/digital_input_pullup.py` | A pushbutton with the pin's own pull-up resistor |
+| `02_digital/state_change_detection.py` | Counting presses by detecting the edge |
+| `02_digital/tone_melody.py` | Playing a tune on a piezo buzzer |
+| `02_digital/tone_pitch_follower.py` | A pitch that follows an analogue input |
+| `03_analog/analog_in_out_serial.py` | Setting LED brightness from a potentiometer |
+| `03_analog/calibration.py` | Learning a sensor's range at start-up |
+| `03_analog/smoothing.py` | A running average of the last 10 readings |
+| `04_communication/ascii_table.py` | Characters with their decimal, hex, octal and binary values |
+| `04_communication/graph.py` | Sending readings to a serial plotter |
+| `04_communication/i2c_scanner.py` | Finding I2C devices on SDA/SCL |
+| `04_communication/physical_pixel.py` | Switching the LED from the computer |
+| `04_communication/uart_loopback.py` | UART0 with D1 jumpered to D0 |
+| `phyduino_pico/analog_averaging.py` | How averaging steadies a reading |
+| `phyduino_pico/analog_differential.py` | Voltage between two pins (A3-A4 true differential, A0-A1 computed) |
+| `phyduino_pico/vbus_monitor.py` | USB-C supply voltage and CPU temperature |
+| `phyduino_pico/usb_pd_power.py` | Asking a USB-PD charger for 9-20 V (output on UART0, since the charger takes the USB port) |
 
 ## Building the Phyduino Pico firmware
 
@@ -147,7 +168,7 @@ files, so copy them off first (`mpremote cp :main.py .`).
 
 ```
 phyduino.py          The library (the only file the board needs)
-examples/            Example scripts
+examples/            Example scripts, by Arduino example category (01_basics/, ...) and phyduino_pico/
 tests/               PC-side tests (pytest + a fake machine module), hardware checklist
 docs/                GitHub Pages site; the API reference is built into docs/wiki/
 boards/PHYDUINO_PICO/ MicroPython board definition (16 MB flash, pin names, phyduino.py frozen in)
@@ -175,7 +196,9 @@ set to **GitHub Actions**.
 
 When adding a function, give it a docstring with `@ingroup` and one of the topics in
 `extras/doxygen/api.dox`, and add it to the table in `extras/doxygen/mainpage.md`. When adding an
-example, register it in `extras/doxygen/examples.dox` and `extras/doxygen/DoxygenLayout.xml`.
+example, put it in the folder for its Arduino example category (e.g. `02_digital/`), or in
+`phyduino_pico/` if it has no Arduino match, and register it in `extras/doxygen/examples.dox` and
+`extras/doxygen/DoxygenLayout.xml`. Example file names must be unique across the folders.
 
 ## Tests
 

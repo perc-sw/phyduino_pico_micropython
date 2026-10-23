@@ -14,6 +14,7 @@ INPUT                  = phyduino.py \
                          extras/doxygen/examples.dox
 USE_MDFILE_AS_MAINPAGE = extras/doxygen/mainpage.md
 EXAMPLE_PATH           = examples
+EXAMPLE_RECURSIVE      = YES
 FULL_PATH_NAMES        = NO
 
 # Python: docstrings hold Doxygen commands (@brief, @param, ...)

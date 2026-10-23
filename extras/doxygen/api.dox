@@ -6,7 +6,7 @@
 
 /**
 @defgroup pins Pins
-@brief Pin names, the pin map and digital pins.
+@brief Pin names, the pin map, digital pins and PWM.
 
 Pins use the names printed on the board, as strings: `"D0"`-`"D13"`,
 `"D18"`, `"D19"`, `"A0"`-`"A5"`, `"SDA"`, `"SCL"` and `"LED"`. Names are not
@@ -26,7 +26,8 @@ case-sensitive. There are no D14-D17.
 | A3-A5 | MAX11635 AIN0-2 | On-board ADC, 0-2.048 V. Analogue only |
 
 Some pairs of pins share a PWM channel, so they can't run different PWM
-signals at once: D1/D8, D0/D9, D4/D18, D5/D19, D6/A0, D11/A1, D12/A2.
+signals at once: D1/D8, D0/D9, D4/D18, D5/D19, D6/A0, D11/A1, D12/A2. pwm()
+refuses the second pin of a pair until pin() is called on the first.
 */
 
 /**

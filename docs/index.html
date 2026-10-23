@@ -107,11 +107,11 @@
   <!-- Example -->
   <div class="section-head"><h2>Example</h2></div>
   <div class="doc-text">
-    <pre class="code">import phyduino as pd
+    <pre class="code">import phyduino as mcu
 
-pd.led.on()
-print(pd.analog_volts("A3"))             # 0-2.048 V, on-board MAX11635
-button = pd.pin("D2", "in", pull="up")</pre>
+mcu.led.on()
+print(mcu.analog_volts("A3"))             # 0-2.048 V, on-board MAX11635
+button = mcu.pin("D2", "in", pull="up")</pre>
   </div>
 
   <!-- Documentation: the API reference is built by Doxygen into ./wiki/ (git-ignored;
@@ -146,7 +146,7 @@ button = pd.pin("D2", "in", pull="up")</pre>
       <tbody>
         <tr>
           <td>Pins</td>
-          <td>PINS, pin(), gpio(): the board's pin names as strings</td>
+          <td>PINS, pin(), gpio(), pwm(): the board's pin names as strings · examples: button, fade, tone_melody</td>
           <td><a class="ds-link" href="./wiki/group__pins.html">API</a></td>
         </tr>
         <tr>
@@ -156,7 +156,7 @@ button = pd.pin("D2", "in", pull="up")</pre>
         </tr>
         <tr>
           <td>Analogue inputs</td>
-          <td>A0&ndash;A5 as codes, millivolts or volts, averaging, differential · examples: analog_read, analog_millivolts, analog_averaging, analog_differential</td>
+          <td>A0&ndash;A5 as codes, millivolts or volts, averaging, differential · examples: analog_read_serial, read_analog_voltage, analog_averaging, analog_differential</td>
           <td><a class="ds-link" href="./wiki/group__analog.html">API</a></td>
         </tr>
         <tr>
@@ -166,7 +166,7 @@ button = pd.pin("D2", "in", pull="up")</pre>
         </tr>
         <tr>
           <td>Header buses</td>
-          <td>i2c(), spi(), uart() on the header pins · examples: i2c_scan, uart_loopback</td>
+          <td>i2c(), spi(), uart() on the header pins · examples: i2c_scanner, uart_loopback</td>
           <td><a class="ds-link" href="./wiki/group__buses.html">API</a></td>
         </tr>
         <tr>

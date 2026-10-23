@@ -3,9 +3,10 @@
   Doxygen's default layout (doxygen -l, 1.17.0); Doxygen warns if any entry is
   missing, so the whole file is kept. Changes, all in navindex:
   - Doxygen's own Examples list is hidden: it can only show file names
-    (analog_millivolts.py). The Examples page in extras/doxygen/examples.dox
+    (read_analog_voltage.py). The Examples page in extras/doxygen/examples.dox
     replaces it, as the last entry, where the hidden list was, with the
-    scripts under it. Keep that list in step with the Examples page.
+    scripts under it, grouped by example folder. Keep that list in step with
+    the Examples page.
   - Related pages are hidden: the only one is that Examples page.
 -->
 <doxygenlayout version="2.0">
@@ -51,15 +52,41 @@
     </tab>
     <tab type="examples" visible="no" title="" intro=""/>
     <tab type="usergroup" visible="yes" url="@ref example_scripts" title="Examples">
-      <tab type="user" visible="yes" url="@ref blink.py" title="Blink"/>
-      <tab type="user" visible="yes" url="@ref analog_read.py" title="Analog Read"/>
-      <tab type="user" visible="yes" url="@ref analog_millivolts.py" title="Analog Millivolts"/>
-      <tab type="user" visible="yes" url="@ref analog_averaging.py" title="Analog Averaging"/>
-      <tab type="user" visible="yes" url="@ref analog_differential.py" title="Analog Differential"/>
-      <tab type="user" visible="yes" url="@ref vbus_monitor.py" title="VBUS Monitor"/>
-      <tab type="user" visible="yes" url="@ref usb_pd_power.py" title="USB-PD Power"/>
-      <tab type="user" visible="yes" url="@ref i2c_scan.py" title="I2C Scan"/>
-      <tab type="user" visible="yes" url="@ref uart_loopback.py" title="UART Loopback"/>
+      <tab type="usergroup" visible="yes" title="01 Basics">
+        <tab type="user" visible="yes" url="@ref bare_minimum.py" title="Bare Minimum"/>
+        <tab type="user" visible="yes" url="@ref blink.py" title="Blink"/>
+        <tab type="user" visible="yes" url="@ref analog_read_serial.py" title="Analog Read Serial"/>
+        <tab type="user" visible="yes" url="@ref digital_read_serial.py" title="Digital Read Serial"/>
+        <tab type="user" visible="yes" url="@ref fade.py" title="Fade"/>
+        <tab type="user" visible="yes" url="@ref read_analog_voltage.py" title="Read Analog Voltage"/>
+      </tab>
+      <tab type="usergroup" visible="yes" title="02 Digital">
+        <tab type="user" visible="yes" url="@ref blink_without_delay.py" title="Blink Without Delay"/>
+        <tab type="user" visible="yes" url="@ref button.py" title="Button"/>
+        <tab type="user" visible="yes" url="@ref debounce.py" title="Debounce"/>
+        <tab type="user" visible="yes" url="@ref digital_input_pullup.py" title="Digital Input Pullup"/>
+        <tab type="user" visible="yes" url="@ref state_change_detection.py" title="State Change Detection"/>
+        <tab type="user" visible="yes" url="@ref tone_melody.py" title="Tone Melody"/>
+        <tab type="user" visible="yes" url="@ref tone_pitch_follower.py" title="Tone Pitch Follower"/>
+      </tab>
+      <tab type="usergroup" visible="yes" title="03 Analog">
+        <tab type="user" visible="yes" url="@ref analog_in_out_serial.py" title="Analog In Out Serial"/>
+        <tab type="user" visible="yes" url="@ref calibration.py" title="Calibration"/>
+        <tab type="user" visible="yes" url="@ref smoothing.py" title="Smoothing"/>
+      </tab>
+      <tab type="usergroup" visible="yes" title="04 Communication">
+        <tab type="user" visible="yes" url="@ref ascii_table.py" title="ASCII Table"/>
+        <tab type="user" visible="yes" url="@ref graph.py" title="Graph"/>
+        <tab type="user" visible="yes" url="@ref i2c_scanner.py" title="I2C Scanner"/>
+        <tab type="user" visible="yes" url="@ref physical_pixel.py" title="Physical Pixel"/>
+        <tab type="user" visible="yes" url="@ref uart_loopback.py" title="UART Loopback"/>
+      </tab>
+      <tab type="usergroup" visible="yes" title="Phyduino Pico">
+        <tab type="user" visible="yes" url="@ref analog_averaging.py" title="Analog Averaging"/>
+        <tab type="user" visible="yes" url="@ref analog_differential.py" title="Analog Differential"/>
+        <tab type="user" visible="yes" url="@ref vbus_monitor.py" title="VBUS Monitor"/>
+        <tab type="user" visible="yes" url="@ref usb_pd_power.py" title="USB-PD Power"/>
+      </tab>
     </tab>
   </navindex>
 

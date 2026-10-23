@@ -26,8 +26,9 @@ CLAUDE.md
 *.swp
 *~
 
-# Development notes
+# Development notes and checklists
 notes/
+docs/notes/
 
 # Doxygen output; built and published by .github/workflows/docs.yml
 docs/wiki/
