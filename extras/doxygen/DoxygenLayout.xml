@@ -3,7 +3,7 @@
   Doxygen's default layout (doxygen -l, 1.17.0); Doxygen warns if any entry is
   missing, so the whole file is kept. Changes, all in navindex:
   - Doxygen's own Examples list is hidden: it can only show file names
-    (read_analog_voltage.py). The Examples page in extras/doxygen/examples.dox
+    (01_basics/read_analog_voltage/main.py). The Examples page in extras/doxygen/examples.dox
     replaces it, as the last entry, where the hidden list was, with the
     scripts under it, grouped by example folder. Keep that list in step with
     the Examples page.
@@ -53,39 +53,39 @@
     <tab type="examples" visible="no" title="" intro=""/>
     <tab type="usergroup" visible="yes" url="@ref example_scripts" title="Examples">
       <tab type="usergroup" visible="yes" title="01 Basics">
-        <tab type="user" visible="yes" url="@ref bare_minimum.py" title="Bare Minimum"/>
-        <tab type="user" visible="yes" url="@ref blink.py" title="Blink"/>
-        <tab type="user" visible="yes" url="@ref analog_read_serial.py" title="Analog Read Serial"/>
-        <tab type="user" visible="yes" url="@ref digital_read_serial.py" title="Digital Read Serial"/>
-        <tab type="user" visible="yes" url="@ref fade.py" title="Fade"/>
-        <tab type="user" visible="yes" url="@ref read_analog_voltage.py" title="Read Analog Voltage"/>
+        <tab type="user" visible="yes" url="@ref 01_basics/bare_minimum/main.py" title="Bare Minimum"/>
+        <tab type="user" visible="yes" url="@ref 01_basics/blink/main.py" title="Blink"/>
+        <tab type="user" visible="yes" url="@ref 01_basics/analog_read_serial/main.py" title="Analog Read Serial"/>
+        <tab type="user" visible="yes" url="@ref 01_basics/digital_read_serial/main.py" title="Digital Read Serial"/>
+        <tab type="user" visible="yes" url="@ref 01_basics/fade/main.py" title="Fade"/>
+        <tab type="user" visible="yes" url="@ref 01_basics/read_analog_voltage/main.py" title="Read Analog Voltage"/>
       </tab>
       <tab type="usergroup" visible="yes" title="02 Digital">
-        <tab type="user" visible="yes" url="@ref blink_without_delay.py" title="Blink Without Delay"/>
-        <tab type="user" visible="yes" url="@ref button.py" title="Button"/>
-        <tab type="user" visible="yes" url="@ref debounce.py" title="Debounce"/>
-        <tab type="user" visible="yes" url="@ref digital_input_pullup.py" title="Digital Input Pullup"/>
-        <tab type="user" visible="yes" url="@ref state_change_detection.py" title="State Change Detection"/>
-        <tab type="user" visible="yes" url="@ref tone_melody.py" title="Tone Melody"/>
-        <tab type="user" visible="yes" url="@ref tone_pitch_follower.py" title="Tone Pitch Follower"/>
+        <tab type="user" visible="yes" url="@ref 02_digital/blink_without_delay/main.py" title="Blink Without Delay"/>
+        <tab type="user" visible="yes" url="@ref 02_digital/button/main.py" title="Button"/>
+        <tab type="user" visible="yes" url="@ref 02_digital/debounce/main.py" title="Debounce"/>
+        <tab type="user" visible="yes" url="@ref 02_digital/digital_input_pullup/main.py" title="Digital Input Pullup"/>
+        <tab type="user" visible="yes" url="@ref 02_digital/state_change_detection/main.py" title="State Change Detection"/>
+        <tab type="user" visible="yes" url="@ref 02_digital/tone_melody/main.py" title="Tone Melody"/>
+        <tab type="user" visible="yes" url="@ref 02_digital/tone_pitch_follower/main.py" title="Tone Pitch Follower"/>
       </tab>
       <tab type="usergroup" visible="yes" title="03 Analog">
-        <tab type="user" visible="yes" url="@ref analog_in_out_serial.py" title="Analog In Out Serial"/>
-        <tab type="user" visible="yes" url="@ref calibration.py" title="Calibration"/>
-        <tab type="user" visible="yes" url="@ref smoothing.py" title="Smoothing"/>
+        <tab type="user" visible="yes" url="@ref 03_analog/analog_in_out_serial/main.py" title="Analog In Out Serial"/>
+        <tab type="user" visible="yes" url="@ref 03_analog/calibration/main.py" title="Calibration"/>
+        <tab type="user" visible="yes" url="@ref 03_analog/smoothing/main.py" title="Smoothing"/>
       </tab>
       <tab type="usergroup" visible="yes" title="04 Communication">
-        <tab type="user" visible="yes" url="@ref ascii_table.py" title="ASCII Table"/>
-        <tab type="user" visible="yes" url="@ref graph.py" title="Graph"/>
-        <tab type="user" visible="yes" url="@ref i2c_scanner.py" title="I2C Scanner"/>
-        <tab type="user" visible="yes" url="@ref physical_pixel.py" title="Physical Pixel"/>
-        <tab type="user" visible="yes" url="@ref uart_loopback.py" title="UART Loopback"/>
+        <tab type="user" visible="yes" url="@ref 04_communication/ascii_table/main.py" title="ASCII Table"/>
+        <tab type="user" visible="yes" url="@ref 04_communication/graph/main.py" title="Graph"/>
+        <tab type="user" visible="yes" url="@ref 04_communication/i2c_scanner/main.py" title="I2C Scanner"/>
+        <tab type="user" visible="yes" url="@ref 04_communication/physical_pixel/main.py" title="Physical Pixel"/>
+        <tab type="user" visible="yes" url="@ref 04_communication/uart_loopback/main.py" title="UART Loopback"/>
       </tab>
       <tab type="usergroup" visible="yes" title="Phyduino Pico">
-        <tab type="user" visible="yes" url="@ref analog_averaging.py" title="Analog Averaging"/>
-        <tab type="user" visible="yes" url="@ref analog_differential.py" title="Analog Differential"/>
-        <tab type="user" visible="yes" url="@ref vbus_monitor.py" title="VBUS Monitor"/>
-        <tab type="user" visible="yes" url="@ref usb_pd_power.py" title="USB-PD Power"/>
+        <tab type="user" visible="yes" url="@ref phyduino_pico/analog_averaging/main.py" title="Analog Averaging"/>
+        <tab type="user" visible="yes" url="@ref phyduino_pico/analog_differential/main.py" title="Analog Differential"/>
+        <tab type="user" visible="yes" url="@ref phyduino_pico/vbus_monitor/main.py" title="VBUS Monitor"/>
+        <tab type="user" visible="yes" url="@ref phyduino_pico/usb_pd_power/main.py" title="USB-PD Power"/>
       </tab>
     </tab>
   </navindex>

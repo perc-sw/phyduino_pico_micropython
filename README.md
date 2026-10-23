@@ -114,110 +114,52 @@ Errors say what went wrong, e.g. `pin("A3")` reminds you that A3 is analogue onl
 ## Examples
 
 The examples are in folders named after the Arduino IDE's example categories, with
-board-specific ones in `phyduino_pico/`. Each is laid out like an Arduino sketch: `setup()` runs
-once, then `loop()` runs over and over; leave the `main()` at the end of each file as it is. Each file's header comment says what to connect and what it
-prints. Run one with MicroPico's **Run**, or `mpremote run examples/01_basics/blink.py` (after
-copying `phyduino.py` to the board).
+board-specific ones in `phyduino_pico/`. Each example is a `main.py` in its own folder (like an
+Arduino sketch folder), because MicroPython runs `main.py` each time the board starts. Each is laid
+out like an Arduino sketch: `setup()` runs once, then `loop()` runs over and over; leave the
+`main()` at the end of each file as it is. Each file's header comment says what to connect and what
+it prints.
+
+Copy `phyduino.py` to the board first (not needed on the Phyduino Pico firmware, which has it
+built in), then either:
+
+- run an example without saving it: MicroPico's **Run**, or
+  `mpremote run examples/01_basics/blink/main.py`;
+- or copy its `main.py` to the board so it runs every time the board starts:
+  `mpremote cp examples/01_basics/blink/main.py :` then press RESET.
 
 | Example | Shows |
 |---|---|
-| `01_basics/bare_minimum.py` | The empty setup() and loop() to start a program from |
-| `01_basics/blink.py` | Blinking the on-board LED |
-| `01_basics/analog_read_serial.py` | All six analogue pins as 12-bit codes |
-| `01_basics/digital_read_serial.py` | Printing the state of a pushbutton |
-| `01_basics/fade.py` | Fading the on-board LED with PWM |
-| `01_basics/read_analog_voltage.py` | All six analogue pins in millivolts |
-| `02_digital/blink_without_delay.py` | Timing with time.ticks_ms() instead of time.sleep() |
-| `02_digital/button.py` | Lighting the LED while a pushbutton is pressed |
-| `02_digital/debounce.py` | Ignoring contact bounce so each press counts once |
-| `02_digital/digital_input_pullup.py` | A pushbutton with the pin's own pull-up resistor |
-| `02_digital/state_change_detection.py` | Counting presses by detecting the edge |
-| `02_digital/tone_melody.py` | Playing a tune on a piezo buzzer |
-| `02_digital/tone_pitch_follower.py` | A pitch that follows an analogue input |
-| `03_analog/analog_in_out_serial.py` | Setting LED brightness from a potentiometer |
-| `03_analog/calibration.py` | Learning a sensor's range at start-up |
-| `03_analog/smoothing.py` | A running average of the last 10 readings |
-| `04_communication/ascii_table.py` | Characters with their decimal, hex, octal and binary values |
-| `04_communication/graph.py` | Sending readings to a serial plotter |
-| `04_communication/i2c_scanner.py` | Finding I2C devices on SDA/SCL |
-| `04_communication/physical_pixel.py` | Switching the LED from the computer |
-| `04_communication/uart_loopback.py` | UART0 with D1 jumpered to D0 |
-| `phyduino_pico/analog_averaging.py` | How averaging steadies a reading |
-| `phyduino_pico/analog_differential.py` | Voltage between two pins (A3-A4 true differential, A0-A1 computed) |
-| `phyduino_pico/vbus_monitor.py` | USB-C supply voltage and CPU temperature |
-| `phyduino_pico/usb_pd_power.py` | Asking a USB-PD charger for 9-20 V (output on UART0, since the charger takes the USB port) |
+| `01_basics/bare_minimum/` | The empty setup() and loop() to start a program from |
+| `01_basics/blink/` | Blinking the on-board LED |
+| `01_basics/analog_read_serial/` | All six analogue pins as 12-bit codes |
+| `01_basics/digital_read_serial/` | Printing the state of a pushbutton |
+| `01_basics/fade/` | Fading the on-board LED with PWM |
+| `01_basics/read_analog_voltage/` | All six analogue pins in millivolts |
+| `02_digital/blink_without_delay/` | Timing with time.ticks_ms() instead of time.sleep() |
+| `02_digital/button/` | Lighting the LED while a pushbutton is pressed |
+| `02_digital/debounce/` | Ignoring contact bounce so each press counts once |
+| `02_digital/digital_input_pullup/` | A pushbutton with the pin's own pull-up resistor |
+| `02_digital/state_change_detection/` | Counting presses by detecting the edge |
+| `02_digital/tone_melody/` | Playing a tune on a piezo buzzer |
+| `02_digital/tone_pitch_follower/` | A pitch that follows an analogue input |
+| `03_analog/analog_in_out_serial/` | Setting LED brightness from a potentiometer |
+| `03_analog/calibration/` | Learning a sensor's range at start-up |
+| `03_analog/smoothing/` | A running average of the last 10 readings |
+| `04_communication/ascii_table/` | Characters with their decimal, hex, octal and binary values |
+| `04_communication/graph/` | Sending readings to a serial plotter |
+| `04_communication/i2c_scanner/` | Finding I2C devices on SDA/SCL |
+| `04_communication/physical_pixel/` | Switching the LED from the computer |
+| `04_communication/uart_loopback/` | UART0 with D1 jumpered to D0 |
+| `phyduino_pico/analog_averaging/` | How averaging steadies a reading |
+| `phyduino_pico/analog_differential/` | Voltage between two pins (A3-A4 true differential, A0-A1 computed) |
+| `phyduino_pico/vbus_monitor/` | USB-C supply voltage and CPU temperature |
+| `phyduino_pico/usb_pd_power/` | Asking a USB-PD charger for 9-20 V (output on UART0, since the charger takes the USB port) |
 
-## Building the Phyduino Pico firmware
+## Development
 
-The stock Raspberry Pi Pico firmware is built for that board's 2 MB flash, so it leaves 14 MB of
-the Phyduino Pico's 16 MB unused. `boards/PHYDUINO_PICO/` is a MicroPython board definition that
-uses the full 16 MB (about 15 MB for files), names the pins `Pin("D7")`, `Pin("LED")` (GPIO5), and
-has `phyduino.py` built in. A copy of `phyduino.py` on the board still takes priority over the
-built-in one.
-
-```
-tools/build_firmware.sh            # writes dist/phyduino_pico-<version>-micropython-<version>.uf2
-```
-
-The script clones MicroPython (unchanged, at the version pinned in the script) into `build/` and
-builds the board from this repository. It needs git, make, cmake, python3 and the Arm GNU toolchain;
-on Windows, run it in WSL (Ubuntu). Installing the new firmware erases the board's
-files, so copy them off first (`mpremote cp :main.py .`).
-
-## Repository layout
-
-```
-phyduino.py          The library (the only file the board needs)
-examples/            Example scripts, by Arduino example category (01_basics/, ...) and phyduino_pico/
-tests/               PC-side tests (pytest + a fake machine module), hardware checklist
-docs/                GitHub Pages site; the API reference is built into docs/wiki/
-boards/PHYDUINO_PICO/ MicroPython board definition (16 MB flash, pin names, phyduino.py frozen in)
-tools/               build_firmware.sh: builds the firmware UF2 into dist/
-Doxyfile             Doxygen settings for the API reference
-extras/doxygen/      API reference main page, topics, examples page, header, footer, layout, CSS
-.github/workflows/   CI (tests, mpy-cross, version check), docs build and GitHub Pages publishing
-.vscode/             Recommends the MicroPico extension
-```
-
-## Documentation
-
-The API reference is generated by [Doxygen](https://www.doxygen.nl/) 1.17 from the docstrings in
-`phyduino.py`. Docstrings use Doxygen commands (`@brief`, `@param`, `@return`, `@exception`,
-`@ingroup`); names starting with `_` are private and left out. From the repository root:
-
-```
-doxygen
-```
-
-then open `docs/index.html`. The output in `docs/wiki/` is git-ignored. On GitHub, the Docs workflow
-builds it on every push and pull request (any warning, such as an undocumented function, fails the
-build) and publishes `docs/` to GitHub Pages from `main`. That needs **Settings → Pages → Source**
-set to **GitHub Actions**.
-
-When adding a function, give it a docstring with `@ingroup` and one of the topics in
-`extras/doxygen/api.dox`, and add it to the table in `extras/doxygen/mainpage.md`. When adding an
-example, put it in the folder for its Arduino example category (e.g. `02_digital/`), or in
-`phyduino_pico/` if it has no Arduino match, and register it in `extras/doxygen/examples.dox` and
-`extras/doxygen/DoxygenLayout.xml`. Example file names must be unique across the folders.
-
-## Tests
-
-PC-side tests run `phyduino.py` and every example against a fake `machine` module that records pin
-set-up and SPI/I2C traffic. From the repository root:
-
-```
-python -m venv .venv
-.venv\Scripts\python -m pip install -r requirements-dev.txt
-.venv\Scripts\python -m pytest tests
-.venv\Scripts\mpy-cross -march=armv6m phyduino.py    # checks it compiles for the RP2040
-```
-
-On GitHub, the CI workflow (`.github/workflows/ci.yml`) runs on every push and pull request. It
-runs the tests, compiles `phyduino.py` and every example with `mpy-cross`, and checks that the
-version in `phyduino.py` (`__version__`) matches `PROJECT_NUMBER` in `Doxyfile`, the version pill in
-`docs/index.html` and a `CHANGELOG.md` section. To release, change all four together.
-
-Tests on a real board are in `tests/hardware-checklist.md`.
+Notes for developing the library (building the firmware, documentation, tests, releases and the
+hardware checklists) are in `docs/notes/`. Start with `docs/notes/development.html`.
 
 ## Licence
 

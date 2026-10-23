@@ -13,5 +13,5 @@ First version.
   - `usb_pd()`: STUSB4500 USB-PD profiles, contract and renegotiation (working registers only, 10 W limit).
   - `i2c()`, `spi()` and `uart()` on the header pins.
 - `boards/PHYDUINO_PICO/`: MicroPython board definition (16 MB flash, board pin names, `phyduino.py` frozen in) and `tools/build_firmware.sh` to build it against a pinned MicroPython release.
-- 25 examples in Arduino-style category folders (`01_basics/`, `02_digital/`, `03_analog/`, `04_communication/`) named after the Arduino IDE examples, plus `phyduino_pico/` for board features, each with `setup()` and `loop()`; host tests with a fake `machine` module, and a hardware checklist.
+- 25 examples in Arduino-style category folders (`01_basics/`, `02_digital/`, `03_analog/`, `04_communication/`) named after the Arduino IDE examples, plus `phyduino_pico/` for board features. Each is a `main.py` in its own folder (e.g. `01_basics/blink/main.py`), so it can be copied to the board and run at start-up, with `setup()` and `loop()`; host tests with a fake `machine` module, and a hardware checklist.
 - Documentation site (`docs/`) with a Doxygen API reference generated from the docstrings, published to GitHub Pages.

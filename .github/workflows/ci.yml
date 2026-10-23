@@ -10,7 +10,7 @@ name: CI
 on:
   push:
   pull_request:
-
+  workflow_call:  # run by release.yml before it builds the firmware
 permissions:
   contents: read
 
@@ -38,9 +38,10 @@ jobs:
       - name: Compile for the RP2040
         run: |
           mkdir -p "$RUNNER_TEMP/mpy"
-          for f in phyduino.py examples/*/*.py; do
+          for f in phyduino.py examples/*/*/main.py; do
             echo "$f"
-            .venv/bin/mpy-cross -march=armv6m -o "$RUNNER_TEMP/mpy/$(basename "$f" .py).mpy" "$f"
+            out="$(echo "${f%.py}" | tr / _).mpy"  # every example is main.py, so name by path
+            .venv/bin/mpy-cross -march=armv6m -o "$RUNNER_TEMP/mpy/$out" "$f"
           done
 
   versions:
