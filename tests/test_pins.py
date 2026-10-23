@@ -111,3 +111,44 @@ def test_uarts_use_header_pins(pd):
     assert (u1.id, u1.kwargs["tx"].id, u1.kwargs["rx"].id, u1.kwargs["baudrate"]) == (1, 8, 9, 9600)
     with pytest.raises(ValueError):
         pd.uart(2)
+
+
+def test_pwm_sets_up_pin_frequency_and_duty(pd, fake):
+    glow = pd.pwm("LED")
+    assert (glow.pin.id, glow.pin.mode, glow.freq(), glow.duty_u16()) == (5, fake.Pin.OUT, 1000, 0)
+    buzzer = pd.pwm("d3", freq=440, duty_u16=32768)
+    assert (buzzer.pin.id, buzzer.freq(), buzzer.duty_u16()) == (7, 440, 32768)
+
+
+def test_pwm_on_d19_uses_12ma_drive(pd, fake):
+    pd.pwm("D19")
+    assert fake.mem32[GPIO25_PAD] & 0x30 == 0x30
+
+
+@pytest.mark.parametrize("name", ["A3", "A4", "A5"])
+def test_pwm_not_on_external_adc_pins(pd, name):
+    with pytest.raises(ValueError, match="external ADC"):
+        pd.pwm(name)
+
+
+@pytest.mark.parametrize("first, second", [
+    ("D1", "D8"), ("D0", "D9"), ("D4", "D18"), ("D5", "D19"),
+    ("D6", "A0"), ("D11", "A1"), ("D12", "A2"),
+])
+def test_pwm_refuses_shared_output(pd, first, second):
+    pd.pwm(first)
+    with pytest.raises(ValueError, match=first):
+        pd.pwm(second)
+    pd.pin(first, "out")  # frees the output
+    pd.pwm(second)
+
+
+def test_pwm_same_pin_again_or_by_other_name(pd):
+    pd.pwm("D18")
+    pd.pwm("D18", freq=50)
+    pd.pwm("SDA")
+
+
+def test_pwm_slice_neighbours_allowed(pd):
+    pd.pwm("D2")
+    pd.pwm("D3")

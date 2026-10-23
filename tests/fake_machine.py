@@ -13,6 +13,7 @@ def reset():
     I2C.instances.clear()
     I2C.devices.clear()
     UART.instances.clear()
+    PWM.instances.clear()
     mem32.clear()
 
 
@@ -116,6 +117,26 @@ class UART:
 
     def read(self, count=None):
         return None  # nothing wired to RX
+
+
+class PWM:
+    instances = []
+
+    def __init__(self, pin):
+        self.pin = pin
+        self.frequency = None
+        self.duty = None
+        PWM.instances.append(self)
+
+    def freq(self, value=None):
+        if value is None:
+            return self.frequency
+        self.frequency = value
+
+    def duty_u16(self, value=None):
+        if value is None:
+            return self.duty
+        self.duty = value
 
 
 class _Mem32(dict):

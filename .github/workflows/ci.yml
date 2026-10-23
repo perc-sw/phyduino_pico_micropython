@@ -38,7 +38,7 @@ jobs:
       - name: Compile for the RP2040
         run: |
           mkdir -p "$RUNNER_TEMP/mpy"
-          for f in phyduino.py examples/*.py; do
+          for f in phyduino.py examples/*/*.py; do
             echo "$f"
             .venv/bin/mpy-cross -march=armv6m -o "$RUNNER_TEMP/mpy/$(basename "$f" .py).mpy" "$f"
           done
