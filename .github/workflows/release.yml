@@ -1,0 +1,104 @@
+# On a version tag (v0.1.0-rc.1, v0.1.0, ...):
+#   ci      - the CI workflow (tests, mpy-cross, version check) on the tagged commit
+#   check   - the tag is "v" + __version__ in phyduino.py, and CHANGELOG.md has a
+#             dated section for it (not "(unreleased)")
+#   build   - builds the Phyduino Pico firmware with tools/build_firmware.sh
+#   release - creates the GitHub release with the UF2 and its SHA-256 attached;
+#             tags with a "-" (e.g. v0.1.0-rc.1) are marked as pre-releases
+#
+# To release: date the CHANGELOG.md section, commit, then
+#   git tag v<version> && git push origin v<version>
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+# One run per tag; a re-pushed tag waits for the earlier run
+concurrency:
+  group: release-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  check:
+    runs-on: ubuntu-24.04  # pinned; change deliberately
+    steps:
+      - uses: actions/checkout@v7
+      - name: Tag, version and changelog match
+        run: |
+          version=$(sed -n 's/^__version__ = "\(.*\)"$/\1/p' phyduino.py)
+          echo "tag: $GITHUB_REF_NAME, phyduino.py: $version"
+          status=0
+          [ "$GITHUB_REF_NAME" = "v$version" ] ||
+            { echo "::error file=phyduino.py::tag $GITHUB_REF_NAME is not v$version"; status=1; }
+          heading=$(grep -m1 "^## $version\b" CHANGELOG.md || true)
+          [ -n "$heading" ] ||
+            { echo "::error file=CHANGELOG.md::no section for $version"; status=1; }
+          case "$heading" in *nreleased*)
+            echo "::error file=CHANGELOG.md::$version is still (unreleased); add the release date"; status=1 ;;
+          esac
+          exit $status
+
+  build:
+    needs: [ci, check]
+    runs-on: ubuntu-24.04  # pinned; change deliberately
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install the Arm GNU toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends gcc-arm-none-eabi libnewlib-arm-none-eabi
+          arm-none-eabi-gcc --version
+
+      - name: Build firmware
+        run: tools/build_firmware.sh
+
+      - name: SHA-256 checksums
+        working-directory: dist
+        run: |
+          for f in *.uf2; do sha256sum "$f" > "$f.sha256"; done
+          cat ./*.sha256
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: firmware
+          path: dist/
+          if-no-files-found: error
+
+  release:
+    needs: build
+    runs-on: ubuntu-24.04  # pinned; change deliberately
+    permissions:
+      contents: write  # create the release and upload its files
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: firmware
+          path: dist
+
+      # Notes are the tag's CHANGELOG.md section; a re-run replaces the files
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          awk -v h="## $version" 'index($0, "## ") == 1 { if (p) exit; p = (index($0, h) == 1); next } p' \
+            CHANGELOG.md > "$RUNNER_TEMP/notes.md"
+          prerelease=""
+          case "$version" in *-*) prerelease="--prerelease" ;; esac
+          if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" dist/* --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" dist/* --verify-tag $prerelease \
+              --title "Phyduino Pico MicroPython $GITHUB_REF_NAME" \
+              --notes-file "$RUNNER_TEMP/notes.md"
+          fi
