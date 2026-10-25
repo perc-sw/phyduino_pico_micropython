@@ -20,8 +20,8 @@ IDE's example categories. Each example is a `main.py` in its own folder, because
 MicroPython runs `main.py` each time the board starts. Each page below explains
 what the script does, how to wire it and what it prints, followed by its source.
 
-Copy `phyduino.py` to the board first (the Phyduino Pico firmware has it built
-in), then run a script from VS Code (MicroPico's **Run**), PyCharm, or with
+With the Phyduino Pico firmware on the board (on the standard firmware, copy
+`phyduino.py` to the board first), run a script from VS Code (MicroPico's **Run**), PyCharm, or with
 `mpremote run examples/<folder>/<name>/main.py`. To have it run every time the
 board starts, copy its `main.py` to the board:
 `mpremote cp examples/<folder>/<name>/main.py :`, then press RESET.

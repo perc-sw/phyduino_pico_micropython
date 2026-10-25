@@ -3,7 +3,8 @@
 A one-file MicroPython library for the University of Toronto Department of
 Physics Phyduino Pico. Set-up steps are on the [home page](../index.html).
 
-Copy `phyduino.py` to the board next to your own `main.py`, then:
+It is built into the Phyduino Pico firmware, so your own `main.py` can use it
+straight away:
 
 ```{.py}
 import phyduino as mcu
@@ -13,8 +14,8 @@ print(mcu.analog_volts("A3"))
 button = mcu.pin("D2", "in", pull="up")
 ```
 
-The library runs on the standard Raspberry Pi Pico (RP2040) MicroPython
-firmware. Everything else in MicroPython (`time`, `machine.PWM`, ...) works as
+On the standard Raspberry Pi Pico (RP2040) MicroPython firmware, copy
+`phyduino.py` to the board next to your `main.py`. Everything else in MicroPython (`time`, `machine.PWM`, ...) works as
 described in the [MicroPython documentation](https://docs.micropython.org/en/latest/rp2/quickref.html);
 use gpio() to find the RP2040 GPIO behind a pin name.
 

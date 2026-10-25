@@ -1,7 +1,7 @@
 """@package phyduino
 @brief Phyduino Pico board library for MicroPython.
 
-Copy this file to the board next to your own main.py, then:
+Built into the Phyduino Pico firmware, so your own main.py can use it:
 @code
 import phyduino as mcu
 
@@ -17,7 +17,8 @@ A0-A2 are read by the RP2040 (0-3.3 V). A3-A5 are read by the on-board
 MAX11635 ADC (0-2.048 V) and are analogue only. The same functions work on
 all six.
 
-Runs on the standard Raspberry Pi Pico (RP2040) MicroPython firmware.
+Also runs on the standard Raspberry Pi Pico (RP2040) MicroPython firmware:
+copy this file to the board next to your main.py.
 Licence: GPL-3.0.
 """
 

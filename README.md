@@ -8,15 +8,17 @@ A one-file MicroPython library for the [Phyduino Pico](https://github.com/perc-s
 used in the University of Toronto, Department of Physics,
 "[Introduction to Electronics](https://plrs.physics.utoronto.ca/course-listing/)" course.
 
-Documentation: <https://perc-sw.github.io/phyduino_pico_micropython/>
+### Documentation: <https://perc-sw.github.io/phyduino_pico_micropython/>
 
-It runs on the standard Raspberry Pi Pico (RP2040) MicroPython firmware and adds what that firmware
-doesn't know about this board:
+It is built into the Phyduino Pico MicroPython firmware (on this repository's Releases page) and
+adds what MicroPython doesn't know about this board:
 
-- the pin names printed on the board (`"D7"`, `"A3"`, ...) instead of RP2040 GPIO numbers;
-- the on-board LED, which is on GPIO5 (MicroPython's own `Pin("LED")` is GPIO25, the D19 pin here);
-- A3-A5, which are read by the on-board MAX11635 ADC rather than the RP2040;
-- the USB-C supply voltage (VBUS) and the USB-PD controller.
+- The pin names printed on the board (`"D7"`, `"A3"`, ...) instead of RP2040 GPIO numbers.
+- The on-board LED.
+- The external ADC interface for the on-board MAX11635 ADC (`"A3"` to `"A5"`).
+- The USB-C supply voltage (VBUS) and the USB-PD controller.
+
+### Example script
 
 ```python
 import phyduino as mcu
@@ -29,60 +31,67 @@ print(button.value())
 
 ## Set up
 
-The board runs `main.py` each time it starts. It also needs the library, `phyduino.py`: either
-built into the Phyduino Pico firmware, or copied onto the board next to your `main.py`.
+The Phyduino Pico runs the `main.py` each time it starts. The firmware has the library,
+`phyduino.py`, built in, so your `main.py` is the only file you put on the board.
 
-### 1. Put MicroPython on the board (once)
+### 1. Put the Phyduino Pico firmware on the board (once)
 
-Choose one firmware:
-
-- **Phyduino Pico firmware (recommended).** Download
-  `phyduino_pico-<version>-micropython-<version>.uf2` from this repository's
-  [Releases](https://github.com/perc-sw/phyduino_pico_micropython/releases) page. It uses the board's full 16 MB flash (about 15 MB for your files),
-  knows the board's pin names (`Pin("D7")`, `Pin("LED")`), and has `phyduino.py` built in, so there
-  is nothing to copy in step 2.
-- **Standard Raspberry Pi Pico firmware.** Download the latest **Raspberry Pi Pico** (RP2040) UF2
-  from <https://micropython.org/download/RPI_PICO/>, then copy `phyduino.py` to the board in step 2.
-  It only uses 2 MB of the flash (about 1.4 MB for files).
-
-Then, for either one:
-
-1. Slide the boot switch (SW1) to the boot position and press RESET (SW2). The board appears as a
+1. Download `phyduino_pico-<version>-micropython-<version>.uf2` from this repository's
+   [Releases](https://github.com/perc-sw/phyduino_pico_micropython/releases) page.
+2. Slide the boot switch (SW1) to the UF2 position and press RESET (SW2). The board appears as a
    drive named `RPI-RP2`.
-2. Copy the UF2 onto that drive. Slide SW1 back and press RESET.
+3. Copy the UF2 onto that drive. Slide SW1 to the opposite position and press RESET.
 
-Installing a firmware erases the files on the board, so copy off anything you want to keep first
+***Installing MicroPython firmware erases the files on the board, back-up any files/code before downloading.***
 (`mpremote cp :main.py .`).
 
-### 2. Copy the library and run your code
+The firmware uses the board's full 16 MB flash (about 15 MB for your files), knows the board's pin
+names (`Pin("D7")`, `Pin("LED")`) and has `phyduino.py` built in. To check that it is the one on
+the board:
 
-On the Phyduino Pico firmware, skip copying `phyduino.py`: it is built in. A copy on the board
-takes priority over the built-in one, so delete any old copy to use the built-in version.
+```
+mpremote exec "import os; print(os.uname().machine)"   # Phyduino Pico with RP2040
+```
+
+### 2. Run your code
+
+A `phyduino.py` on the board takes priority over the built-in one, so delete any old copy
+(`mpremote rm :phyduino.py`) to use the version in the firmware.
 
 **VS Code**
 
 1. Install the [MicroPico](https://marketplace.visualstudio.com/items?itemName=paulober.pico-w-go)
    extension. (Opening this repository in VS Code offers to install it.)
-2. Make a folder for your project with `phyduino.py` and your `main.py` in it, and open the folder.
+2. Make a folder for your project with your `main.py` in it, and open the folder.
 3. Run **MicroPico: Initialize MicroPico Project** from the Command Palette (Ctrl+Shift+P). This
    adds autocompletion for MicroPython's built-in modules.
-4. With the board plugged in, right-click `phyduino.py` and choose **Upload file to Pico**.
-5. Open `main.py` and click **Run** in the status bar, or upload it as well so it runs at start-up.
+4. With the board plugged in, open `main.py` and click **Run** in the status bar, or right-click it
+   and choose **Upload file to Pico** so it runs at start-up.
 
 **PyCharm**
 
 1. Install the **MicroPython Tools** plugin (Settings → Plugins → Marketplace).
-2. Make a project with `phyduino.py` and your `main.py`, and connect to the board from the
-   plugin's tool window.
-3. Upload `phyduino.py` to the board, then run or upload `main.py`.
+2. Make a project with your `main.py`, and connect to the board from the plugin's tool window.
+3. Run `main.py`, or upload it so it runs at start-up.
 
 **Command line (either IDE's terminal)**
 
 ```
 pip install mpremote
-mpremote cp phyduino.py :         # copy the library to the board
 mpremote run main.py              # run your file without copying it
 mpremote cp main.py :             # or copy it so it runs at start-up
+```
+
+### Standard Raspberry Pi Pico firmware
+
+The library also runs on the standard Raspberry Pi Pico (RP2040) firmware from
+<https://micropython.org/download/RPI_PICO/>, installed the same way. That firmware only uses 2 MB
+of the flash (about 1.4 MB for files) and doesn't know the board's pin names, so `Pin("LED")` is
+GPIO25 (the D19 pin) rather than the on-board LED. Copy `phyduino.py` from this repository to the
+board as well as your `main.py`:
+
+```
+mpremote cp phyduino.py :         # copy the library to the board
 ```
 
 ## Pins
@@ -137,8 +146,8 @@ out like an Arduino sketch: `setup()` runs once, then `loop()` runs over and ove
 `main()` at the end of each file as it is. Each file's header comment says what to connect and what
 it prints.
 
-Copy `phyduino.py` to the board first (not needed on the Phyduino Pico firmware, which has it
-built in), then either:
+With the Phyduino Pico firmware on the board (on the standard firmware, copy `phyduino.py` to the
+board first), either:
 
 - run an example without saving it: MicroPico's **Run**, or
   `mpremote run examples/01_basics/blink/main.py`;
