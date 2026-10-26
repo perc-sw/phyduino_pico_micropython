@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Builds MicroPython firmware for the Phyduino Pico from boards/PHYDUINO_PICO,
-# with phyduino.py frozen in.
+# with phyduino.py and arduino.py frozen in.
 #
 #   tools/build_firmware.sh          build dist/phyduino_pico-<lib>-micropython-<mp>.uf2
 #   tools/build_firmware.sh clean    remove this board's build directory first
@@ -76,7 +76,7 @@ make -C "$MPY_DIR/ports/rp2" BOARD_DIR="$BOARD_DIR" BUILD="$BUILD_DIR" submodule
     { cat "$BUILD_DIR.submodules.log"; exit 1; }
 
 # --- Build -----------------------------------------------------------------------
-step 3/5 "mpy-cross (compiles the frozen phyduino.py)"
+step 3/5 "mpy-cross (compiles the frozen phyduino.py and arduino.py)"
 make -C "$MPY_DIR/mpy-cross" -j "$JOBS"
 
 step 4/5 "Firmware, $JOBS jobs"

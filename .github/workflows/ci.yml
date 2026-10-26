@@ -1,7 +1,7 @@
 # On each push / pull request:
-#   host-tests - PC-side tests: phyduino.py and every example against a fake
+#   host-tests - PC-side tests: phyduino.py, arduino.py and every example against a fake
 #                machine module (tests/), with pytest
-#   compile    - phyduino.py and every example through mpy-cross for the
+#   compile    - phyduino.py, arduino.py and every example through mpy-cross for the
 #                RP2040 (armv6m), which catches syntax MicroPython rejects
 #   versions   - __version__ in phyduino.py matches the Doxyfile, the docs
 #                landing page and a CHANGELOG.md section
@@ -38,7 +38,7 @@ jobs:
       - name: Compile for the RP2040
         run: |
           mkdir -p "$RUNNER_TEMP/mpy"
-          for f in phyduino.py examples/*/*/main.py; do
+          for f in phyduino.py arduino.py examples/*/*/main.py; do
             echo "$f"
             out="$(echo "${f%.py}" | tr / _).mpy"  # every example is main.py, so name by path
             .venv/bin/mpy-cross -march=armv6m -o "$RUNNER_TEMP/mpy/$out" "$f"

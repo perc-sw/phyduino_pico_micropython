@@ -14,6 +14,7 @@ def reset():
     I2C.devices.clear()
     UART.instances.clear()
     PWM.instances.clear()
+    Timer.instances.clear()
     mem32.clear()
 
 
@@ -137,6 +138,28 @@ class PWM:
         if value is None:
             return self.duty
         self.duty = value
+
+
+class Timer:
+    ONE_SHOT = 0
+    PERIODIC = 1
+    instances = []
+
+    def __init__(self, id=-1, mode=PERIODIC, period=-1, callback=None):
+        self.mode = mode
+        self.period = period
+        self.callback = callback
+        self.running = True
+        Timer.instances.append(self)
+
+    def deinit(self):
+        self.running = False
+
+    def fire(self):
+        """Test helper: the period has passed."""
+        if self.running:
+            self.running = self.mode == Timer.PERIODIC
+            self.callback(self)
 
 
 class _Mem32(dict):

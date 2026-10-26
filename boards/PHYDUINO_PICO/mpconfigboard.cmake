@@ -10,5 +10,5 @@ if(NOT DEFINED MICROPY_HW_FLASH_STORAGE_BYTES)
     set(MICROPY_HW_FLASH_STORAGE_BYTES 15728640)  # PICO_FLASH_SIZE_BYTES - (1 * 1024 * 1024) = 16MB - 1MB
 endif()
 
-# Freeze phyduino.py into the firmware
+# Freeze phyduino.py and arduino.py into the firmware
 set(MICROPY_FROZEN_MANIFEST ${MICROPY_BOARD_DIR}/manifest.py)

@@ -1,5 +1,5 @@
 # Doxyfile 1.17.0
-# API reference for phyduino.py, written to docs/wiki/ (git-ignored; published
+# API reference for phyduino.py and arduino.py, written to docs/wiki/ (git-ignored; published
 # by .github/workflows/docs.yml). Run "doxygen" in the repository root.
 # Only the settings that differ from Doxygen's defaults are listed.
 
@@ -9,6 +9,7 @@ PROJECT_BRIEF          = "Introduction to Electronics - MicroPython library"
 OUTPUT_DIRECTORY       = docs
 HTML_OUTPUT            = wiki
 INPUT                  = phyduino.py \
+                         arduino.py \
                          extras/doxygen/mainpage.md \
                          extras/doxygen/api.dox \
                          extras/doxygen/examples.dox

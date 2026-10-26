@@ -1,4 +1,4 @@
-"""Loads phyduino.py on the PC with fake `machine`, `micropython` and `time` functions."""
+"""Loads phyduino.py and arduino.py on the PC with fake `machine`, `micropython` and `time` functions."""
 
 import importlib
 import os
@@ -34,12 +34,16 @@ class FakeClock:
     def sleep_ms(self, ms):
         self.now_us += ms * 1000
 
+    def sleep_us(self, us):
+        self.now_us += us
+
 
 clock = FakeClock()
 time.ticks_us = clock.ticks_us
 time.ticks_ms = clock.ticks_ms
 time.ticks_diff = lambda new, old: new - old
 time.sleep_ms = clock.sleep_ms
+time.sleep_us = clock.sleep_us
 
 
 @pytest.fixture
@@ -51,6 +55,14 @@ def pd():
     import phyduino
 
     return importlib.reload(phyduino)
+
+
+@pytest.fixture
+def ard(pd):
+    """A freshly loaded arduino module, on top of a fresh phyduino."""
+    import arduino
+
+    return importlib.reload(arduino)
 
 
 @pytest.fixture

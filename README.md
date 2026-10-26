@@ -115,6 +115,33 @@ pin of a pair until you call `pin()` on the first.
 
 Errors say what went wrong, e.g. `pin("A3")` reminds you that A3 is analogue only.
 
+### Arduino-style functions (optional)
+
+The firmware also has `arduino.py` built in, for code that reads like an Arduino sketch:
+
+```python
+from arduino import *
+
+pinMode(13, OUTPUT)              # D13
+digitalWrite(13, HIGH)
+print(analogRead(A0))            # 0-1023, as on an Arduino
+analogWrite(3, 128)              # PWM on D3, 0-255
+```
+
+| Function | Does |
+|---|---|
+| `pinMode(pin, mode)` | `INPUT`, `OUTPUT`, `INPUT_PULLUP` or `INPUT_PULLDOWN` |
+| `digitalWrite(pin, value)`, `digitalRead(pin)` | `HIGH` or `LOW` |
+| `analogRead(pin)`, `analogReadResolution(bits)` | A0-A5 (or 0-5), 10 bits (0-1023) unless changed |
+| `analogWrite(pin, value)`, `analogWriteResolution(bits)`, `analogWriteFreq(hz)` | PWM, 8 bits (0-255) at 1 kHz unless changed |
+| `tone(pin, frequency, duration)`, `noTone(pin)` | A note on a piezo buzzer; returns straight away |
+| `delay(ms)`, `delayMicroseconds(us)`, `millis()`, `micros()` | Waits and time since start-up; `millis()` and `micros()` don't wrap round |
+| `map(value, fromLow, fromHigh, toLow, toHigh)`, `constrain(value, low, high)` | Rescale and limit a number |
+
+Pins are numbers (`13` is D13) or names (`"D13"`, `LED_BUILTIN`, `A0`-`A5`). Use `print()` for
+`Serial.print()`, and `mcu.i2c()`, `mcu.spi()` and `mcu.uart()` for Wire, SPI and Serial1.
+`from arduino import *` replaces Python's `map()` with the Arduino one.
+
 ## Examples
 
 The examples are in folders named after the Arduino IDE's example categories, with

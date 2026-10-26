@@ -1,6 +1,6 @@
 /*
  * Topics for the API reference. Each function, class and constant in
- * phyduino.py joins one with @ingroup in its docstring or ## comment; keep the
+ * phyduino.py and arduino.py joins one with @ingroup in its docstring or ## comment; keep the
  * table on the main page (extras/doxygen/mainpage.md) in step.
  */
 
@@ -71,4 +71,25 @@ for their methods.
 
 Most programs use the @ref analog functions instead. Use this for a scan of
 several channels or a differential reading in raw codes.
+*/
+
+/**
+@defgroup arduino Arduino-style functions
+@brief arduino.py: pinMode(), digitalWrite(), analogRead() and the rest, with Arduino's names and ranges.
+
+Optional, and built into the firmware next to phyduino.py:
+@code
+from arduino import *
+
+pinMode(LED_BUILTIN, OUTPUT)
+digitalWrite(LED_BUILTIN, HIGH)
+print(analogRead(A0))  # 0-1023
+@endcode
+
+Digital pins are numbers (13 is D13) or the board's names ("D13"). The
+@ref pins rules still apply: no D14-D17, A3-A5 are analogue only, and pairs
+of pins share a PWM output. Serial, Wire and SPI are not here: use print(),
+i2c(), spi() and uart() from phyduino.py.
+
+`from arduino import *` replaces Python's map() with the Arduino one.
 */
