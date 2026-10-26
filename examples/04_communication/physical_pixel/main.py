@@ -1,6 +1,6 @@
 # Turns the on-board LED on when it receives "H" and off when it receives "L"
-# from the computer. Type the letters in the REPL terminal (MicroPico's
-# terminal or mpremote) while the script runs.
+# from the computer. Type the letters in the REPL terminal (PyCharm's REPL
+# or mpremote) while the script runs.
 #
 # sys.stdin.read(1) waits for the next character, so loop() pauses until one
 # arrives.

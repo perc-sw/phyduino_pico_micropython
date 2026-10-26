@@ -11,10 +11,8 @@ __pycache__/
 build/
 dist/
 
-# Editors and tools: keep only the recommended-extensions file
-.vscode/*
-!.vscode/extensions.json
-.micropico
+# Editors and tools
+.vscode/
 .idea/
 .claude/
 CLAUDE.md

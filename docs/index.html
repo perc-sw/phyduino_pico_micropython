@@ -53,7 +53,7 @@
       <div class="spec-row">
         <span class="spec-pill">MicroPython</span>
         <span class="spec-pill">RP2040</span>
-        <span class="spec-pill">VS Code · PyCharm</span>
+        <span class="spec-pill">PyCharm · mpremote</span>
         <span class="spec-pill">Windows · Linux · macOS</span>
         <!-- Keep in step with __version__ in phyduino.py and PROJECT_NUMBER in Doxyfile -->
         <span class="spec-pill">v0.1.0-rc.1</span>
@@ -85,9 +85,6 @@
       <div class="step-body">
         Write your <code>main.py</code> and run it on the board:
         <ul>
-          <li><strong>VS Code</strong>: install the
-          <a href="https://marketplace.visualstudio.com/items?itemName=paulober.pico-w-go">MicroPico</a>
-          extension, open <code>main.py</code> and click <strong>Run</strong>.</li>
           <li><strong>PyCharm</strong>: install the <strong>MicroPython Tools</strong> plugin, then run <code>main.py</code>.</li>
           <li><strong>Terminal</strong>: <code>mpremote run main.py</code>.</li>
         </ul>
@@ -97,12 +94,8 @@
   </ol>
   <div class="doc-text">
     <p>
-      The library also runs on the standard <strong>Raspberry Pi Pico</strong> (RP2040) firmware from
-      <a href="https://micropython.org/download/RPI_PICO/">micropython.org</a> (2&nbsp;MB of flash, no
-      board pin names): download <code>phyduino.py</code> from the
-      <a href="https://github.com/perc-sw/phyduino_pico_micropython">repository</a> and upload it to the
-      board next to your <code>main.py</code>. On the Phyduino Pico firmware, delete any old copy of
-      <code>phyduino.py</code> from the board, as it takes priority over the built-in one.
+      Delete any old copy of <code>phyduino.py</code> from the board, as it takes priority over the
+      one built into the firmware.
     </p>
   </div>
 

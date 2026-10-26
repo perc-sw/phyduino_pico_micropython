@@ -14,8 +14,7 @@ print(mcu.analog_volts("A3"))
 button = mcu.pin("D2", "in", pull="up")
 ```
 
-On the standard Raspberry Pi Pico (RP2040) MicroPython firmware, copy
-`phyduino.py` to the board next to your `main.py`. Everything else in MicroPython (`time`, `machine.PWM`, ...) works as
+Everything else in MicroPython (`time`, `machine.PWM`, ...) works as
 described in the [MicroPython documentation](https://docs.micropython.org/en/latest/rp2/quickref.html);
 use gpio() to find the RP2040 GPIO behind a pin name.
 

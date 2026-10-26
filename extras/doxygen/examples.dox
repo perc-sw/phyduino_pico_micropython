@@ -20,8 +20,7 @@ IDE's example categories. Each example is a `main.py` in its own folder, because
 MicroPython runs `main.py` each time the board starts. Each page below explains
 what the script does, how to wire it and what it prints, followed by its source.
 
-With the Phyduino Pico firmware on the board (on the standard firmware, copy
-`phyduino.py` to the board first), run a script from VS Code (MicroPico's **Run**), PyCharm, or with
+With the Phyduino Pico firmware on the board, run a script from PyCharm, or with
 `mpremote run examples/<folder>/<name>/main.py`. To have it run every time the
 board starts, copy its `main.py` to the board:
 `mpremote cp examples/<folder>/<name>/main.py :`, then press RESET.
@@ -408,8 +407,8 @@ Features of this board that the Arduino examples have no match for.
  * @example 04_communication/graph/main.py
  * @htmlonly<span class="example-title" hidden>Graph example script</span>@endhtmlonly
  * Prints the reading on A0, one number per line, 50 times a second, for a
- * serial plotter to draw as a graph. Close MicroPico's terminal first so the
- * port is free.
+ * serial plotter to draw as a graph. Close PyCharm's REPL or mpremote first so
+ * the port is free.
  *
  * @par Wiring
  * A potentiometer wiper or sensor on A0 (0-3.3 V).
@@ -419,7 +418,7 @@ Features of this board that the Arduino examples have no match for.
  * @example 04_communication/physical_pixel/main.py
  * @htmlonly<span class="example-title" hidden>Physical Pixel example script</span>@endhtmlonly
  * Turns the on-board LED on when it receives "H" and off when it receives "L"
- * from the computer. Type the letters in the REPL terminal (MicroPico's
- * terminal or mpremote) while the script runs. `sys.stdin.read(1)` waits for
+ * from the computer. Type the letters in the REPL terminal (PyCharm's REPL
+ * or mpremote) while the script runs. `sys.stdin.read(1)` waits for
  * the next character, so loop() pauses until one arrives.
  */

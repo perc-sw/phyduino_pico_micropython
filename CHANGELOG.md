@@ -4,7 +4,7 @@
 
 First version.
 
-- `phyduino.py`: one-file library for the Phyduino Pico (RP2040) on the standard Raspberry Pi Pico MicroPython firmware, or built into the Phyduino Pico firmware.
+- `phyduino.py`: one-file library for the Phyduino Pico (RP2040), built into the Phyduino Pico firmware.
   - `PINS` map and `pin()` / `gpio()` using the board's pin names (D0-D13, D18, D19, A0-A5, SDA, SCL, LED).
   - `pwm()` on the header pins and the LED, refusing pins that share a PWM output.
   - `led` for the on-board LED (GPIO5).

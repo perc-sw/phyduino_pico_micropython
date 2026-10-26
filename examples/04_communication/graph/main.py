@@ -2,8 +2,8 @@
 # serial plotter to draw as a graph.
 #
 # Connect a potentiometer wiper or sensor to A0 (0-3.3 V). Any serial plotter
-# that reads one number per line can show it; close MicroPico's terminal first
-# so the port is free.
+# that reads one number per line can show it; close PyCharm's REPL or mpremote
+# first so the port is free.
 
 import time  # sleep_ms() for pauses
 
