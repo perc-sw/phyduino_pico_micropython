@@ -20,6 +20,10 @@ use gpio() to find the RP2040 GPIO behind a pin name.
 
 ## Functions
 
+### phyduino.py
+
+`import phyduino as mcu`
+
 | Topic | Use |
 |---|---|
 | @ref pins | `PINS`, pin(), gpio(), pwm() |
@@ -27,8 +31,19 @@ use gpio() to find the RP2040 GPIO behind a pin name.
 | @ref analog | analog_read(), analog_millivolts(), analog_volts(), analog_averaging(), analog_differential_millivolts(), analog_full_scale_millivolts(), `ADC_FULL_SCALE_MILLIVOLTS`, `EXT_ADC_FULL_SCALE_MILLIVOLTS` |
 | @ref power | vbus_volts(), cpu_temperature(), usb_pd(): STUSB4500.request(), STUSB4500.set_profiles(), STUSB4500.profiles(), STUSB4500.contract(), STUSB4500.contract_position(), STUSB4500.renegotiate() |
 | @ref buses | i2c(), spi(), uart() |
-| @ref arduino | arduino.py, optional: pinMode(), digitalWrite(), digitalRead(), analogRead(), analogReadResolution(), analogWrite(), analogWriteResolution(), analogWriteFreq(), tone(), noTone(), delay(), delayMicroseconds(), millis(), micros(), map(), constrain(), `HIGH`, `LOW`, `INPUT`, `OUTPUT`, `INPUT_PULLUP`, `INPUT_PULLDOWN`, `LED_BUILTIN`, `A0`-`A5` |
 | @ref ext_adc | external_adc(): MAX11635.read(), MAX11635.scan(), MAX11635.read_differential(), MAX11635.set_averaging(), MAX11635.averaging |
+
+### arduino.py
+
+`from arduino import *`, optional
+
+| Topic | Use |
+|---|---|
+| @ref arduino_digital | pinMode(), digitalWrite(), digitalRead(), `HIGH`, `LOW`, `INPUT`, `OUTPUT`, `INPUT_PULLUP`, `INPUT_PULLDOWN`, `LED_BUILTIN` |
+| @ref arduino_analog | analogRead(), analogReadResolution(), analogWrite(), analogWriteResolution(), analogWriteFreq(), `A0`-`A5` |
+| @ref arduino_tones | tone(), noTone() |
+| @ref arduino_time | delay(), delayMicroseconds(), millis(), micros() |
+| @ref arduino_math | map(), constrain() |
 
 Errors raise `ValueError` (a wrong pin name or setting) or `OSError` (an
 on-board chip did not respond), with a message saying what to do.

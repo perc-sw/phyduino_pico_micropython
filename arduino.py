@@ -33,46 +33,46 @@ import phyduino as _mcu
 # --- Constants --------------------------------------------------------------------
 
 ## @brief Pin level: high (3.3 V).
-# @ingroup arduino
+# @ingroup arduino_digital
 HIGH = 1
 ## @brief Pin level: low (0 V).
-# @ingroup arduino
+# @ingroup arduino_digital
 LOW = 0
 
 ## @brief pinMode(): a digital input with no pull resistor.
-# @ingroup arduino
+# @ingroup arduino_digital
 INPUT = 0
 ## @brief pinMode(): a digital output.
-# @ingroup arduino
+# @ingroup arduino_digital
 OUTPUT = 1
 ## @brief pinMode(): a digital input pulled up to 3.3 V.
-# @ingroup arduino
+# @ingroup arduino_digital
 INPUT_PULLUP = 2
 ## @brief pinMode(): a digital input pulled down to 0 V.
-# @ingroup arduino
+# @ingroup arduino_digital
 INPUT_PULLDOWN = 3
 
 ## @brief The on-board green LED.
-# @ingroup arduino
+# @ingroup arduino_digital
 LED_BUILTIN = "LED"
 
 ## @brief Analogue pin A0 (RP2040 ADC, 0-3.3 V).
-# @ingroup arduino
+# @ingroup arduino_analog
 A0 = "A0"
 ## @brief Analogue pin A1 (RP2040 ADC, 0-3.3 V).
-# @ingroup arduino
+# @ingroup arduino_analog
 A1 = "A1"
 ## @brief Analogue pin A2 (RP2040 ADC, 0-3.3 V).
-# @ingroup arduino
+# @ingroup arduino_analog
 A2 = "A2"
 ## @brief Analogue pin A3 (MAX11635, 0-2.048 V). Analogue only.
-# @ingroup arduino
+# @ingroup arduino_analog
 A3 = "A3"
 ## @brief Analogue pin A4 (MAX11635, 0-2.048 V). Analogue only.
-# @ingroup arduino
+# @ingroup arduino_analog
 A4 = "A4"
 ## @brief Analogue pin A5 (MAX11635, 0-2.048 V). Analogue only.
-# @ingroup arduino
+# @ingroup arduino_analog
 A5 = "A5"
 
 _MODES = {
@@ -104,7 +104,7 @@ def pinMode(pin, mode):
     @param pin  Pin number (2 is D2) or name ("D2", "A0", LED_BUILTIN).
     @param mode INPUT, OUTPUT, INPUT_PULLUP or INPUT_PULLDOWN.
     @exception ValueError Unknown pin or mode, or an analogue-only pin (A3-A5).
-    @ingroup arduino
+    @ingroup arduino_digital
     """
     if mode not in _MODES:
         raise ValueError("mode must be INPUT, OUTPUT, INPUT_PULLUP or INPUT_PULLDOWN")
@@ -121,7 +121,7 @@ def digitalWrite(pin, value):
 
     @param pin   Pin number (2 is D2) or name ("D2", "A0", LED_BUILTIN).
     @param value HIGH or LOW.
-    @ingroup arduino
+    @ingroup arduino_digital
     """
     key = _key(pin)
     if key not in _pins or _pins[key][0] != OUTPUT:
@@ -136,7 +136,7 @@ def digitalRead(pin):
 
     @param pin Pin number (2 is D2) or name ("D2", "A0").
     @return HIGH or LOW.
-    @ingroup arduino
+    @ingroup arduino_digital
     """
     key = _key(pin)
     if key not in _pins:
@@ -151,7 +151,7 @@ def analogReadResolution(bits):
 
     @param bits 1-16. 10 (0-1023) at start-up; 12 (0-4095) is the ADCs' own resolution.
     @exception ValueError bits is outside 1-16.
-    @ingroup arduino
+    @ingroup arduino_analog
     """
     global _read_bits
     if not 1 <= bits <= 16:
@@ -166,7 +166,7 @@ def analogRead(pin):
     @return 0-1023 at the default 10 bits. A0-A2: top = 3.3 V. A3-A5: top = 2.048 V.
     @exception ValueError Not an analogue pin.
     @exception OSError    The external ADC did not respond (A3-A5).
-    @ingroup arduino
+    @ingroup arduino_analog
     """
     code = _mcu.analog_read(_key(pin, "A"))  # 12 bits
     if _read_bits <= 12:
@@ -179,7 +179,7 @@ def analogWriteResolution(bits):
 
     @param bits 1-16. 8 (0-255) at start-up.
     @exception ValueError bits is outside 1-16.
-    @ingroup arduino
+    @ingroup arduino_analog
     """
     global _write_bits
     if not 1 <= bits <= 16:
@@ -191,7 +191,7 @@ def analogWriteFreq(hz):
     """@brief Sets the PWM frequency for analogWrite() on pins set up after this.
 
     @param hz Frequency in Hz, 8 Hz and up. 1000 at start-up.
-    @ingroup arduino
+    @ingroup arduino_analog
     """
     global _write_freq
     _write_freq = hz
@@ -214,7 +214,7 @@ def analogWrite(pin, value):
                  values outside the range are clamped.
     @exception ValueError Unknown pin, an analogue-only pin (A3-A5), or the pin
                           shares its PWM output with one already in use.
-    @ingroup arduino
+    @ingroup arduino_analog
     """
     top = (1 << _write_bits) - 1
     value = constrain(int(value), 0, top)
@@ -231,7 +231,7 @@ def tone(pin, frequency, duration=None):
     @param pin       Pin number (8 is D8) or name ("D8").
     @param frequency Frequency in Hz, 8 Hz and up; 0 is silence.
     @param duration  Milliseconds to play for; None plays until noTone().
-    @ingroup arduino
+    @ingroup arduino_tones
     """
     global _tone_timer
     if _tone_timer is not None:
@@ -252,7 +252,7 @@ def noTone(pin):
     """@brief Stops a tone() on a pin.
 
     @param pin Pin number (8 is D8) or name ("D8").
-    @ingroup arduino
+    @ingroup arduino_tones
     """
     key = _key(pin)
     if key in _pwms:
@@ -273,7 +273,7 @@ def delay(ms):
     """@brief Waits a number of milliseconds.
 
     @param ms Milliseconds.
-    @ingroup arduino
+    @ingroup arduino_time
     """
     time.sleep_ms(int(ms))
 
@@ -282,7 +282,7 @@ def delayMicroseconds(us):
     """@brief Waits a number of microseconds.
 
     @param us Microseconds.
-    @ingroup arduino
+    @ingroup arduino_time
     """
     time.sleep_us(int(us))
 
@@ -293,7 +293,7 @@ def millis():
     Never wraps round, as long as it is called at least every 6 days.
 
     @return Milliseconds.
-    @ingroup arduino
+    @ingroup arduino_time
     """
     global _last_ms, _millis
     now = time.ticks_ms()
@@ -308,7 +308,7 @@ def micros():
     Never wraps round, as long as it is called at least every 8 minutes.
 
     @return Microseconds.
-    @ingroup arduino
+    @ingroup arduino_time
     """
     global _last_us, _micros
     now = time.ticks_us()
@@ -336,7 +336,7 @@ def map(value, fromLow, fromHigh, toLow, toHigh):
     @code
     analogWrite(3, map(analogRead(A0), 0, 1023, 0, 255))
     @endcode
-    @ingroup arduino
+    @ingroup arduino_math
     """
     top = (value - fromLow) * (toHigh - toLow)
     bottom = fromHigh - fromLow
@@ -353,7 +353,7 @@ def constrain(value, low, high):
     @param low   The smallest result.
     @param high  The largest result.
     @return low if value is below it, high if above it, otherwise value.
-    @ingroup arduino
+    @ingroup arduino_math
     """
     if value < low:
         return low

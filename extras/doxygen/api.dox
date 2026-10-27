@@ -2,10 +2,39 @@
  * Topics for the API reference. Each function, class and constant in
  * phyduino.py and arduino.py joins one with @ingroup in its docstring or ## comment; keep the
  * table on the main page (extras/doxygen/mainpage.md) in step.
+ * The topics sit under two parent topics, one per module, so the Topics list
+ * shows which file each one documents.
  */
 
 /**
+@defgroup phyduino_api phyduino.py
+@brief The Phyduino Pico library: `import phyduino as mcu`, with MicroPython-style names.
+*/
+
+/**
+@defgroup arduino_api arduino.py
+@brief Optional Arduino-style functions: `from arduino import *`, with Arduino's names and ranges.
+
+Built into the firmware next to phyduino.py:
+@code
+from arduino import *
+
+pinMode(LED_BUILTIN, OUTPUT)
+digitalWrite(LED_BUILTIN, HIGH)
+print(analogRead(A0))  # 0-1023
+@endcode
+
+Digital pins are numbers (13 is D13) or the board's names ("D13"). The
+@ref pins rules still apply: no D14-D17, A3-A5 are analogue only, and pairs
+of pins share a PWM output. Serial, Wire and SPI are not here: use print(),
+i2c(), spi() and uart() from phyduino.py.
+
+`from arduino import *` replaces Python's map() with the Arduino one.
+*/
+
+/**
 @defgroup pins Pins
+@ingroup phyduino_api
 @brief Pin names, the pin map, digital pins and PWM.
 
 Pins use the names printed on the board, as strings: `"D0"`-`"D13"`,
@@ -32,6 +61,7 @@ refuses the second pin of a pair until pin() is called on the first.
 
 /**
 @defgroup led On-board LED
+@ingroup phyduino_api
 @brief The green user LED on GPIO5.
 
 MicroPython's own `Pin("LED")` is GPIO25, which is the D19 pin on this board;
@@ -39,7 +69,8 @@ use `led` instead.
 */
 
 /**
-@defgroup analog Analogue inputs
+@defgroup analog Analog inputs
+@ingroup phyduino_api
 @brief Reading A0-A5, the same functions on every pin.
 
 A0-A2 are read by the RP2040's ADC (0-3.3 V). A3-A5 are read by the on-board
@@ -49,6 +80,7 @@ Keep every pin between 0 V and its full scale.
 
 /**
 @defgroup power Power and temperature
+@ingroup phyduino_api
 @brief The USB-C supply (VBUS), USB Power Delivery and the RP2040's temperature.
 
 A USB-PD charger can be asked for 9-20 V with usb_pd(). VBUS also feeds the
@@ -57,6 +89,7 @@ header's VIN pin, so VIN follows the contract.
 
 /**
 @defgroup buses Header buses
+@ingroup phyduino_api
 @brief I2C, SPI and UART set up on the header pins.
 
 Each function returns a standard MicroPython `machine.I2C`, `machine.SPI` or
@@ -67,6 +100,7 @@ for their methods.
 
 /**
 @defgroup ext_adc External ADC
+@ingroup phyduino_api
 @brief The MAX11635 chip behind A3-A5, by channel.
 
 Most programs use the @ref analog functions instead. Use this for a scan of
@@ -74,22 +108,31 @@ several channels or a differential reading in raw codes.
 */
 
 /**
-@defgroup arduino Arduino-style functions
-@brief arduino.py: pinMode(), digitalWrite(), analogRead() and the rest, with Arduino's names and ranges.
+@defgroup arduino_digital Digital I/O
+@ingroup arduino_api
+@brief Pins as inputs and outputs: pinMode(), digitalWrite(), digitalRead() and the pin constants.
+*/
 
-Optional, and built into the firmware next to phyduino.py:
-@code
-from arduino import *
+/**
+@defgroup arduino_analog Analog I/O
+@ingroup arduino_api
+@brief Reading A0-A5 with analogRead() (0-1023) and PWM with analogWrite() (0-255), with their settings.
+*/
 
-pinMode(LED_BUILTIN, OUTPUT)
-digitalWrite(LED_BUILTIN, HIGH)
-print(analogRead(A0))  # 0-1023
-@endcode
+/**
+@defgroup arduino_tones Tones
+@ingroup arduino_api
+@brief Notes on a piezo buzzer: tone() and noTone().
+*/
 
-Digital pins are numbers (13 is D13) or the board's names ("D13"). The
-@ref pins rules still apply: no D14-D17, A3-A5 are analogue only, and pairs
-of pins share a PWM output. Serial, Wire and SPI are not here: use print(),
-i2c(), spi() and uart() from phyduino.py.
+/**
+@defgroup arduino_time Time
+@ingroup arduino_api
+@brief Waiting and timing: delay(), delayMicroseconds(), millis() and micros().
+*/
 
-`from arduino import *` replaces Python's map() with the Arduino one.
+/**
+@defgroup arduino_math Math
+@ingroup arduino_api
+@brief Rescaling and limiting numbers: map() and constrain().
 */
