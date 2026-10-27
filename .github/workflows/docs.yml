@@ -67,6 +67,15 @@ jobs:
             echo "PROJECT_NUMBER = $version"
             echo "WARN_AS_ERROR = FAIL_ON_WARNINGS" ) | doxygen -
 
+      # The landing page's version (every page-version span) from __version__ in phyduino.py
+      - name: Set landing page version
+        run: |
+          version=$(sed -n 's/^__version__ = "\(.*\)"$/\1/p' phyduino.py)
+          test -n "$version"
+          sed -i -E "s#(<span class=\"[^\"]*page-version\">)[^<]*(</span>)#\1v$version\2#g" docs/index.html
+          grep -o 'page-version">[^<]*<' docs/index.html
+          grep -q "page-version\">v$version<" docs/index.html
+
       - uses: actions/configure-pages@v6
         if: github.event_name != 'pull_request'
 
