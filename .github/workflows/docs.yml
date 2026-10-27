@@ -1,5 +1,6 @@
 # GitHub Pages: the docs/ site plus the Doxygen API reference (docs/wiki/).
-#   build  - runs Doxygen 1.17.0 (any warning fails the run), uploads docs/
+#   build  - runs Doxygen 1.17.0 (any warning fails the run), sets the landing
+#            page's version (linked to its GitHub release if there is one), uploads docs/
 #   deploy - publishes the upload to GitHub Pages (main branch only)
 #
 # Pull requests run build only, so missing documentation shows up before merge.
@@ -75,6 +76,20 @@ jobs:
           sed -i -E "s#(<span class=\"[^\"]*page-version\">)[^<]*(</span>)#\1v$version\2#g" docs/index.html
           grep -o 'page-version">[^<]*<' docs/index.html
           grep -q "page-version\">v$version<" docs/index.html
+
+      # The version pill links to its GitHub release, once release.yml has published one
+      - name: Link version to its release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(sed -n 's/^__version__ = "\(.*\)"$/\1/p' phyduino.py)
+          url=$(gh release view "v$version" --json url,isDraft --jq 'select(.isDraft | not) | .url' 2>/dev/null || true)
+          if [ -z "$url" ]; then
+            echo "no release v$version yet; the version pill has no link"
+            exit 0
+          fi
+          sed -i -E "s#(<span class=\"spec-pill page-version\">)(v$version)(</span>)#\1<a href=\"$url\">\2</a>\3#" docs/index.html
+          grep -q "<a href=\"$url\">v$version</a>" docs/index.html
 
       - uses: actions/configure-pages@v6
         if: github.event_name != 'pull_request'

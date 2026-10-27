@@ -4,7 +4,8 @@
 #             dated section for it (not "(unreleased)")
 #   build   - builds the Phyduino Pico firmware with tools/build_firmware.sh
 #   release - creates the GitHub release with the UF2 and its SHA-256 attached;
-#             tags with a "-" (e.g. v0.1.0-rc.1) are marked as pre-releases
+#             tags with a "-" (e.g. v0.1.0-rc.1) are marked as pre-releases; then
+#             starts the Docs workflow so the landing page links to the release
 #
 # To release: date the CHANGELOG.md section, commit, then
 #   git tag v<version> && git push origin v<version>
@@ -77,6 +78,7 @@ jobs:
     runs-on: ubuntu-24.04  # pinned; change deliberately
     permissions:
       contents: write  # create the release and upload its files
+      actions: write   # start the Docs workflow
     steps:
       - uses: actions/checkout@v7
 
@@ -102,3 +104,10 @@ jobs:
               --title "Phyduino Pico MicroPython $GITHUB_REF_NAME" \
               --notes-file "$RUNNER_TEMP/notes.md"
           fi
+
+      # Redeploy the docs so the landing page's version pill links to this release.
+      # A release made with GITHUB_TOKEN starts no workflows; workflow_dispatch is the exception
+      - name: Redeploy docs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run docs.yml --ref main
