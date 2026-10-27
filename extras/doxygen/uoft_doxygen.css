@@ -268,7 +268,7 @@ ul.page-outline li.vis {
   width: auto;
 }
 
-/* Title with the version under it; not in the site stylesheet */
+/* Title with "MicroPython" and the version under it; not in the site stylesheet */
 .header-title-block {
   margin-left: auto;
   display: flex;
@@ -278,7 +278,7 @@ ul.page-outline li.vis {
   line-height: 1.2;  /* Doxygen's 22px line height is too tight for the 32px title */
 }
 
-.header-version {
+.header-subtitle {
   font-family: var(--sans);
   font-size: 16px;
   font-weight: 500;

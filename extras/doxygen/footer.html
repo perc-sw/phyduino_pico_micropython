@@ -151,11 +151,19 @@ $generatedby&#160;<a href="https://www.doxygen.org/index.html"><img class="foote
     });
 
     let first = null;
+    let shown = null;  // last entry not hidden by a fold
     sections.forEach(function (section, i) {
       const bottom = i + 1 < sections.length ? sections[i + 1].top : box.bottom;
       const visible = section.top < viewBottom - margin && bottom > viewTop + margin;
       section.item.classList.toggle('vis', visible);
-      if (visible && !first) first = section.item;
+      if (section.item.offsetParent !== null) {
+        shown = section.item;
+      } else if (visible && shown) {
+        // An entry hidden by a fold marks the folded entry above it instead
+        shown.classList.add('vis');
+        if (!first) first = shown;
+      }
+      if (visible && !first && section.item.offsetParent !== null) first = section.item;
     });
 
     // Keep the first highlighted entry in view when the panel is taller than the window
@@ -171,6 +179,64 @@ $generatedby&#160;<a href="https://www.doxygen.org/index.html"><img class="foote
   window.addEventListener('scroll', highlight, { passive: true });
   window.addEventListener('resize', function () { setTimeout(highlight, 0); });
   window.addEventListener('load', function () { setTimeout(highlight, 300); });
+})();
+</script>
+
+<script type="text/javascript">
+// Fold arrows in the "On this page" panel. Doxygen draws them but doesn't make
+// them work. Most child entries are not nested: they are the <li>s that follow
+// their parent in the same list, indented by the arrow's left padding. Member
+// groups are the exception and keep their entries in a nested <ul>.
+(function () {
+  function depth(item) {
+    const arrow = item.querySelector(':scope > div.item > span.arrow');
+    return arrow ? parseInt(arrow.style.paddingLeft, 10) || 0 : 0;
+  }
+
+  // Hides the entries under folded ones, list by list
+  function applyFolds() {
+    document.querySelectorAll('ul.page-outline, ul.page-outline ul').forEach(function (list) {
+      let foldedAt = Infinity;  // depth of the folded entry being skipped under
+      Array.from(list.children).forEach(function (item) {
+        const d = depth(item);
+        if (d > foldedAt) {
+          item.hidden = true;
+          return;
+        }
+        item.hidden = false;
+        foldedAt = item.classList.contains('folded') ? d : Infinity;
+        const nested = item.querySelector(':scope > ul');
+        if (nested) nested.hidden = item.classList.contains('folded');
+      });
+    });
+  }
+
+  function setFolded(item, folded) {
+    const head = item.querySelector(':scope > div.item > span.arrow > span.arrowhead');
+    if (!head) return;
+    item.classList.toggle('folded', folded);
+    head.classList.toggle('opened', !folded);
+    head.classList.toggle('closed', folded);
+  }
+
+  document.addEventListener('click', function (e) {
+    const arrow = e.target.closest('ul.page-outline span.arrow');
+    if (!arrow || !arrow.querySelector('span.arrowhead')) return;
+    const item = arrow.closest('li');
+    setFolded(item, !item.classList.contains('folded'));
+    applyFolds();
+    window.dispatchEvent(new Event('scroll'));  // redo the highlight for the new folds
+  });
+
+  // Every section starts folded. Doxygen builds the panel when the page is ready.
+  document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(function () {
+      document.querySelectorAll('ul.page-outline li').forEach(function (item) {
+        setFolded(item, true);
+      });
+      applyFolds();
+    }, 0);
+  });
 })();
 </script>
 
