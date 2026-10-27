@@ -105,16 +105,6 @@
       </p>
     </div>
 
-    <!-- Example -->
-    <div class="section-head" id="example"><h2>Example</h2></div>
-    <div class="doc-text">
-      <pre class="code">import phyduino as mcu
-
-mcu.led.on()
-print(mcu.analog_volts("A3"))             # 0-2.048 V, on-board MAX11635
-button = mcu.pin("D2", "in", pull="up")</pre>
-    </div>
-
     <!-- Documentation: the API reference is built by Doxygen into ./wiki/ (git-ignored;
          run "doxygen" in the repository root, or see .github/workflows/docs.yml) -->
     <div class="section-head" id="documentation"><h2>Documentation</h2></div>
@@ -131,55 +121,6 @@ button = mcu.pin("D2", "in", pull="up")</pre>
             <td>The example scripts with their source, wiring and output</td>
             <td><a class="ds-link" href="./wiki/example_scripts.html">Open</a></td>
           </tr>
-          <tr>
-            <td>Pin map</td>
-            <td>Pin names, RP2040 GPIOs, buses and shared PWM channels</td>
-            <td><a class="ds-link" href="./wiki/group__pins.html">Open</a></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Library contents: one row per topic in extras/doxygen/api.dox -->
-    <div class="section-head" id="library"><h2>What the library provides</h2></div>
-    <div class="ds-table-wrap">
-      <table class="ds-table">
-        <tbody>
-          <tr>
-            <td>Pins</td>
-            <td>PINS, pin(), gpio(), pwm(): the board's pin names as strings · examples: button, fade, tone_melody</td>
-            <td><a class="ds-link" href="./wiki/group__pins.html">API</a></td>
-          </tr>
-          <tr>
-            <td>On-board LED</td>
-            <td>led.on(), off(), toggle(), value() · example: blink</td>
-            <td><a class="ds-link" href="./wiki/group__led.html">API</a></td>
-          </tr>
-          <tr>
-            <td>Analogue inputs</td>
-            <td>A0&ndash;A5 as codes, millivolts or volts, averaging, differential · examples: analog_read_serial, read_analog_voltage, analog_averaging, analog_differential</td>
-            <td><a class="ds-link" href="./wiki/group__analog.html">API</a></td>
-          </tr>
-          <tr>
-            <td>Power and temperature</td>
-            <td>vbus_volts(), cpu_temperature(), USB-PD profiles and contract · examples: vbus_monitor, usb_pd_power</td>
-            <td><a class="ds-link" href="./wiki/group__power.html">API</a></td>
-          </tr>
-          <tr>
-            <td>Header buses</td>
-            <td>i2c(), spi(), uart() on the header pins · examples: i2c_scanner, uart_loopback</td>
-            <td><a class="ds-link" href="./wiki/group__buses.html">API</a></td>
-          </tr>
-          <tr>
-            <td>External ADC</td>
-            <td>The MAX11635 behind A3&ndash;A5, by channel: scans and raw differential readings</td>
-            <td><a class="ds-link" href="./wiki/group__ext__adc.html">API</a></td>
-          </tr>
-          <tr>
-            <td>Arduino-style functions</td>
-            <td>Optional arduino.py: pinMode(), digitalWrite(), digitalRead(), analogRead(), analogWrite(), tone(), delay(), millis(), map() and the constants HIGH, LOW, INPUT_PULLUP, LED_BUILTIN</td>
-            <td><a class="ds-link" href="./wiki/group__arduino.html">API</a></td>
-          </tr>
         </tbody>
       </table>
     </div>
@@ -195,19 +136,19 @@ button = mcu.pin("D2", "in", pull="up")</pre>
         </span>
         <svg class="repo-row-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
       </a>
+      <a class="repo-row" href="https://github.com/perc-sw/phyduino_bsp">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        <span>
+          <span class="repo-row-label">GitHub · </span>
+          <span class="repo-row-name">Phyduino Pico Board Manager (Arduino API)</span>
+        </span>
+        <svg class="repo-row-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
       <a class="repo-row" href="https://github.com/perc-sw/phyduino_pico">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
         <span>
           <span class="repo-row-label">GitHub · </span>
           <span class="repo-row-name">Phyduino Pico</span>
-        </span>
-        <svg class="repo-row-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-      </a>
-      <a class="repo-row" href="https://github.com/perc-sw/phyduino_bsp">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-        <span>
-          <span class="repo-row-label">GitHub · </span>
-          <span class="repo-row-name">Phyduino Board Support (Arduino)</span>
         </span>
         <svg class="repo-row-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
       </a>
@@ -221,16 +162,13 @@ button = mcu.pin("D2", "in", pull="up")</pre>
     <ul>
       <li><a href="#top">Overview</a></li>
       <li><a href="#setup">Set up</a></li>
-      <li><a href="#example">Example</a></li>
       <li><a href="#documentation">Documentation</a></li>
-      <li><a href="#library">What the library provides</a></li>
       <li><a href="#repositories">Course Repositories</a></li>
     </ul>
     <span class="doc-nav-head">Reference</span>
     <ul class="doc-nav-ext">
       <li><a href="./wiki/index.html">API reference</a></li>
       <li><a href="./wiki/example_scripts.html">Examples</a></li>
-      <li><a href="./wiki/group__pins.html">Pin map</a></li>
     </ul>
   </nav>
 
