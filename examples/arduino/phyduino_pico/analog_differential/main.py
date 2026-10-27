@@ -8,10 +8,10 @@
 #   Fine for slow signals, but noise on both pins does not cancel.
 #
 # Keep every pin between 0 V and its full scale (A0-A2: 3.3 V, A3-A5: 2.048 V).
+# Arduino has no differential reading, so this uses the phyduino functions.
 
-import time  # sleep() for pauses
-
-import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
+from arduino import *  # the Arduino-style functions: pinMode(), digitalWrite(), delay(), ...
+import phyduino as mcu  # the Phyduino Pico library, for mcu.analog_differential_millivolts()
 
 
 def setup():
@@ -22,9 +22,9 @@ def loop():
     # The voltage of the first pin minus the second, in millivolts. "%7.1f" shows
     # each with one decimal place, right-aligned in 7 characters.
     print("A3 - A4: %7.1f mV    A0 - A1: %7.1f mV" % (
-        mcu.analog_differential_millivolts("A3", "A4"),  # sampled at the same instant
-        mcu.analog_differential_millivolts("A0", "A1")))  # two readings, one after the other
-    time.sleep(0.5)  # twice a second
+        mcu.analog_differential_millivolts(A3, A4),  # sampled at the same instant
+        mcu.analog_differential_millivolts(A0, A1)))  # two readings, one after the other
+    delay(500)  # twice a second
 
 
 # Do not edit below this line: it runs setup() once, then loop() over and over.

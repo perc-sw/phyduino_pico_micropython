@@ -2,9 +2,8 @@
 # second. VBUS is about 5 V from a computer; a USB-PD charger can raise it
 # (see phyduino_pico/usb_pd_power/). VBUS is also on the header's VIN pin.
 
-import time  # sleep() for pauses
-
-import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
+from arduino import *  # the Arduino-style functions: pinMode(), digitalWrite(), delay(), ...
+import phyduino as mcu  # the Phyduino Pico library, for mcu.vbus_volts() and mcu.cpu_temperature()
 
 
 def setup():
@@ -14,7 +13,7 @@ def setup():
 def loop():
     # "%.2f" shows two decimal places, "%.1f" one.
     print("VBUS %.2f V    CPU %.1f C" % (mcu.vbus_volts(), mcu.cpu_temperature()))
-    time.sleep(1)  # once a second
+    delay(1000)  # once a second
 
 
 # Do not edit below this line: it runs setup() once, then loop() over and over.

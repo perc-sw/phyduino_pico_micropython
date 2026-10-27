@@ -7,20 +7,21 @@
 
 import sys  # sys.stdin: characters typed in the terminal
 
-import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
+from arduino import *  # the Arduino-style functions: pinMode(), digitalWrite(), delay(), ...
 
 
 def setup():
-    mcu.led.off()  # start with the LED off
+    pinMode(LED_BUILTIN, OUTPUT)  # the LED's pin as an output
+    digitalWrite(LED_BUILTIN, LOW)  # start with the LED off
     print("Type H to turn the LED on, L to turn it off.")
 
 
 def loop():
     char = sys.stdin.read(1)  # wait for one character from the terminal
     if char == "H":
-        mcu.led.on()
+        digitalWrite(LED_BUILTIN, HIGH)
     elif char == "L":
-        mcu.led.off()
+        digitalWrite(LED_BUILTIN, LOW)
     # Any other character is ignored.
 
 

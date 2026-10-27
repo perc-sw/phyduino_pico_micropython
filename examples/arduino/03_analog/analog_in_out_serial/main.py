@@ -3,24 +3,19 @@
 #
 # Connect a potentiometer wiper to A0, with its ends on GND and 3.3 V.
 
-import time  # sleep_ms() for pauses
-
-import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
-
-led = None  # the LED's PWM output; setup() fills this in
+from arduino import *  # the Arduino-style functions: pinMode(), digitalWrite(), delay(), ...
 
 
 def setup():
-    global led  # change the led variable above, not a new one inside setup()
-    led = mcu.pwm("LED")  # Puts the LED's pin into PWM mode and saves the control variable to the 'led' variable.
+    pass  # analogRead() and analogWrite() need no set-up
 
 
 def loop():
-    sensor = mcu.analog_read("A0")  # 0 (0 V) to 4095 (3.3 V)
-    output = sensor * 65535 // 4095  # scale to 0-65535 for duty_u16(), like Arduino's map()
-    led.duty_u16(output)  # brighter as the voltage rises
+    sensor = analogRead(A0)  # 0 (0 V) to 1023 (3.3 V)
+    output = map(sensor, 0, 1023, 0, 255)  # rescale to 0-255 for analogWrite()
+    analogWrite(LED_BUILTIN, output)  # brighter as the voltage rises
     print("sensor =", sensor, "  output =", output)
-    time.sleep_ms(2)  # a short pause between readings
+    delay(2)  # a short pause between readings
 
 
 # Do not edit below this line: it runs setup() once, then loop() over and over.

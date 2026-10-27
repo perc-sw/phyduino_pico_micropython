@@ -5,9 +5,7 @@
 # that reads one number per line can show it; close PyCharm's REPL or mpremote
 # first so the port is free.
 
-import time  # sleep_ms() for pauses
-
-import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
+from arduino import *  # the Arduino-style functions: pinMode(), digitalWrite(), delay(), ...
 
 
 def setup():
@@ -15,8 +13,8 @@ def setup():
 
 
 def loop():
-    print(mcu.analog_read("A0"))  # one number per line, 0-4095, for the plotter
-    time.sleep_ms(20)  # 20 ms apart: 50 readings a second
+    print(analogRead(A0))  # one number per line, 0-1023, for the plotter
+    delay(20)  # 20 ms apart: 50 readings a second
 
 
 # Do not edit below this line: it runs setup() once, then loop() over and over.

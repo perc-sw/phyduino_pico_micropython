@@ -4,9 +4,7 @@
 # Connect a potentiometer wiper or sensor to A0 (0-3.3 V). For averaging done
 # by the board itself, see phyduino_pico/analog_averaging/.
 
-import time  # sleep_ms() for pauses
-
-import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
+from arduino import *  # the Arduino-style functions: pinMode(), digitalWrite(), delay(), ...
 
 NUM_READINGS = 10  # how many readings to average; more is smoother but slower to follow
 
@@ -22,11 +20,11 @@ def setup():
 def loop():
     global index, total  # loop() changes both, so it needs the ones above
     total -= readings[index]  # take the oldest reading out of the sum
-    readings[index] = mcu.analog_read("A0")  # replace it with a new one
+    readings[index] = analogRead(A0)  # replace it with a new one, 0-1023
     total += readings[index]  # and add that to the sum
     index = (index + 1) % NUM_READINGS  # move along; % wraps back to 0 after the end
     print(total // NUM_READINGS)  # the average
-    time.sleep_ms(1)  # a short pause between readings
+    delay(1)  # a short pause between readings
 
 
 # Do not edit below this line: it runs setup() once, then loop() over and over.

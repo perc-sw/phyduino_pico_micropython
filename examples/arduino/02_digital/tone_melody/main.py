@@ -2,12 +2,12 @@
 # plays it again.
 #
 # Connect a piezo buzzer between D8 and GND (or a small speaker in series with
-# a 100 Ohm resistor). MicroPython has no tone(): a PWM output at 50 % duty
-# makes the note, and a duty of 0 is silence.
+# a 100 Ohm resistor). tone() returns straight away, so delay() waits while
+# the note plays.
 
-import time  # sleep() and sleep_ms() for pauses
+from arduino import *  # the Arduino-style functions: pinMode(), digitalWrite(), delay(), ...
 
-import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
+BUZZER_PIN = 8  # the buzzer is on D8
 
 # Note frequencies in Hz; 0 is a rest.
 NOTE_G3 = 196
@@ -19,30 +19,19 @@ MELODY = (NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4)
 # Note lengths: 4 = quarter note, 8 = eighth note.
 DURATIONS = (4, 8, 8, 4, 4, 4, 4, 4)
 
-buzzer = None  # the buzzer's PWM output; setup() fills this in
-
-
-def tone(frequency, duration_ms):
-    """Plays one note (or a rest, if frequency is 0) for duration_ms."""
-    if frequency:  # 0 counts as false, so a rest skips this
-        buzzer.freq(frequency)  # the pitch: how many times a second the pin switches
-        buzzer.duty_u16(32768)  # half of 65535: high half the time, which makes a tone
-    time.sleep_ms(duration_ms)  # let the note sound
-    buzzer.duty_u16(0)  # always low: silence
-
 
 def setup():
-    global buzzer  # change the buzzer variable above, not a new one inside setup()
-    buzzer = mcu.pwm("D8")  # Puts D8 into PWM mode and saves the control variable to the 'buzzer' variable.
+    pass  # tone() sets the pin up the first time it is called
 
 
 def loop():
     # zip() pairs each note with its length: (NOTE_C4, 4), (NOTE_G3, 8), ...
     for note, duration in zip(MELODY, DURATIONS):
         length_ms = 1000 // duration  # a quarter note is 1000 / 4 = 250 ms
-        tone(note, length_ms)
-        time.sleep_ms(length_ms * 3 // 10)  # a gap of 30 % so the notes sound separate
-    time.sleep(2)  # wait two seconds before playing it again
+        tone(BUZZER_PIN, note, length_ms)  # play the note (0 is a rest) for length_ms
+        delay(length_ms * 13 // 10)  # wait for the note plus a 30 % gap, so the notes sound separate
+        noTone(BUZZER_PIN)  # make sure the note has stopped
+    delay(2000)  # wait two seconds before playing it again
 
 
 # Do not edit below this line: it runs setup() once, then loop() over and over.

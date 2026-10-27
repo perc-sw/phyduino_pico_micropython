@@ -3,19 +3,21 @@
 # Connect a pushbutton between D2 and 3.3 V. The pin's pull-down resistor
 # holds D2 at 0 while the button is open.
 
-import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
+from arduino import *  # the Arduino-style functions: pinMode(), digitalWrite(), delay(), ...
 
-button = None  # the button's pin; setup() fills this in
+BUTTON_PIN = 2  # the pushbutton is on D2
 
 
 def setup():
-    global button  # change the button variable above, not a new one inside setup()
-    button = mcu.pin("D2", "in", pull="down")  # D2 as an input, held at 0 until pressed
+    pinMode(LED_BUILTIN, OUTPUT)  # the LED's pin as an output
+    pinMode(BUTTON_PIN, INPUT_PULLDOWN)  # D2 as an input, held LOW until pressed
 
 
 def loop():
-    # The button reads 1 while pressed and 0 when not; the LED is on at 1, off at 0.
-    mcu.led.value(button.value())
+    if digitalRead(BUTTON_PIN) == HIGH:  # HIGH while pressed
+        digitalWrite(LED_BUILTIN, HIGH)  # LED on
+    else:
+        digitalWrite(LED_BUILTIN, LOW)  # LED off
 
 
 # Do not edit below this line: it runs setup() once, then loop() over and over.

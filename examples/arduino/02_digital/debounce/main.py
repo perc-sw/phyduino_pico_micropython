@@ -5,38 +5,36 @@
 # Connect a pushbutton between D2 and 3.3 V; the pull-down holds D2 at 0
 # while the button is open.
 
-import time  # ticks_ms() and ticks_diff() for timing
+from arduino import *  # the Arduino-style functions: pinMode(), digitalWrite(), delay(), ...
 
-import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
-
+BUTTON_PIN = 2  # the pushbutton is on D2
 DEBOUNCE_MS = 50  # how long a reading must stay the same to count, in milliseconds
 
-button = None  # the button's pin; setup() fills this in
-led_state = 1  # 1 = LED on, 0 = off
-button_state = 0  # the steady reading
-last_reading = 0  # the reading on the previous pass
+led_state = HIGH  # HIGH = LED on, LOW = off
+button_state = LOW  # the steady reading
+last_reading = LOW  # the reading on the previous pass
 last_change_ms = 0  # when the reading last changed
 
 
 def setup():
-    global button  # change the button variable above, not a new one inside setup()
-    button = mcu.pin("D2", "in", pull="down")  # D2 as an input, held at 0 until pressed
-    mcu.led.value(led_state)  # start with the LED on
+    pinMode(BUTTON_PIN, INPUT_PULLDOWN)  # D2 as an input, held LOW until pressed
+    pinMode(LED_BUILTIN, OUTPUT)  # the LED's pin as an output
+    digitalWrite(LED_BUILTIN, led_state)  # start with the LED on
 
 
 def loop():
     # loop() changes all of these, so it needs the ones above.
     global led_state, button_state, last_reading, last_change_ms
-    reading = button.value()  # 1 while pressed, 0 when not
+    reading = digitalRead(BUTTON_PIN)  # HIGH while pressed, LOW when not
     if reading != last_reading:
-        last_change_ms = time.ticks_ms()  # it changed (or bounced): start the wait again
+        last_change_ms = millis()  # it changed (or bounced): start the wait again
     # Only believe the reading once it has stayed the same for DEBOUNCE_MS.
-    if time.ticks_diff(time.ticks_ms(), last_change_ms) > DEBOUNCE_MS:
+    if millis() - last_change_ms > DEBOUNCE_MS:
         if reading != button_state:  # a real change
             button_state = reading
-            if button_state == 1:  # only act on a press, not a release
-                led_state = not led_state  # swap on and off
-                mcu.led.value(led_state)
+            if button_state == HIGH:  # only act on a press, not a release
+                led_state = HIGH if led_state == LOW else LOW  # swap on and off
+    digitalWrite(LED_BUILTIN, led_state)
     last_reading = reading  # compare against this next time
 
 

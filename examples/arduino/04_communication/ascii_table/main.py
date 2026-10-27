@@ -1,7 +1,7 @@
 # Prints the printable ASCII characters, 33 ("!") to 126 ("~"), each with its
 # value in decimal, hexadecimal, octal and binary.
 
-import time  # sleep() for pauses
+from arduino import *  # the Arduino-style functions: pinMode(), digitalWrite(), delay(), ...
 
 
 def setup():
@@ -13,7 +13,7 @@ def setup():
 
 
 def loop():
-    time.sleep(1)  # nothing left to do: the table was printed once, in setup()
+    delay(1000)  # nothing left to do: the table was printed once, in setup()
 
 
 # Do not edit below this line: it runs setup() once, then loop() over and over.

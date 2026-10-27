@@ -5,9 +5,8 @@
 # include them; otherwise fit 4.7 kOhm resistors from SDA and SCL to 3.3 V.
 # The on-board USB-PD controller is on a separate bus and does not appear.
 
-import time  # sleep() for pauses
-
-import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
+from arduino import *  # the Arduino-style functions: pinMode(), digitalWrite(), delay(), ...
+import phyduino as mcu  # the Phyduino Pico library, for mcu.i2c() in place of Arduino's Wire
 
 bus = None  # the I2C bus; setup() fills this in
 
@@ -24,7 +23,7 @@ def loop():
         print("Found:", ", ".join("0x%02X" % address for address in found))
     else:
         print("No devices found. Check the wiring and the pull-up resistors.")
-    time.sleep(5)  # scan again in five seconds
+    delay(5000)  # scan again in five seconds
 
 
 # Do not edit below this line: it runs setup() once, then loop() over and over.

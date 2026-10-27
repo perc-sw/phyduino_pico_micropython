@@ -2,7 +2,7 @@
 # main code goes in loop(), which runs over and over. Copy this file to start
 # a new program.
 
-import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
+from arduino import *  # the Arduino-style functions: pinMode(), digitalWrite(), delay(), ...
 
 
 def setup():

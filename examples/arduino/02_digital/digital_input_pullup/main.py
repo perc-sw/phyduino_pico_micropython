@@ -4,23 +4,24 @@
 # Connect a pushbutton between D2 and GND. The pull-up holds D2 at 1 while the
 # button is open, so the logic is inverted: pressed reads 0.
 
-import time  # sleep() for pauses
+from arduino import *  # the Arduino-style functions: pinMode(), digitalWrite(), delay(), ...
 
-import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
-
-button = None  # the button's pin; setup() fills this in
+BUTTON_PIN = 2  # the pushbutton is on D2
 
 
 def setup():
-    global button  # change the button variable above, not a new one inside setup()
-    button = mcu.pin("D2", "in", pull="up")  # D2 as an input, held at 1 until pressed
+    pinMode(BUTTON_PIN, INPUT_PULLUP)  # D2 as an input, held HIGH until pressed
+    pinMode(LED_BUILTIN, OUTPUT)  # the LED's pin as an output
 
 
 def loop():
-    state = button.value()  # 0 while pressed (the button connects D2 to GND), 1 when not
+    state = digitalRead(BUTTON_PIN)  # LOW while pressed (the button connects D2 to GND), HIGH when not
     print(state)
-    mcu.led.value(not state)  # "not" swaps 0 and 1, so the LED is on while pressed
-    time.sleep(0.1)  # ten readings a second
+    if state == LOW:  # pressed
+        digitalWrite(LED_BUILTIN, HIGH)  # LED on
+    else:
+        digitalWrite(LED_BUILTIN, LOW)  # LED off
+    delay(100)  # ten readings a second
 
 
 # Do not edit below this line: it runs setup() once, then loop() over and over.

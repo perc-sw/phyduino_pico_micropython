@@ -1,17 +1,17 @@
 # Blinks the on-board green LED once a second.
 
-import time  # sleep() for pauses
-
-import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
+from arduino import *  # the Arduino-style functions: pinMode(), digitalWrite(), delay(), ...
 
 
 def setup():
-    mcu.led.off()  # start with the LED off
+    pinMode(LED_BUILTIN, OUTPUT)  # the LED's pin as an output
 
 
 def loop():
-    mcu.led.toggle()  # on if it was off, off if it was on
-    time.sleep(0.5)  # wait half a second, so one on-off cycle takes a second
+    digitalWrite(LED_BUILTIN, HIGH)  # LED on
+    delay(500)  # wait half a second
+    digitalWrite(LED_BUILTIN, LOW)  # LED off
+    delay(500)  # wait half a second, so one on-off cycle takes a second
 
 
 # Do not edit below this line: it runs setup() once, then loop() over and over.

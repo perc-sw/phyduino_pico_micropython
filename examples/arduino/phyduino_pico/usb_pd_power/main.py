@@ -10,9 +10,8 @@
 # anything on VIN that can't take the voltage you ask for.
 # The request lasts until the board loses power.
 
-import time  # sleep() for pauses
-
-import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
+from arduino import *  # the Arduino-style functions: pinMode(), digitalWrite(), delay(), ...
+import phyduino as mcu  # the Phyduino Pico library, for mcu.usb_pd() and mcu.uart()
 
 MAX_VOLTS = 9  # 5, 9, 12, 15 or 20
 
@@ -42,7 +41,7 @@ def loop():
         report("Contract: offer %d, %.2f A    VBUS %.2f V" % (position, amps, volts))
     else:
         report("No PD contract (plain USB)    VBUS %.2f V" % volts)
-    time.sleep(1)  # once a second
+    delay(1000)  # once a second
 
 
 # Do not edit below this line: it runs setup() once, then loop() over and over.

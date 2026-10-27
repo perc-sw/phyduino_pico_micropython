@@ -1,15 +1,13 @@
-# Reads all six analogue pins as 12-bit codes (0-4095), twice a second.
+# Reads all six analogue pins with analogRead() (0-1023), twice a second.
 #
-# A0-A2: 0 = 0 V, 4095 = 3.3 V (RP2040 ADC).
-# A3-A5: 0 = 0 V, 4095 = 2.048 V (on-board MAX11635 ADC).
+# A0-A2: 0 = 0 V, 1023 = 3.3 V (RP2040 ADC).
+# A3-A5: 0 = 0 V, 1023 = 2.048 V (on-board MAX11635 ADC).
 # Connect a potentiometer wiper (ends on GND and 3.3 V) to any pin to see it
 # change; keep A3-A5 at or below 2.048 V. Unconnected pins drift.
 
-import time  # sleep() for pauses
+from arduino import *  # the Arduino-style functions: pinMode(), digitalWrite(), delay(), ...
 
-import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
-
-NAMES = ("A0", "A1", "A2", "A3", "A4", "A5")  # the pins to read, in order
+PINS = (A0, A1, A2, A3, A4, A5)  # the pins to read, in order
 
 
 def setup():
@@ -17,10 +15,10 @@ def setup():
 
 
 def loop():
-    # Read each pin and print them on one line, e.g. "A0=2048  A1=   3 ...".
+    # Read each pin and print them on one line, e.g. "A0= 512  A1=   0 ...".
     # "%s=%4d" puts the name, then the reading right-aligned in 4 characters.
-    print("  ".join("%s=%4d" % (name, mcu.analog_read(name)) for name in NAMES))
-    time.sleep(0.5)  # wait half a second before the next line
+    print("  ".join("%s=%4d" % (pin, analogRead(pin)) for pin in PINS))
+    delay(500)  # wait half a second before the next line
 
 
 # Do not edit below this line: it runs setup() once, then loop() over and over.

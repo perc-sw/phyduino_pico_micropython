@@ -5,38 +5,37 @@
 # LED is on at the start, give the sensor its lowest and highest values, e.g.
 # cover it and then shine a light on it.
 
-import time  # ticks_ms(), ticks_diff() and sleep_ms() for timing
+from arduino import *  # the Arduino-style functions: pinMode(), digitalWrite(), delay(), ...
 
-import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
-
+SENSOR_PIN = A0  # the sensor is on A0
 CALIBRATION_MS = 5000  # how long to learn the range for, in milliseconds
 
-led = None  # the LED's PWM output; setup() fills this in
-sensor_min = 4095  # start the wrong way round so the first readings replace them
+sensor_min = 1023  # start the wrong way round so the first readings replace them
 sensor_max = 0
 
 
 def setup():
-    global led, sensor_min, sensor_max  # setup() changes all three
-    mcu.led.on()  # the LED is on while calibrating
-    start = time.ticks_ms()  # when calibration began
+    global sensor_min, sensor_max  # setup() changes both
+    pinMode(LED_BUILTIN, OUTPUT)  # the LED's pin as an output
+    digitalWrite(LED_BUILTIN, HIGH)  # the LED is on while calibrating
+    start = millis()  # when calibration began
     # Keep reading until CALIBRATION_MS has passed, remembering the lowest and highest.
-    while time.ticks_diff(time.ticks_ms(), start) < CALIBRATION_MS:
-        value = mcu.analog_read("A0")  # 0-4095
+    while millis() - start < CALIBRATION_MS:
+        value = analogRead(SENSOR_PIN)  # 0-1023
         sensor_min = min(sensor_min, value)  # the lowest so far
         sensor_max = max(sensor_max, value)  # the highest so far
-        time.sleep_ms(10)
-    mcu.led.off()  # calibration finished
+        delay(10)
+    digitalWrite(LED_BUILTIN, LOW)  # calibration finished
     print("range:", sensor_min, "-", sensor_max)
-    led = mcu.pwm("LED")  # Puts the LED's pin into PWM mode and saves the control variable to the 'led' variable.
+    sensor_max = max(sensor_max, sensor_min + 1)  # at least 1 apart, so map() never divides by 0
 
 
 def loop():
-    value = mcu.analog_read("A0")
-    span = max(sensor_max - sensor_min, 1)  # the width of the range; at least 1, so no divide by 0
-    value = min(max(value, sensor_min), sensor_max)  # keep in the range, like constrain()
-    led.duty_u16((value - sensor_min) * 65535 // span)  # bottom of the range = off, top = fully on
-    time.sleep_ms(10)
+    value = analogRead(SENSOR_PIN)
+    value = constrain(value, sensor_min, sensor_max)  # keep it in the calibrated range
+    value = map(value, sensor_min, sensor_max, 0, 255)  # bottom of the range = 0, top = 255
+    analogWrite(LED_BUILTIN, value)  # off at the bottom, fully on at the top
+    delay(10)
 
 
 # Do not edit below this line: it runs setup() once, then loop() over and over.

@@ -2,9 +2,8 @@
 # Connect a jumper wire from D1 (TX) to D0 (RX) first; without it, nothing
 # comes back.
 
-import time  # sleep() for pauses
-
-import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
+from arduino import *  # the Arduino-style functions: pinMode(), digitalWrite(), delay(), ...
+import phyduino as mcu  # the Phyduino Pico library, for mcu.uart() in place of Arduino's Serial1
 
 serial = None  # the serial port; setup() fills this in
 count = 0  # the number in the next message
@@ -19,12 +18,12 @@ def loop():
     global count  # loop() changes it, so it needs the one above
     message = "hello %d" % count  # e.g. "hello 0"
     serial.write(message)  # send it out of D1
-    time.sleep(0.05)  # give it time to arrive back on D0
+    delay(50)  # give it time to arrive back on D0
     received = serial.read()  # everything that has arrived, as bytes; None if nothing
     # decode() turns the bytes back into text; %r shows the quotes, so None stands out.
     print("sent %r, received %r" % (message, received.decode() if received else None))
     count += 1  # a new number next time
-    time.sleep(0.5)  # twice a second
+    delay(500)  # twice a second
 
 
 # Do not edit below this line: it runs setup() once, then loop() over and over.

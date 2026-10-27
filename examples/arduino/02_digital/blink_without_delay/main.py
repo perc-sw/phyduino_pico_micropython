@@ -1,30 +1,26 @@
-# Blinks the on-board LED once a second without time.sleep(), so loop() is free
-# to do other work between changes. Each pass checks how long it has been since
-# the last change with time.ticks_ms() and time.ticks_diff().
+# Blinks the on-board LED once a second without delay(), so loop() is free to
+# do other work between changes. Each pass checks how long it has been since
+# the last change with millis().
 
-import time  # ticks_ms() and ticks_diff() for timing
-
-import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
+from arduino import *  # the Arduino-style functions: pinMode(), digitalWrite(), delay(), ...
 
 INTERVAL_MS = 500  # time between changes, in milliseconds
 
+led_state = LOW  # the LED's level: LOW = off, HIGH = on
 previous_ms = 0  # the time of the last change
 
 
 def setup():
-    global previous_ms  # change the variable above, not a new one inside setup()
-    mcu.led.off()  # start with the LED off
-    previous_ms = time.ticks_ms()  # milliseconds since the board started
+    pinMode(LED_BUILTIN, OUTPUT)  # the LED's pin as an output
 
 
 def loop():
-    global previous_ms  # loop() changes it, so it needs the one above
-    now = time.ticks_ms()  # the time now
-    # ticks_diff() gives the time between two ticks_ms() readings. Always use it
-    # rather than now - previous_ms: the count wraps round to 0 after a while.
-    if time.ticks_diff(now, previous_ms) >= INTERVAL_MS:
+    global led_state, previous_ms  # loop() changes both, so it needs the ones above
+    now = millis()  # milliseconds since the board started
+    if now - previous_ms >= INTERVAL_MS:  # millis() never wraps round, so plain subtraction works
         previous_ms = now  # remember when this change happened
-        mcu.led.toggle()  # on if it was off, off if it was on
+        led_state = HIGH if led_state == LOW else LOW  # swap on and off
+        digitalWrite(LED_BUILTIN, led_state)
     # Nothing here waits, so other work can go here and still run every pass.
 
 
