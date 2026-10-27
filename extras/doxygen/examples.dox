@@ -1,13 +1,16 @@
 /*
- * The Examples page, and the scripts in examples/ registered for it, with the
- * formatted description shown above each script's source. Doxygen does not
- * read comments in the scripts themselves, so keep each block here in step
- * with that script's header comment, with the list on the Examples page, with
- * the scripts under Examples in DoxygenLayout.xml (the side menu) and with the
- * Examples table in README.md.
+ * The Examples landing page, the two pages it leads to, one for each set of
+ * examples in examples/, and the scripts registered for them, with the formatted description shown above each
+ * script's source. Doxygen does not read comments in the scripts themselves, so
+ * keep each block here in step with that script's header comment, with the
+ * lists on its Examples page, with the scripts under Examples in
+ * DoxygenLayout.xml (the side menu) and with the Examples table in README.md.
  *
- * The Examples page replaces Doxygen's own list (hidden in DoxygenLayout.xml),
- * which can only show file paths such as 01_basics/read_analog_voltage/main.py. For the same
+ * The two sets have the same examples: examples/arduino/ (arduino.py, setup()
+ * and loop()) and examples/phyduino/ (phyduino.py, plain MicroPython).
+ *
+ * These pages replace Doxygen's own list (hidden in DoxygenLayout.xml),
+ * which can only show file paths such as arduino/01_basics/blink/main.py. For the same
  * reason each script's page title is set by the hidden example-title span at
  * the start of its block, which a script in footer.html moves into the title.
  */
@@ -15,70 +18,553 @@
 /**
 @page example_scripts Examples
 
-Example scripts for the Phyduino Pico, in folders named after the Arduino
-IDE's example categories. Each example is a `main.py` in its own folder, because
-MicroPython runs `main.py` each time the board starts. Each page below explains
-what the script does, how to wire it and what it prints, followed by its source.
+Example scripts for the Phyduino Pico. There are two sets with the same
+examples: pick the library you want to use.
+
+| Examples | Uses | Laid out as |
+|---|---|---|
+| @ref examples_arduino "arduino.py examples" | The Arduino-style functions: `from arduino import *`; pinMode(), digitalWrite(), analogRead() (0-1023), analogWrite() (0-255), delay(), millis() | An Arduino sketch: setup() runs once, then loop() runs over and over |
+| @ref examples_phyduino "phyduino.py examples" | The Phyduino Pico library: `import phyduino as mcu`; pin(), pwm(), `led`, analog_read() (0-4095), time.sleep() | A plain MicroPython script: the set-up code at the top runs once, then a `while True:` loop runs over and over |
+
+Choose arduino.py if you know Arduino or want code that reads like an
+Arduino sketch, and phyduino.py for the usual MicroPython style and the
+board's full resolution.
+
+@par Blink, in each set
+arduino.py (the main() at the end of each file is left out here):
+@code{.py}
+from arduino import *
+
+def setup():
+    pinMode(LED_BUILTIN, OUTPUT)
+
+def loop():
+    digitalWrite(LED_BUILTIN, HIGH)
+    delay(500)
+    digitalWrite(LED_BUILTIN, LOW)
+    delay(500)
+@endcode
+phyduino.py:
+@code{.py}
+import time
+import phyduino as mcu
+
+while True:
+    mcu.led.toggle()
+    time.sleep(0.5)
+@endcode
+*/
+
+/**
+@page examples_arduino arduino.py examples
+
+Example scripts for the Phyduino Pico that use the Arduino-style functions in
+`arduino.py` (`from arduino import *`), in `examples/arduino/`. Each script has
+the shape of an Arduino sketch: setup() runs once, then loop() runs over and
+over, using pinMode(), digitalWrite(), analogRead() (0-1023), analogWrite()
+(0-255), delay() and millis(). The main() at the end of each file starts them;
+leave it as it is.
+
+The examples are in folders named after the Arduino IDE's example categories,
+with board-specific ones in `phyduino_pico/`. Each example is a `main.py` in its
+own folder, because MicroPython runs `main.py` each time the board starts. Each
+page below explains what the script does, how to wire it and what it prints,
+followed by its source. The same examples written with phyduino.py are on
+the @ref examples_phyduino "phyduino.py examples" page.
 
 With the Phyduino Pico firmware on the board, run a script from PyCharm, or with
-`mpremote run examples/<folder>/<name>/main.py`. To have it run every time the
-board starts, copy its `main.py` to the board:
-`mpremote cp examples/<folder>/<name>/main.py :`, then press RESET.
+`mpremote run examples/arduino/<folder>/<name>/main.py`. To have it run every time
+the board starts, copy its `main.py` to the board:
+`mpremote cp examples/arduino/<folder>/<name>/main.py :`, then press RESET.
 
-Every script has the same shape as an Arduino sketch: setup() runs once, then
-loop() runs over and over. The main() at the end of each file starts them; leave
-it as it is.
 
 @par 01_basics
 | Example | What it shows |
 |---|---|
-| @ref 01_basics/bare_minimum/main.py "Bare Minimum" | The empty setup() and loop() to start a program from |
-| @ref 01_basics/blink/main.py "Blink" | Blinking the on-board LED |
-| @ref 01_basics/analog_read_serial/main.py "Analog Read Serial" | All six analogue pins as 12-bit codes |
-| @ref 01_basics/digital_read_serial/main.py "Digital Read Serial" | Printing the state of a pushbutton |
-| @ref 01_basics/fade/main.py "Fade" | Fading the on-board LED with PWM |
-| @ref 01_basics/read_analog_voltage/main.py "Read Analog Voltage" | All six analogue pins in millivolts |
+| @ref arduino/01_basics/bare_minimum/main.py "Bare Minimum" | The empty setup() and loop() to start a program from |
+| @ref arduino/01_basics/blink/main.py "Blink" | Blinking the on-board LED |
+| @ref arduino/01_basics/analog_read_serial/main.py "Analog Read Serial" | All six analogue pins with analogRead(), 0-1023 |
+| @ref arduino/01_basics/digital_read_serial/main.py "Digital Read Serial" | Printing the state of a pushbutton |
+| @ref arduino/01_basics/fade/main.py "Fade" | Fading the on-board LED with analogWrite() |
+| @ref arduino/01_basics/read_analog_voltage/main.py "Read Analog Voltage" | All six analogue pins in millivolts |
 
 @par 02_digital
 | Example | What it shows |
 |---|---|
-| @ref 02_digital/blink_without_delay/main.py "Blink Without Delay" | Timing with time.ticks_ms() instead of time.sleep() |
-| @ref 02_digital/button/main.py "Button" | Lighting the LED while a pushbutton is pressed |
-| @ref 02_digital/debounce/main.py "Debounce" | Ignoring contact bounce so each press counts once |
-| @ref 02_digital/digital_input_pullup/main.py "Digital Input Pullup" | A pushbutton with the pin's own pull-up resistor |
-| @ref 02_digital/state_change_detection/main.py "State Change Detection" | Counting presses by detecting the edge |
-| @ref 02_digital/tone_melody/main.py "Tone Melody" | Playing a tune on a piezo buzzer |
-| @ref 02_digital/tone_pitch_follower/main.py "Tone Pitch Follower" | A pitch that follows an analogue input |
+| @ref arduino/02_digital/blink_without_delay/main.py "Blink Without Delay" | Timing with millis() instead of delay() |
+| @ref arduino/02_digital/button/main.py "Button" | Lighting the LED while a pushbutton is pressed |
+| @ref arduino/02_digital/debounce/main.py "Debounce" | Ignoring contact bounce so each press counts once |
+| @ref arduino/02_digital/digital_input_pullup/main.py "Digital Input Pullup" | A pushbutton with the pin's own pull-up resistor |
+| @ref arduino/02_digital/state_change_detection/main.py "State Change Detection" | Counting presses by detecting the edge |
+| @ref arduino/02_digital/tone_melody/main.py "Tone Melody" | Playing a tune on a piezo buzzer |
+| @ref arduino/02_digital/tone_pitch_follower/main.py "Tone Pitch Follower" | A pitch that follows an analogue input |
 
 @par 03_analog
 | Example | What it shows |
 |---|---|
-| @ref 03_analog/analog_in_out_serial/main.py "Analog In Out Serial" | Setting LED brightness from a potentiometer |
-| @ref 03_analog/calibration/main.py "Calibration" | Learning a sensor's range at start-up |
-| @ref 03_analog/smoothing/main.py "Smoothing" | A running average of the last 10 readings |
+| @ref arduino/03_analog/analog_in_out_serial/main.py "Analog In Out Serial" | Setting LED brightness from a potentiometer |
+| @ref arduino/03_analog/calibration/main.py "Calibration" | Learning a sensor's range at start-up |
+| @ref arduino/03_analog/smoothing/main.py "Smoothing" | A running average of the last 10 readings |
 
 @par 04_communication
 | Example | What it shows |
 |---|---|
-| @ref 04_communication/ascii_table/main.py "ASCII Table" | Characters with their decimal, hex, octal and binary values |
-| @ref 04_communication/graph/main.py "Graph" | Sending readings to a serial plotter |
-| @ref 04_communication/i2c_scanner/main.py "I2C Scanner" | Finding the devices on the I2C bus |
-| @ref 04_communication/physical_pixel/main.py "Physical Pixel" | Switching the LED from the computer |
-| @ref 04_communication/uart_loopback/main.py "UART Loopback" | Sending and receiving on UART0 |
+| @ref arduino/04_communication/ascii_table/main.py "ASCII Table" | Characters with their decimal, hex, octal and binary values |
+| @ref arduino/04_communication/graph/main.py "Graph" | Sending readings to a serial plotter |
+| @ref arduino/04_communication/i2c_scanner/main.py "I2C Scanner" | Finding the devices on the I2C bus |
+| @ref arduino/04_communication/physical_pixel/main.py "Physical Pixel" | Switching the LED from the computer |
+| @ref arduino/04_communication/uart_loopback/main.py "UART Loopback" | Sending and receiving on UART0 |
 
 @par phyduino_pico
 Features of this board that the Arduino examples have no match for.
 | Example | What it shows |
 |---|---|
-| @ref phyduino_pico/analog_averaging/main.py "Analog Averaging" | How the averaging setting steadies a reading |
-| @ref phyduino_pico/analog_differential/main.py "Analog Differential" | The voltage between two pins |
-| @ref phyduino_pico/vbus_monitor/main.py "VBUS Monitor" | The USB-C supply voltage and the CPU temperature |
-| @ref phyduino_pico/usb_pd_power/main.py "USB-PD Power" | Asking a USB-PD charger for a higher voltage |
+| @ref arduino/phyduino_pico/analog_averaging/main.py "Analog Averaging" | How the averaging setting steadies a reading |
+| @ref arduino/phyduino_pico/analog_differential/main.py "Analog Differential" | The voltage between two pins |
+| @ref arduino/phyduino_pico/vbus_monitor/main.py "VBUS Monitor" | The USB-C supply voltage and the CPU temperature |
+| @ref arduino/phyduino_pico/usb_pd_power/main.py "USB-PD Power" | Asking a USB-PD charger for a higher voltage |
 */
 
 /**
- * @example 01_basics/blink/main.py
- * @htmlonly<span class="example-title" hidden>Blink example script</span>@endhtmlonly
+@page examples_phyduino phyduino.py examples
+
+Example scripts for the Phyduino Pico that use `phyduino.py`
+(`import phyduino as mcu`), in `examples/phyduino/`, written the usual
+MicroPython way: the set-up code at the top of the file runs once, then a
+`while True:` loop runs over and over. Analogue readings are 12-bit (0-4095)
+and PWM duty is 0-65535.
+
+The examples are in folders named after the Arduino IDE's example categories,
+with board-specific ones in `phyduino_pico/`. Each example is a `main.py` in its
+own folder, because MicroPython runs `main.py` each time the board starts. Each
+page below explains what the script does, how to wire it and what it prints,
+followed by its source. The same examples written with arduino.py are on
+the @ref examples_arduino "arduino.py examples" page.
+
+With the Phyduino Pico firmware on the board, run a script from PyCharm, or with
+`mpremote run examples/phyduino/<folder>/<name>/main.py`. To have it run every time
+the board starts, copy its `main.py` to the board:
+`mpremote cp examples/phyduino/<folder>/<name>/main.py :`, then press RESET.
+
+
+@par 01_basics
+| Example | What it shows |
+|---|---|
+| @ref phyduino/01_basics/bare_minimum/main.py "Bare Minimum" | The empty program to start from |
+| @ref phyduino/01_basics/blink/main.py "Blink" | Blinking the on-board LED |
+| @ref phyduino/01_basics/analog_read_serial/main.py "Analog Read Serial" | All six analogue pins as 12-bit codes |
+| @ref phyduino/01_basics/digital_read_serial/main.py "Digital Read Serial" | Printing the state of a pushbutton |
+| @ref phyduino/01_basics/fade/main.py "Fade" | Fading the on-board LED with PWM |
+| @ref phyduino/01_basics/read_analog_voltage/main.py "Read Analog Voltage" | All six analogue pins in millivolts |
+
+@par 02_digital
+| Example | What it shows |
+|---|---|
+| @ref phyduino/02_digital/blink_without_delay/main.py "Blink Without Delay" | Timing with time.ticks_ms() instead of time.sleep() |
+| @ref phyduino/02_digital/button/main.py "Button" | Lighting the LED while a pushbutton is pressed |
+| @ref phyduino/02_digital/debounce/main.py "Debounce" | Ignoring contact bounce so each press counts once |
+| @ref phyduino/02_digital/digital_input_pullup/main.py "Digital Input Pullup" | A pushbutton with the pin's own pull-up resistor |
+| @ref phyduino/02_digital/state_change_detection/main.py "State Change Detection" | Counting presses by detecting the edge |
+| @ref phyduino/02_digital/tone_melody/main.py "Tone Melody" | Playing a tune on a piezo buzzer |
+| @ref phyduino/02_digital/tone_pitch_follower/main.py "Tone Pitch Follower" | A pitch that follows an analogue input |
+
+@par 03_analog
+| Example | What it shows |
+|---|---|
+| @ref phyduino/03_analog/analog_in_out_serial/main.py "Analog In Out Serial" | Setting LED brightness from a potentiometer |
+| @ref phyduino/03_analog/calibration/main.py "Calibration" | Learning a sensor's range at start-up |
+| @ref phyduino/03_analog/smoothing/main.py "Smoothing" | A running average of the last 10 readings |
+
+@par 04_communication
+| Example | What it shows |
+|---|---|
+| @ref phyduino/04_communication/ascii_table/main.py "ASCII Table" | Characters with their decimal, hex, octal and binary values |
+| @ref phyduino/04_communication/graph/main.py "Graph" | Sending readings to a serial plotter |
+| @ref phyduino/04_communication/i2c_scanner/main.py "I2C Scanner" | Finding the devices on the I2C bus |
+| @ref phyduino/04_communication/physical_pixel/main.py "Physical Pixel" | Switching the LED from the computer |
+| @ref phyduino/04_communication/uart_loopback/main.py "UART Loopback" | Sending and receiving on UART0 |
+
+@par phyduino_pico
+Features of this board that the Arduino examples have no match for.
+| Example | What it shows |
+|---|---|
+| @ref phyduino/phyduino_pico/analog_averaging/main.py "Analog Averaging" | How the averaging setting steadies a reading |
+| @ref phyduino/phyduino_pico/analog_differential/main.py "Analog Differential" | The voltage between two pins |
+| @ref phyduino/phyduino_pico/vbus_monitor/main.py "VBUS Monitor" | The USB-C supply voltage and the CPU temperature |
+| @ref phyduino/phyduino_pico/usb_pd_power/main.py "USB-PD Power" | Asking a USB-PD charger for a higher voltage |
+*/
+
+/**
+ * @example arduino/01_basics/bare_minimum/main.py
+ * @htmlonly<span class="example-title" hidden>Bare Minimum example script (arduino.py)</span>@endhtmlonly
+ * The smallest program: set-up code goes in setup(), which runs once, and the
+ * main code goes in loop(), which runs over and over. Copy this file to start
+ * a new program.
+ */
+
+/**
+ * @example arduino/01_basics/blink/main.py
+ * @htmlonly<span class="example-title" hidden>Blink example script (arduino.py)</span>@endhtmlonly
+ * Blinks the on-board green LED once a second.
+ *
+ * @par Uses
+ * pinMode(), digitalWrite(), delay()
+ */
+
+/**
+ * @example arduino/01_basics/analog_read_serial/main.py
+ * @htmlonly<span class="example-title" hidden>Analog Read Serial example script (arduino.py)</span>@endhtmlonly
+ * Reads all six analogue pins with analogRead() (0-1023), twice a second.
+ *
+ * A0-A2: 0 = 0 V, 1023 = 3.3 V (RP2040 ADC). A3-A5: 0 = 0 V, 1023 = 2.048 V
+ * (on-board MAX11635 ADC).
+ *
+ * @par Wiring
+ * Connect a potentiometer wiper (ends on GND and 3.3 V) to any pin to see it
+ * change; keep A3-A5 at or below 2.048 V. Unconnected pins drift.
+ *
+ * @par Output
+ * @code{.unparsed}
+ * A0= 512  A1=   0  A2=   0  A3= 512  A4=   0  A5=   0
+ * @endcode
+ */
+
+/**
+ * @example arduino/01_basics/digital_read_serial/main.py
+ * @htmlonly<span class="example-title" hidden>Digital Read Serial example script (arduino.py)</span>@endhtmlonly
+ * Prints the state of a pushbutton on D2, 1 when pressed and 0 when not, ten
+ * times a second.
+ *
+ * @par Wiring
+ * A pushbutton between D2 and 3.3 V. The pin's pull-down resistor holds D2 at
+ * 0 while the button is open.
+ */
+
+/**
+ * @example arduino/01_basics/fade/main.py
+ * @htmlonly<span class="example-title" hidden>Fade example script (arduino.py)</span>@endhtmlonly
+ * Fades the on-board LED up and down with PWM, about once every three
+ * seconds. analogWrite() takes 0 (off) to 255 (fully on); the brightness goes
+ * up in 51 steps of 5, 30 ms apart, then back down.
+ *
+ * @par Uses
+ * analogWrite(), delay()
+ */
+
+/**
+ * @example arduino/01_basics/read_analog_voltage/main.py
+ * @htmlonly<span class="example-title" hidden>Read Analog Voltage example script (arduino.py)</span>@endhtmlonly
+ * Prints the voltage on every analogue pin, in millivolts, twice a second.
+ *
+ * Each analogRead() is scaled with its own pin's full scale (3.3 V for A0-A2,
+ * 2.048 V for A3-A5), so the numbers can be compared directly.
+ *
+ * @par Output
+ * A0 to A5 in order:
+ * @code{.unparsed}
+ * 1650.0 0.0 0.0 1024.0 0.0 0.0
+ * @endcode
+ */
+
+/**
+ * @example arduino/02_digital/blink_without_delay/main.py
+ * @htmlonly<span class="example-title" hidden>Blink Without Delay example script (arduino.py)</span>@endhtmlonly
+ * Blinks the on-board LED once a second without delay(), so loop() is free
+ * to do other work between changes. Each pass checks how long it has been since
+ * the last change with millis(), which never wraps round, so plain subtraction
+ * works.
+ */
+
+/**
+ * @example arduino/02_digital/button/main.py
+ * @htmlonly<span class="example-title" hidden>Button example script (arduino.py)</span>@endhtmlonly
+ * Lights the on-board LED while a pushbutton on D2 is pressed.
+ *
+ * @par Wiring
+ * A pushbutton between D2 and 3.3 V. The pin's pull-down resistor holds D2 at
+ * 0 while the button is open.
+ */
+
+/**
+ * @example arduino/02_digital/debounce/main.py
+ * @htmlonly<span class="example-title" hidden>Debounce example script (arduino.py)</span>@endhtmlonly
+ * Toggles the on-board LED each time a pushbutton on D2 is pressed, ignoring
+ * the contact bounce that makes one press look like several. A new reading
+ * only counts once it has stayed the same for `DEBOUNCE_MS`.
+ *
+ * @par Wiring
+ * A pushbutton between D2 and 3.3 V; the pull-down holds D2 at 0 while the
+ * button is open.
+ */
+
+/**
+ * @example arduino/02_digital/digital_input_pullup/main.py
+ * @htmlonly<span class="example-title" hidden>Digital Input Pullup example script (arduino.py)</span>@endhtmlonly
+ * Reads a pushbutton on D2 using the pin's pull-up resistor, so no other
+ * parts are needed, prints its state and lights the on-board LED while it is
+ * pressed.
+ *
+ * @par Wiring
+ * A pushbutton between D2 and GND. The pull-up holds D2 at 1 while the button
+ * is open, so the logic is inverted: pressed reads 0.
+ */
+
+/**
+ * @example arduino/02_digital/state_change_detection/main.py
+ * @htmlonly<span class="example-title" hidden>State Change Detection example script (arduino.py)</span>@endhtmlonly
+ * Counts presses of a pushbutton on D2 and lights the on-board LED on every
+ * fourth press. It acts on the change from released to pressed (an edge), not
+ * on the button being held down.
+ *
+ * @par Wiring
+ * A pushbutton between D2 and 3.3 V; the pull-down holds D2 at 0 while the
+ * button is open.
+ *
+ * @par Output
+ * @code{.unparsed}
+ * on
+ * number of button pushes: 1
+ * off
+ * @endcode
+ */
+
+/**
+ * @example arduino/02_digital/tone_melody/main.py
+ * @htmlonly<span class="example-title" hidden>Tone Melody example script (arduino.py)</span>@endhtmlonly
+ * Plays a short tune on a piezo buzzer on D8, then waits two seconds and
+ * plays it again. tone() returns straight away, so delay() waits while the
+ * note plays.
+ *
+ * @par Wiring
+ * A piezo buzzer between D8 and GND (or a small speaker in series with a
+ * 100 Ohm resistor).
+ *
+ * @par Uses
+ * tone(), noTone(), delay()
+ */
+
+/**
+ * @example arduino/02_digital/tone_pitch_follower/main.py
+ * @htmlonly<span class="example-title" hidden>Tone Pitch Follower example script (arduino.py)</span>@endhtmlonly
+ * Plays a pitch on a piezo buzzer on D8 that follows the voltage on A0, from
+ * 120 Hz at 0 V to 1500 Hz at 3.3 V, and prints the reading and the pitch.
+ *
+ * @par Wiring
+ * A piezo buzzer between D8 and GND, and a potentiometer wiper (ends on GND
+ * and 3.3 V) or a light sensor divider on A0.
+ *
+ * @par Uses
+ * analogRead(), map(), tone()
+ */
+
+/**
+ * @example arduino/03_analog/analog_in_out_serial/main.py
+ * @htmlonly<span class="example-title" hidden>Analog In Out Serial example script (arduino.py)</span>@endhtmlonly
+ * Reads a potentiometer on A0 with analogRead(), sets the on-board LED's
+ * brightness from it with analogWrite(), and prints both numbers.
+ *
+ * @par Wiring
+ * A potentiometer wiper on A0, with its ends on GND and 3.3 V.
+ *
+ * @par Output
+ * @code{.unparsed}
+ * sensor = 512   output = 127
+ * @endcode
+ */
+
+/**
+ * @example arduino/03_analog/calibration/main.py
+ * @htmlonly<span class="example-title" hidden>Calibration example script (arduino.py)</span>@endhtmlonly
+ * Learns the range of a sensor on A0 during the first five seconds, then sets
+ * the on-board LED's brightness from where each reading falls in that range.
+ *
+ * @par Wiring
+ * A sensor, e.g. a light-dependent resistor divider, on A0. While the LED is
+ * on at the start, give the sensor its lowest and highest values, e.g. cover
+ * it and then shine a light on it.
+ */
+
+/**
+ * @example arduino/03_analog/smoothing/main.py
+ * @htmlonly<span class="example-title" hidden>Smoothing example script (arduino.py)</span>@endhtmlonly
+ * Prints a running average of the last 10 readings of A0, which steadies a
+ * noisy signal. Each new reading replaces the oldest one. For averaging done
+ * by the board itself, see @ref arduino/phyduino_pico/analog_averaging/main.py "Analog Averaging".
+ *
+ * @par Wiring
+ * A potentiometer wiper or sensor on A0 (0-3.3 V).
+ */
+
+/**
+ * @example arduino/04_communication/ascii_table/main.py
+ * @htmlonly<span class="example-title" hidden>ASCII Table example script (arduino.py)</span>@endhtmlonly
+ * Prints the printable ASCII characters, 33 ("!") to 126 ("~"), each with its
+ * value in decimal, hexadecimal, octal and binary, once, in setup().
+ *
+ * @par Output
+ * @code{.unparsed}
+ * ASCII Table ~ Character Map
+ * !, dec: 33, hex: 21, oct: 41, bin: 100001
+ * ", dec: 34, hex: 22, oct: 42, bin: 100010
+ * ...
+ * @endcode
+ */
+
+/**
+ * @example arduino/04_communication/graph/main.py
+ * @htmlonly<span class="example-title" hidden>Graph example script (arduino.py)</span>@endhtmlonly
+ * Prints the reading on A0, one number per line, 50 times a second, for a
+ * serial plotter to draw as a graph. Close PyCharm's REPL or mpremote first so
+ * the port is free.
+ *
+ * @par Wiring
+ * A potentiometer wiper or sensor on A0 (0-3.3 V).
+ */
+
+/**
+ * @example arduino/04_communication/i2c_scanner/main.py
+ * @htmlonly<span class="example-title" hidden>I2C Scanner example script (arduino.py)</span>@endhtmlonly
+ * Lists the addresses of the I2C devices on SDA (D18) and SCL (D19), every
+ * 5 seconds, so a module can be plugged in while it runs.
+ *
+ * Arduino's Wire has no match here, so this uses `mcu.i2c()` from phyduino.py.
+ *
+ * @par Wiring
+ * The board has no pull-up resistors on these pins. Most sensor modules
+ * include them; otherwise fit 4.7 kOhm resistors from SDA and SCL to 3.3 V.
+ * The on-board USB-PD controller is on a separate bus and does not appear.
+ *
+ * @par Output
+ * @code{.unparsed}
+ * Found: 0x3C, 0x76
+ * @endcode
+ */
+
+/**
+ * @example arduino/04_communication/physical_pixel/main.py
+ * @htmlonly<span class="example-title" hidden>Physical Pixel example script (arduino.py)</span>@endhtmlonly
+ * Turns the on-board LED on when it receives "H" and off when it receives "L"
+ * from the computer. Type the letters in the REPL terminal (PyCharm's REPL
+ * or mpremote) while the script runs. `sys.stdin.read(1)` waits for
+ * the next character, so loop() pauses until one arrives.
+ */
+
+/**
+ * @example arduino/04_communication/uart_loopback/main.py
+ * @htmlonly<span class="example-title" hidden>UART Loopback example script (arduino.py)</span>@endhtmlonly
+ * Sends a numbered message out of UART0 and reads it back, twice a second.
+ *
+ * Arduino's Serial1 has no match here, so this uses `mcu.uart()` from phyduino.py.
+ *
+ * @par Wiring
+ * Connect a jumper wire from D1 (TX) to D0 (RX) first; without it, nothing
+ * comes back.
+ *
+ * @par Output
+ * @code{.unparsed}
+ * sent 'hello 0', received 'hello 0'
+ * @endcode
+ */
+
+/**
+ * @example arduino/phyduino_pico/analog_averaging/main.py
+ * @htmlonly<span class="example-title" hidden>Analog Averaging example script (arduino.py)</span>@endhtmlonly
+ * Shows how averaging steadies a reading. For each setting, takes 100
+ * readings of A0 and A3 and prints the lowest, the highest and the spread
+ * between them (in ADC steps), then waits 5 seconds and starts again.
+ *
+ * Arduino has no averaging setting, so this uses `mcu.analog_averaging()` from
+ * phyduino.py, which applies to every analogue pin: A3-A5 average in the
+ * external ADC itself, A0-A2 take the samples one after another.
+ * analogReadResolution(12) makes analogRead() give the ADCs' own 0-4095 steps.
+ *
+ * @par Wiring
+ * Connect a steady voltage, e.g. a potentiometer wiper, to A0 (0-3.3 V) and
+ * A3 (0-2.048 V), or leave them as they are.
+ *
+ * @par Output
+ * @code{.unparsed}
+ * averaging  1  A0  lowest 2040  highest 2056  spread  16
+ * averaging  1  A3  lowest 2046  highest 2050  spread   4
+ * ...
+ * averaging 32  A0  lowest 2047  highest 2049  spread   2
+ * @endcode
+ */
+
+/**
+ * @example arduino/phyduino_pico/analog_differential/main.py
+ * @htmlonly<span class="example-title" hidden>Analog Differential example script (arduino.py)</span>@endhtmlonly
+ * Measures the voltage between two analogue pins, e.g. across a resistor or a
+ * sensor bridge, twice a second.
+ *
+ * Arduino has no differential reading, so this uses the phyduino.py functions.
+ *
+ * - **A3 - A4**: true differential. The on-board ADC samples both pins at the
+ *   same instant, so noise common to both cancels. Range ±1024 mV in 0.5 mV
+ *   steps (a larger difference is measured as two separate readings).
+ * - **A0 - A1**: computed from readings taken one after the other. Fine for
+ *   slow signals, but noise on both pins does not cancel.
+ *
+ * @par Wiring
+ * Keep every pin between 0 V and its full scale (A0-A2: 3.3 V, A3-A5: 2.048 V).
+ *
+ * @par Output
+ * @code{.unparsed}
+ * A3 - A4:   100.0 mV    A0 - A1:    99.1 mV
+ * @endcode
+ */
+
+/**
+ * @example arduino/phyduino_pico/vbus_monitor/main.py
+ * @htmlonly<span class="example-title" hidden>VBUS Monitor example script (arduino.py)</span>@endhtmlonly
+ * Prints the USB-C supply voltage (VBUS) and the RP2040's temperature once a
+ * second. VBUS is about 5 V from a computer; a USB-PD charger can raise it
+ * (see @ref arduino/phyduino_pico/usb_pd_power/main.py "USB-PD Power"). VBUS is also on the header's VIN pin.
+ *
+ * Arduino has no match for these, so this uses the phyduino.py functions.
+ *
+ * @par Output
+ * @code{.unparsed}
+ * VBUS 5.02 V    CPU 24.3 C
+ * @endcode
+ */
+
+/**
+ * @example arduino/phyduino_pico/usb_pd_power/main.py
+ * @htmlonly<span class="example-title" hidden>USB-PD Power example script (arduino.py)</span>@endhtmlonly
+ * Asks a USB-PD charger for up to `MAX_VOLTS`, then prints the board's
+ * profiles, the contract and the measured VBUS once a second.
+ *
+ * Arduino has no match for this, so this uses `mcu.usb_pd()` and `mcu.uart()` from phyduino.py.
+ *
+ * A charger takes the only USB-C port, so there is no USB connection to the
+ * computer while it is plugged in. Copy this `main.py` to the board so it runs
+ * by itself, and watch the output on UART0 (TX on D1, 115200 baud)
+ * with a USB-serial adapter. The green POK2 LED lights at 9 V, POK3 at 20 V.
+ *
+ * @warning VBUS also feeds the VIN pin, so VIN follows the contract:
+ * disconnect anything on VIN that can't take the voltage you ask for.
+ *
+ * The request lasts until the board loses power.
+ *
+ * @par Output
+ * @code{.unparsed}
+ * Profiles: 5 V 2 A, 9 V 1 A
+ * Contract: offer 2, 1.00 A    VBUS 9.01 V
+ * @endcode
+ */
+
+/**
+ * @example phyduino/01_basics/bare_minimum/main.py
+ * @htmlonly<span class="example-title" hidden>Bare Minimum example script (phyduino.py)</span>@endhtmlonly
+ * The smallest program: set-up code goes at the top and runs once, and the
+ * main code goes inside `while True:`, which runs over and over. Copy this file
+ * to start a new program.
+ */
+
+/**
+ * @example phyduino/01_basics/blink/main.py
+ * @htmlonly<span class="example-title" hidden>Blink example script (phyduino.py)</span>@endhtmlonly
  * Blinks the on-board green LED once a second.
  *
  * @par Uses
@@ -86,8 +572,8 @@ Features of this board that the Arduino examples have no match for.
  */
 
 /**
- * @example 01_basics/analog_read_serial/main.py
- * @htmlonly<span class="example-title" hidden>Analog Read Serial example script</span>@endhtmlonly
+ * @example phyduino/01_basics/analog_read_serial/main.py
+ * @htmlonly<span class="example-title" hidden>Analog Read Serial example script (phyduino.py)</span>@endhtmlonly
  * Reads all six analogue pins as 12-bit codes (0-4095), twice a second.
  *
  * A0-A2: 0 = 0 V, 4095 = 3.3 V (RP2040 ADC). A3-A5: 0 = 0 V, 4095 = 2.048 V
@@ -104,8 +590,30 @@ Features of this board that the Arduino examples have no match for.
  */
 
 /**
- * @example 01_basics/read_analog_voltage/main.py
- * @htmlonly<span class="example-title" hidden>Read Analog Voltage example script</span>@endhtmlonly
+ * @example phyduino/01_basics/digital_read_serial/main.py
+ * @htmlonly<span class="example-title" hidden>Digital Read Serial example script (phyduino.py)</span>@endhtmlonly
+ * Prints the state of a pushbutton on D2, 1 when pressed and 0 when not, ten
+ * times a second.
+ *
+ * @par Wiring
+ * A pushbutton between D2 and 3.3 V. The pin's pull-down resistor holds D2 at
+ * 0 while the button is open.
+ */
+
+/**
+ * @example phyduino/01_basics/fade/main.py
+ * @htmlonly<span class="example-title" hidden>Fade example script (phyduino.py)</span>@endhtmlonly
+ * Fades the on-board LED up and down with PWM, about once every three
+ * seconds. The duty cycle goes from 0 (off) to 65535 (fully on) in 51 steps,
+ * 30 ms apart, then back down.
+ *
+ * @par Uses
+ * pwm()
+ */
+
+/**
+ * @example phyduino/01_basics/read_analog_voltage/main.py
+ * @htmlonly<span class="example-title" hidden>Read Analog Voltage example script (phyduino.py)</span>@endhtmlonly
  * Prints the voltage on every analogue pin, in millivolts, twice a second.
  *
  * The library scales each pin with its own full scale (3.3 V for A0-A2,
@@ -119,8 +627,203 @@ Features of this board that the Arduino examples have no match for.
  */
 
 /**
- * @example phyduino_pico/analog_averaging/main.py
- * @htmlonly<span class="example-title" hidden>Analog Averaging example script</span>@endhtmlonly
+ * @example phyduino/02_digital/blink_without_delay/main.py
+ * @htmlonly<span class="example-title" hidden>Blink Without Delay example script (phyduino.py)</span>@endhtmlonly
+ * Blinks the on-board LED once a second without time.sleep(), so the loop
+ * is free to do other work between changes. Each pass checks how long it has
+ * been since the last change with `time.ticks_ms()` and `time.ticks_diff()`.
+ */
+
+/**
+ * @example phyduino/02_digital/button/main.py
+ * @htmlonly<span class="example-title" hidden>Button example script (phyduino.py)</span>@endhtmlonly
+ * Lights the on-board LED while a pushbutton on D2 is pressed.
+ *
+ * @par Wiring
+ * A pushbutton between D2 and 3.3 V. The pin's pull-down resistor holds D2 at
+ * 0 while the button is open.
+ */
+
+/**
+ * @example phyduino/02_digital/debounce/main.py
+ * @htmlonly<span class="example-title" hidden>Debounce example script (phyduino.py)</span>@endhtmlonly
+ * Toggles the on-board LED each time a pushbutton on D2 is pressed, ignoring
+ * the contact bounce that makes one press look like several. A new reading
+ * only counts once it has stayed the same for `DEBOUNCE_MS`.
+ *
+ * @par Wiring
+ * A pushbutton between D2 and 3.3 V; the pull-down holds D2 at 0 while the
+ * button is open.
+ */
+
+/**
+ * @example phyduino/02_digital/digital_input_pullup/main.py
+ * @htmlonly<span class="example-title" hidden>Digital Input Pullup example script (phyduino.py)</span>@endhtmlonly
+ * Reads a pushbutton on D2 using the pin's pull-up resistor, so no other
+ * parts are needed, prints its state and lights the on-board LED while it is
+ * pressed.
+ *
+ * @par Wiring
+ * A pushbutton between D2 and GND. The pull-up holds D2 at 1 while the button
+ * is open, so the logic is inverted: pressed reads 0.
+ */
+
+/**
+ * @example phyduino/02_digital/state_change_detection/main.py
+ * @htmlonly<span class="example-title" hidden>State Change Detection example script (phyduino.py)</span>@endhtmlonly
+ * Counts presses of a pushbutton on D2 and lights the on-board LED on every
+ * fourth press. It acts on the change from released to pressed (an edge), not
+ * on the button being held down.
+ *
+ * @par Wiring
+ * A pushbutton between D2 and 3.3 V; the pull-down holds D2 at 0 while the
+ * button is open.
+ *
+ * @par Output
+ * @code{.unparsed}
+ * on
+ * number of button pushes: 1
+ * off
+ * @endcode
+ */
+
+/**
+ * @example phyduino/02_digital/tone_melody/main.py
+ * @htmlonly<span class="example-title" hidden>Tone Melody example script (phyduino.py)</span>@endhtmlonly
+ * Plays a short tune on a piezo buzzer on D8, then waits two seconds and
+ * plays it again. MicroPython has no `tone()`: a PWM output at 50 % duty
+ * makes the note, and a duty of 0 is silence.
+ *
+ * @par Wiring
+ * A piezo buzzer between D8 and GND (or a small speaker in series with a
+ * 100 Ohm resistor).
+ *
+ * @par Uses
+ * pwm()
+ */
+
+/**
+ * @example phyduino/02_digital/tone_pitch_follower/main.py
+ * @htmlonly<span class="example-title" hidden>Tone Pitch Follower example script (phyduino.py)</span>@endhtmlonly
+ * Plays a pitch on a piezo buzzer on D8 that follows the voltage on A0, from
+ * 120 Hz at 0 V to 1500 Hz at 3.3 V, and prints the reading and the pitch.
+ *
+ * @par Wiring
+ * A piezo buzzer between D8 and GND, and a potentiometer wiper (ends on GND
+ * and 3.3 V) or a light sensor divider on A0.
+ *
+ * @par Uses
+ * pwm(), analog_read()
+ */
+
+/**
+ * @example phyduino/03_analog/analog_in_out_serial/main.py
+ * @htmlonly<span class="example-title" hidden>Analog In Out Serial example script (phyduino.py)</span>@endhtmlonly
+ * Reads a potentiometer on A0, sets the on-board LED's brightness from it
+ * with PWM, and prints both numbers.
+ *
+ * @par Wiring
+ * A potentiometer wiper on A0, with its ends on GND and 3.3 V.
+ *
+ * @par Output
+ * @code{.unparsed}
+ * sensor = 2048   output = 32775
+ * @endcode
+ */
+
+/**
+ * @example phyduino/03_analog/calibration/main.py
+ * @htmlonly<span class="example-title" hidden>Calibration example script (phyduino.py)</span>@endhtmlonly
+ * Learns the range of a sensor on A0 during the first five seconds, then sets
+ * the on-board LED's brightness from where each reading falls in that range.
+ *
+ * @par Wiring
+ * A sensor, e.g. a light-dependent resistor divider, on A0. While the LED is
+ * on at the start, give the sensor its lowest and highest values, e.g. cover
+ * it and then shine a light on it.
+ */
+
+/**
+ * @example phyduino/03_analog/smoothing/main.py
+ * @htmlonly<span class="example-title" hidden>Smoothing example script (phyduino.py)</span>@endhtmlonly
+ * Prints a running average of the last 10 readings of A0, which steadies a
+ * noisy signal. Each new reading replaces the oldest one. For averaging done
+ * by the board itself, see @ref phyduino/phyduino_pico/analog_averaging/main.py "Analog Averaging".
+ *
+ * @par Wiring
+ * A potentiometer wiper or sensor on A0 (0-3.3 V).
+ */
+
+/**
+ * @example phyduino/04_communication/ascii_table/main.py
+ * @htmlonly<span class="example-title" hidden>ASCII Table example script (phyduino.py)</span>@endhtmlonly
+ * Prints the printable ASCII characters, 33 ("!") to 126 ("~"), each with its
+ * value in decimal, hexadecimal, octal and binary, then stops.
+ *
+ * @par Output
+ * @code{.unparsed}
+ * ASCII Table ~ Character Map
+ * !, dec: 33, hex: 21, oct: 41, bin: 100001
+ * ", dec: 34, hex: 22, oct: 42, bin: 100010
+ * ...
+ * @endcode
+ */
+
+/**
+ * @example phyduino/04_communication/graph/main.py
+ * @htmlonly<span class="example-title" hidden>Graph example script (phyduino.py)</span>@endhtmlonly
+ * Prints the reading on A0, one number per line, 50 times a second, for a
+ * serial plotter to draw as a graph. Close PyCharm's REPL or mpremote first so
+ * the port is free.
+ *
+ * @par Wiring
+ * A potentiometer wiper or sensor on A0 (0-3.3 V).
+ */
+
+/**
+ * @example phyduino/04_communication/i2c_scanner/main.py
+ * @htmlonly<span class="example-title" hidden>I2C Scanner example script (phyduino.py)</span>@endhtmlonly
+ * Lists the addresses of the I2C devices on SDA (D18) and SCL (D19), every
+ * 5 seconds, so a module can be plugged in while it runs.
+ *
+ * @par Wiring
+ * The board has no pull-up resistors on these pins. Most sensor modules
+ * include them; otherwise fit 4.7 kOhm resistors from SDA and SCL to 3.3 V.
+ * The on-board USB-PD controller is on a separate bus and does not appear.
+ *
+ * @par Output
+ * @code{.unparsed}
+ * Found: 0x3C, 0x76
+ * @endcode
+ */
+
+/**
+ * @example phyduino/04_communication/physical_pixel/main.py
+ * @htmlonly<span class="example-title" hidden>Physical Pixel example script (phyduino.py)</span>@endhtmlonly
+ * Turns the on-board LED on when it receives "H" and off when it receives "L"
+ * from the computer. Type the letters in the REPL terminal (PyCharm's REPL
+ * or mpremote) while the script runs. `sys.stdin.read(1)` waits for
+ * the next character, so the loop pauses until one arrives.
+ */
+
+/**
+ * @example phyduino/04_communication/uart_loopback/main.py
+ * @htmlonly<span class="example-title" hidden>UART Loopback example script (phyduino.py)</span>@endhtmlonly
+ * Sends a numbered message out of UART0 and reads it back, twice a second.
+ *
+ * @par Wiring
+ * Connect a jumper wire from D1 (TX) to D0 (RX) first; without it, nothing
+ * comes back.
+ *
+ * @par Output
+ * @code{.unparsed}
+ * sent 'hello 0', received 'hello 0'
+ * @endcode
+ */
+
+/**
+ * @example phyduino/phyduino_pico/analog_averaging/main.py
+ * @htmlonly<span class="example-title" hidden>Analog Averaging example script (phyduino.py)</span>@endhtmlonly
  * Shows how averaging steadies a reading. For each setting, takes 100
  * readings of A0 and A3 and prints the lowest, the highest and the spread
  * between them (in ADC steps), then waits 5 seconds and starts again.
@@ -142,8 +845,8 @@ Features of this board that the Arduino examples have no match for.
  */
 
 /**
- * @example phyduino_pico/analog_differential/main.py
- * @htmlonly<span class="example-title" hidden>Analog Differential example script</span>@endhtmlonly
+ * @example phyduino/phyduino_pico/analog_differential/main.py
+ * @htmlonly<span class="example-title" hidden>Analog Differential example script (phyduino.py)</span>@endhtmlonly
  * Measures the voltage between two analogue pins, e.g. across a resistor or a
  * sensor bridge, twice a second.
  *
@@ -163,11 +866,11 @@ Features of this board that the Arduino examples have no match for.
  */
 
 /**
- * @example phyduino_pico/vbus_monitor/main.py
- * @htmlonly<span class="example-title" hidden>VBUS Monitor example script</span>@endhtmlonly
+ * @example phyduino/phyduino_pico/vbus_monitor/main.py
+ * @htmlonly<span class="example-title" hidden>VBUS Monitor example script (phyduino.py)</span>@endhtmlonly
  * Prints the USB-C supply voltage (VBUS) and the RP2040's temperature once a
  * second. VBUS is about 5 V from a computer; a USB-PD charger can raise it
- * (see @ref phyduino_pico/usb_pd_power/main.py "USB-PD Power"). VBUS is also on the header's VIN pin.
+ * (see @ref phyduino/phyduino_pico/usb_pd_power/main.py "USB-PD Power"). VBUS is also on the header's VIN pin.
  *
  * @par Output
  * @code{.unparsed}
@@ -176,8 +879,8 @@ Features of this board that the Arduino examples have no match for.
  */
 
 /**
- * @example phyduino_pico/usb_pd_power/main.py
- * @htmlonly<span class="example-title" hidden>USB-PD Power example script</span>@endhtmlonly
+ * @example phyduino/phyduino_pico/usb_pd_power/main.py
+ * @htmlonly<span class="example-title" hidden>USB-PD Power example script (phyduino.py)</span>@endhtmlonly
  * Asks a USB-PD charger for up to `MAX_VOLTS`, then prints the board's
  * profiles, the contract and the measured VBUS once a second.
  *
@@ -196,229 +899,4 @@ Features of this board that the Arduino examples have no match for.
  * Profiles: 5 V 2 A, 9 V 1 A
  * Contract: offer 2, 1.00 A    VBUS 9.01 V
  * @endcode
- */
-
-/**
- * @example 04_communication/i2c_scanner/main.py
- * @htmlonly<span class="example-title" hidden>I2C Scanner example script</span>@endhtmlonly
- * Lists the addresses of the I2C devices on SDA (D18) and SCL (D19), every
- * 5 seconds, so a module can be plugged in while it runs.
- *
- * @par Wiring
- * The board has no pull-up resistors on these pins. Most sensor modules
- * include them; otherwise fit 4.7 kOhm resistors from SDA and SCL to 3.3 V.
- * The on-board USB-PD controller is on a separate bus and does not appear.
- *
- * @par Output
- * @code{.unparsed}
- * Found: 0x3C, 0x76
- * @endcode
- */
-
-/**
- * @example 04_communication/uart_loopback/main.py
- * @htmlonly<span class="example-title" hidden>UART Loopback example script</span>@endhtmlonly
- * Sends a numbered message out of UART0 and reads it back, twice a second.
- *
- * @par Wiring
- * Connect a jumper wire from D1 (TX) to D0 (RX) first; without it, nothing
- * comes back.
- *
- * @par Output
- * @code{.unparsed}
- * sent 'hello 0', received 'hello 0'
- * @endcode
- */
-
-/**
- * @example 01_basics/bare_minimum/main.py
- * @htmlonly<span class="example-title" hidden>Bare Minimum example script</span>@endhtmlonly
- * The smallest program: set-up code goes in setup(), which runs once, and the
- * main code goes in loop(), which runs over and over. Copy this file to start
- * a new program.
- */
-
-/**
- * @example 01_basics/digital_read_serial/main.py
- * @htmlonly<span class="example-title" hidden>Digital Read Serial example script</span>@endhtmlonly
- * Prints the state of a pushbutton on D2, 1 when pressed and 0 when not, ten
- * times a second.
- *
- * @par Wiring
- * A pushbutton between D2 and 3.3 V. The pin's pull-down resistor holds D2 at
- * 0 while the button is open.
- */
-
-/**
- * @example 01_basics/fade/main.py
- * @htmlonly<span class="example-title" hidden>Fade example script</span>@endhtmlonly
- * Fades the on-board LED up and down with PWM, about once every three
- * seconds. The duty cycle goes from 0 (off) to 65535 (fully on) in 51 steps,
- * 30 ms apart, then back down.
- *
- * @par Uses
- * pwm()
- */
-
-/**
- * @example 02_digital/blink_without_delay/main.py
- * @htmlonly<span class="example-title" hidden>Blink Without Delay example script</span>@endhtmlonly
- * Blinks the on-board LED once a second without time.sleep(), so loop() is
- * free to do other work between changes. Each pass checks how long it has
- * been since the last change with `time.ticks_ms()` and `time.ticks_diff()`.
- */
-
-/**
- * @example 02_digital/button/main.py
- * @htmlonly<span class="example-title" hidden>Button example script</span>@endhtmlonly
- * Lights the on-board LED while a pushbutton on D2 is pressed.
- *
- * @par Wiring
- * A pushbutton between D2 and 3.3 V. The pin's pull-down resistor holds D2 at
- * 0 while the button is open.
- */
-
-/**
- * @example 02_digital/debounce/main.py
- * @htmlonly<span class="example-title" hidden>Debounce example script</span>@endhtmlonly
- * Toggles the on-board LED each time a pushbutton on D2 is pressed, ignoring
- * the contact bounce that makes one press look like several. A new reading
- * only counts once it has stayed the same for `DEBOUNCE_MS`.
- *
- * @par Wiring
- * A pushbutton between D2 and 3.3 V; the pull-down holds D2 at 0 while the
- * button is open.
- */
-
-/**
- * @example 02_digital/digital_input_pullup/main.py
- * @htmlonly<span class="example-title" hidden>Digital Input Pullup example script</span>@endhtmlonly
- * Reads a pushbutton on D2 using the pin's pull-up resistor, so no other
- * parts are needed, prints its state and lights the on-board LED while it is
- * pressed.
- *
- * @par Wiring
- * A pushbutton between D2 and GND. The pull-up holds D2 at 1 while the button
- * is open, so the logic is inverted: pressed reads 0.
- */
-
-/**
- * @example 02_digital/state_change_detection/main.py
- * @htmlonly<span class="example-title" hidden>State Change Detection example script</span>@endhtmlonly
- * Counts presses of a pushbutton on D2 and lights the on-board LED on every
- * fourth press. It acts on the change from released to pressed (an edge), not
- * on the button being held down.
- *
- * @par Wiring
- * A pushbutton between D2 and 3.3 V; the pull-down holds D2 at 0 while the
- * button is open.
- *
- * @par Output
- * @code{.unparsed}
- * on
- * number of button pushes: 1
- * off
- * @endcode
- */
-
-/**
- * @example 02_digital/tone_melody/main.py
- * @htmlonly<span class="example-title" hidden>Tone Melody example script</span>@endhtmlonly
- * Plays a short tune on a piezo buzzer on D8, then waits two seconds and
- * plays it again. MicroPython has no `tone()`: a PWM output at 50 % duty
- * makes the note, and a duty of 0 is silence.
- *
- * @par Wiring
- * A piezo buzzer between D8 and GND (or a small speaker in series with a
- * 100 Ohm resistor).
- *
- * @par Uses
- * pwm()
- */
-
-/**
- * @example 02_digital/tone_pitch_follower/main.py
- * @htmlonly<span class="example-title" hidden>Tone Pitch Follower example script</span>@endhtmlonly
- * Plays a pitch on a piezo buzzer on D8 that follows the voltage on A0, from
- * 120 Hz at 0 V to 1500 Hz at 3.3 V, and prints the reading and the pitch.
- *
- * @par Wiring
- * A piezo buzzer between D8 and GND, and a potentiometer wiper (ends on GND
- * and 3.3 V) or a light sensor divider on A0.
- *
- * @par Uses
- * pwm(), analog_read()
- */
-
-/**
- * @example 03_analog/analog_in_out_serial/main.py
- * @htmlonly<span class="example-title" hidden>Analog In Out Serial example script</span>@endhtmlonly
- * Reads a potentiometer on A0, sets the on-board LED's brightness from it
- * with PWM, and prints both numbers.
- *
- * @par Wiring
- * A potentiometer wiper on A0, with its ends on GND and 3.3 V.
- *
- * @par Output
- * @code{.unparsed}
- * sensor = 2048   output = 32775
- * @endcode
- */
-
-/**
- * @example 03_analog/calibration/main.py
- * @htmlonly<span class="example-title" hidden>Calibration example script</span>@endhtmlonly
- * Learns the range of a sensor on A0 during the first five seconds, then sets
- * the on-board LED's brightness from where each reading falls in that range.
- *
- * @par Wiring
- * A sensor, e.g. a light-dependent resistor divider, on A0. While the LED is
- * on at the start, give the sensor its lowest and highest values, e.g. cover
- * it and then shine a light on it.
- */
-
-/**
- * @example 03_analog/smoothing/main.py
- * @htmlonly<span class="example-title" hidden>Smoothing example script</span>@endhtmlonly
- * Prints a running average of the last 10 readings of A0, which steadies a
- * noisy signal. Each new reading replaces the oldest one. For averaging done
- * by the board itself, see @ref phyduino_pico/analog_averaging/main.py "Analog Averaging".
- *
- * @par Wiring
- * A potentiometer wiper or sensor on A0 (0-3.3 V).
- */
-
-/**
- * @example 04_communication/ascii_table/main.py
- * @htmlonly<span class="example-title" hidden>ASCII Table example script</span>@endhtmlonly
- * Prints the printable ASCII characters, 33 ("!") to 126 ("~"), each with its
- * value in decimal, hexadecimal, octal and binary.
- *
- * @par Output
- * @code{.unparsed}
- * ASCII Table ~ Character Map
- * !, dec: 33, hex: 21, oct: 41, bin: 100001
- * ", dec: 34, hex: 22, oct: 42, bin: 100010
- * ...
- * @endcode
- */
-
-/**
- * @example 04_communication/graph/main.py
- * @htmlonly<span class="example-title" hidden>Graph example script</span>@endhtmlonly
- * Prints the reading on A0, one number per line, 50 times a second, for a
- * serial plotter to draw as a graph. Close PyCharm's REPL or mpremote first so
- * the port is free.
- *
- * @par Wiring
- * A potentiometer wiper or sensor on A0 (0-3.3 V).
- */
-
-/**
- * @example 04_communication/physical_pixel/main.py
- * @htmlonly<span class="example-title" hidden>Physical Pixel example script</span>@endhtmlonly
- * Turns the on-board LED on when it receives "H" and off when it receives "L"
- * from the computer. Type the letters in the REPL terminal (PyCharm's REPL
- * or mpremote) while the script runs. `sys.stdin.read(1)` waits for
- * the next character, so loop() pauses until one arrives.
  */

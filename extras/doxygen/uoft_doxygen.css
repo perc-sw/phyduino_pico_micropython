@@ -190,6 +190,18 @@ div.header .title {
   border-left: 1px solid var(--border);
 }
 
+/* Fixed width for the panel, wide enough for EXT_ADC_FULL_SCALE_MILLIVOLTS.
+   Doxygen's script sizes it as if the side bar were inside #container, so it
+   counts the side bar twice and squeezes this panel on narrower windows.
+   On pages without the panel, the second column is empty and takes no space. */
+#container {
+  grid-template-columns: minmax(0, 1fr) auto !important;
+}
+
+#page-nav {
+  width: 300px !important;
+}
+
 /* Sections in view, marked by the script in footer.html */
 ul.page-outline li.vis {
   background-color: var(--accent-bg);

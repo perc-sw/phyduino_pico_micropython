@@ -144,29 +144,36 @@ Pins are numbers (`13` is D13) or names (`"D13"`, `LED_BUILTIN`, `A0`-`A5`). Use
 
 ## Examples
 
-The examples are in folders named after the Arduino IDE's example categories, with
+There are two sets of the same examples:
+
+- `examples/arduino/` uses the Arduino-style functions (`from arduino import *`). Each is laid out
+  like an Arduino sketch: `setup()` runs once, then `loop()` runs over and over; leave the `main()`
+  at the end of each file as it is.
+- `examples/phyduino/` uses `phyduino.py` (`import phyduino as mcu`), written the usual
+  MicroPython way: the set-up code at the top runs once, then a `while True:` loop runs over and
+  over.
+
+In each set the examples are in folders named after the Arduino IDE's example categories, with
 board-specific ones in `phyduino_pico/`. Each example is a `main.py` in its own folder (like an
-Arduino sketch folder), because MicroPython runs `main.py` each time the board starts. Each is laid
-out like an Arduino sketch: `setup()` runs once, then `loop()` runs over and over; leave the
-`main()` at the end of each file as it is. Each file's header comment says what to connect and what
-it prints.
+Arduino sketch folder), because MicroPython runs `main.py` each time the board starts. Each file's
+header comment says what to connect and what it prints.
 
 With the Phyduino Pico firmware on the board, either:
 
 - run an example without saving it: run it from PyCharm, or
-  `mpremote run examples/01_basics/blink/main.py`;
+  `mpremote run examples/phyduino/01_basics/blink/main.py`;
 - or copy its `main.py` to the board so it runs every time the board starts:
-  `mpremote cp examples/01_basics/blink/main.py :` then press RESET.
+  `mpremote cp examples/arduino/01_basics/blink/main.py :` then press RESET.
 
-| Example | Shows |
+| Example (in `arduino/` and `phyduino/`) | Shows |
 |---|---|
-| `01_basics/bare_minimum/` | The empty setup() and loop() to start a program from |
+| `01_basics/bare_minimum/` | The empty program to start from |
 | `01_basics/blink/` | Blinking the on-board LED |
-| `01_basics/analog_read_serial/` | All six analogue pins as 12-bit codes |
+| `01_basics/analog_read_serial/` | All six analogue pins as raw readings |
 | `01_basics/digital_read_serial/` | Printing the state of a pushbutton |
 | `01_basics/fade/` | Fading the on-board LED with PWM |
 | `01_basics/read_analog_voltage/` | All six analogue pins in millivolts |
-| `02_digital/blink_without_delay/` | Timing with time.ticks_ms() instead of time.sleep() |
+| `02_digital/blink_without_delay/` | Timing without pausing: millis() or time.ticks_ms() |
 | `02_digital/button/` | Lighting the LED while a pushbutton is pressed |
 | `02_digital/debounce/` | Ignoring contact bounce so each press counts once |
 | `02_digital/digital_input_pullup/` | A pushbutton with the pin's own pull-up resistor |

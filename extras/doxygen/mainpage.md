@@ -35,4 +35,7 @@ on-board chip did not respond), with a message saying what to do.
 
 ## Examples
 
-The @ref example_scripts page lists the example scripts in `examples/`.
+The @ref example_scripts page lets you choose between the two sets of example
+scripts in `examples/`, which have the same examples:
+@ref examples_arduino (`examples/arduino/`, setup() and loop()) and
+@ref examples_phyduino (`examples/phyduino/`, plain MicroPython).
