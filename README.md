@@ -2,7 +2,11 @@
 
 [![CI](https://github.com/perc-sw/phyduino_pico_micropython/actions/workflows/ci.yml/badge.svg)](https://github.com/perc-sw/phyduino_pico_micropython/actions/workflows/ci.yml)
 [![Docs](https://github.com/perc-sw/phyduino_pico_micropython/actions/workflows/docs.yml/badge.svg)](https://github.com/perc-sw/phyduino_pico_micropython/actions/workflows/docs.yml)
-![Licence](https://img.shields.io/badge/licence-GPL--3.0-blue)
+[![Release](https://github.com/perc-sw/phyduino_pico_micropython/actions/workflows/release.yml/badge.svg)](https://github.com/perc-sw/phyduino_pico_micropython/actions/workflows/release.yml)
+[![Version](https://img.shields.io/github/v/release/perc-sw/phyduino_pico_micropython?include_prereleases&label=version)](https://github.com/perc-sw/phyduino_pico_micropython/releases)
+[![Licence](https://img.shields.io/github/license/perc-sw/phyduino_pico_micropython?label=licence)](LICENSE)
+[![MicroPython](https://img.shields.io/badge/MicroPython-v1.29.0-2B2728?logo=micropython&logoColor=white)](https://micropython.org/)
+![RP2040](https://img.shields.io/badge/RP2040-A22846?logo=raspberrypi&logoColor=white)
 
 A one-file MicroPython library for the [Phyduino Pico](https://github.com/perc-sw/phyduino_pico)
 used in the University of Toronto, Department of Physics,
