@@ -56,8 +56,9 @@ jobs:
           status=0
           grep -qx "PROJECT_NUMBER *= *$version" Doxyfile ||
             { echo "::error file=Doxyfile::PROJECT_NUMBER is not $version"; status=1; }
-          grep -q "<span class=\"spec-pill\">v$version</span>" docs/index.html ||
-            { echo "::error file=docs/index.html::version pill is not v$version"; status=1; }
+          grep -q "page-version\">v$version<" docs/index.html &&
+            ! grep -o 'page-version">[^<]*<' docs/index.html | grep -vqx "page-version\">v$version<" ||
+            { echo "::error file=docs/index.html::a page-version span is not v$version"; status=1; }
           grep -q "^## $version\b" CHANGELOG.md ||
             { echo "::error file=CHANGELOG.md::no section for $version"; status=1; }
           exit $status
