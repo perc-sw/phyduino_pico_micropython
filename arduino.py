@@ -224,7 +224,7 @@ def analogWrite(pin, value):
 # --- Tones ------------------------------------------------------------------------
 
 def tone(pin, frequency, duration=None):
-    """@brief Plays a square wave (a note) on a pin, e.g. for a piezo buzzer.
+    """@brief Plays a square wave (a note) on a pin, for example for a piezo buzzer.
 
     Returns straight away; the note plays on while your code runs.
 
