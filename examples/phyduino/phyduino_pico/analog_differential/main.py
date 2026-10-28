@@ -15,7 +15,7 @@ import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
 
 mcu.analog_averaging(16)  # average 16 samples per reading, for steadier numbers
 
-while True:  # repeats until you press Ctrl-C (or Stop in your editor)
+while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
     # The voltage of the first pin minus the second, in millivolts. "%7.1f" shows
     # each with one decimal place, right-aligned in 7 characters.
     print("A3 - A4: %7.1f mV    A0 - A1: %7.1f mV" % (

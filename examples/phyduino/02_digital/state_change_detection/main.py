@@ -14,7 +14,7 @@ mcu.led.off()  # start with the LED off
 presses = 0  # how many times the button has been pressed
 last_state = 0  # the reading on the previous pass
 
-while True:  # repeats until you press Ctrl-C (or Stop in your editor)
+while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
     state = button.value()  # 1 while pressed, 0 when not
     if state != last_state:  # it has changed since the last pass: an edge
         if state == 1:  # released to pressed

@@ -6,5 +6,5 @@ import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
 
 # Put your set-up code here, to run once.
 
-while True:  # repeats until you press Ctrl-C (or Stop in your editor)
+while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
     pass  # put your main code here, indented like this, to run repeatedly ("pass" means do nothing)

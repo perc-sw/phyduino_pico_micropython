@@ -31,7 +31,7 @@ def play(buzzer, frequency, duration_ms):
 
 buzzer = mcu.pwm("D8")  # Puts D8 into PWM mode and saves the control variable to the 'buzzer' variable.
 
-while True:  # repeats until you press Ctrl-C (or Stop in your editor)
+while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
     # zip() pairs each note with its length: (NOTE_C4, 4), (NOTE_G3, 8), ...
     for note, duration in zip(MELODY, DURATIONS):
         length_ms = 1000 // duration  # a quarter note is 1000 / 4 = 250 ms

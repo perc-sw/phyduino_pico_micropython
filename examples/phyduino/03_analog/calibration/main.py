@@ -28,7 +28,7 @@ print("range:", sensor_min, "-", sensor_max)
 led = mcu.pwm("LED")  # Puts the LED's pin into PWM mode and saves the control variable to the 'led' variable.
 span = max(sensor_max - sensor_min, 1)  # the width of the range; at least 1, so no divide by 0
 
-while True:  # repeats until you press Ctrl-C (or Stop in your editor)
+while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
     value = mcu.analog_read("A0")
     value = min(max(value, sensor_min), sensor_max)  # keep it in the calibrated range
     led.duty_u16((value - sensor_min) * 65535 // span)  # bottom of the range = off, top = fully on

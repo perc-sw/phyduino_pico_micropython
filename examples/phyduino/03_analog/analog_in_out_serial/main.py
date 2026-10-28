@@ -9,7 +9,7 @@ import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
 
 led = mcu.pwm("LED")  # Puts the LED's pin into PWM mode and saves the control variable to the 'led' variable.
 
-while True:  # repeats until you press Ctrl-C (or Stop in your editor)
+while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
     sensor = mcu.analog_read("A0")  # 0 (0 V) to 4095 (3.3 V)
     output = sensor * 65535 // 4095  # scale to 0-65535 for duty_u16()
     led.duty_u16(output)  # brighter as the voltage rises

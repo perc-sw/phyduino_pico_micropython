@@ -11,7 +11,7 @@ INTERVAL_MS = 500  # time between changes, in milliseconds
 mcu.led.off()  # start with the LED off
 previous_ms = time.ticks_ms()  # the time of the last change: milliseconds since the board started
 
-while True:  # repeats until you press Ctrl-C (or Stop in your editor)
+while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
     now = time.ticks_ms()  # the time now
     # ticks_diff() gives the time between two ticks_ms() readings. Always use it
     # rather than now - previous_ms: the count wraps round to 0 after a while.

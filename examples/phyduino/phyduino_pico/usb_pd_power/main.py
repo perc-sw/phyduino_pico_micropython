@@ -30,7 +30,7 @@ usb.request(MAX_VOLTS)  # ask the charger for up to MAX_VOLTS
 # profiles() lists the (volts, amps) the board offers; "%g" drops trailing zeros.
 report("Profiles: " + ", ".join("%g V %g A" % p for p in usb.profiles()))
 
-while True:  # repeats until you press Ctrl-C (or Stop in your editor)
+while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
     volts, amps = usb.contract()  # what the charger agreed to supply
     position = usb.contract_position()  # which profile it agreed to; 0 if none
     if position:  # 0 counts as false

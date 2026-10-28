@@ -11,7 +11,7 @@ import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
 
 NAMES = ("A0", "A1", "A2", "A3", "A4", "A5")  # the pins to read, in order
 
-while True:  # repeats until you press Ctrl-C (or Stop in your editor)
+while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
     # Read each pin and print them on one line, e.g. "A0=2048  A1=   3 ...".
     # "%s=%4d" puts the name, then the reading right-aligned in 4 characters.
     print("  ".join("%s=%4d" % (name, mcu.analog_read(name)) for name in NAMES))

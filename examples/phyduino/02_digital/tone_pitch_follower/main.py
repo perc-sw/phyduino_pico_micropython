@@ -13,7 +13,7 @@ HIGH_HZ = 1500  # pitch at 3.3 V
 
 buzzer = mcu.pwm("D8", duty_u16=32768)  # Puts D8 into PWM mode at half duty and saves the control variable to the 'buzzer' variable.
 
-while True:  # repeats until you press Ctrl-C (or Stop in your editor)
+while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
     reading = mcu.analog_read("A0")  # 0 (0 V) to 4095 (3.3 V)
     pitch = LOW_HZ + reading * (HIGH_HZ - LOW_HZ) // 4095  # scale 0-4095 to LOW_HZ-HIGH_HZ; // divides to a whole number
     print(reading, pitch)

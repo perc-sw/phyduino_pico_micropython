@@ -7,5 +7,5 @@ import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
 
 button = mcu.pin("D2", "in", pull="down")  # D2 as an input, held at 0 until pressed
 
-while True:  # repeats until you press Ctrl-C (or Stop in your editor)
+while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
     mcu.led.value(button.value())  # the button reads 1 while pressed; the LED is on at 1, off at 0

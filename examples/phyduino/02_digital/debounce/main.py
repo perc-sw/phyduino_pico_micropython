@@ -17,7 +17,7 @@ button_state = 0  # the steady reading
 last_reading = 0  # the reading on the previous pass
 last_change_ms = time.ticks_ms()  # when the reading last changed
 
-while True:  # repeats until you press Ctrl-C (or Stop in your editor)
+while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
     reading = button.value()  # 1 while pressed, 0 when not
     if reading != last_reading:
         last_change_ms = time.ticks_ms()  # it changed (or bounced): start the wait again

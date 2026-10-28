@@ -21,7 +21,7 @@ def loop():
 # Do not edit below this line: it runs setup() once, then loop() over and over.
 def main():
     setup()  # runs once, at the start
-    while True:  # repeats until you press Ctrl-C (or Stop in your editor)
+    while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
         loop()
 
 

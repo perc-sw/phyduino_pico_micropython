@@ -9,7 +9,7 @@ import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
 serial = mcu.uart(0, 115200)  # UART0: TX on D1, RX on D0, 115200 bits per second
 count = 0  # the number in the next message
 
-while True:  # repeats until you press Ctrl-C (or Stop in your editor)
+while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
     message = "hello %d" % count  # e.g. "hello 0"
     serial.write(message)  # send it out of D1
     time.sleep(0.05)  # give it time to arrive back on D0

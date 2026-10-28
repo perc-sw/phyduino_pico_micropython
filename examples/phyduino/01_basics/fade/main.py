@@ -13,7 +13,7 @@ led = mcu.pwm("LED")  # Puts the LED's pin into PWM mode and saves the control v
 brightness = 0  # current duty cycle: 0 = off, 65535 = fully on
 fade_amount = STEP  # added to brightness each pass: positive brightens, negative dims
 
-while True:  # repeats until you press Ctrl-C (or Stop in your editor)
+while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
     led.duty_u16(brightness)  # the fraction of the time the LED is on, out of 65535
     brightness += fade_amount  # one step brighter (or dimmer) for next time
     if brightness <= 0 or brightness >= 65535:

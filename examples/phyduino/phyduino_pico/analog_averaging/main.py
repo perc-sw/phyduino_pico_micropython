@@ -20,7 +20,7 @@ def spread(name):
     return min(values), max(values), max(values) - min(values)
 
 
-while True:  # repeats until you press Ctrl-C (or Stop in your editor)
+while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
     for samples in (1, 4, 8, 16, 32):  # each averaging setting in turn
         mcu.analog_averaging(samples)  # every reading is now the average of this many samples
         for name in ("A0", "A3"):  # A0: RP2040 ADC; A3: on-board MAX11635

@@ -9,7 +9,7 @@ import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
 
 NAMES = ("A0", "A1", "A2", "A3", "A4", "A5")  # the pins to read, in order
 
-while True:  # repeats until you press Ctrl-C (or Stop in your editor)
+while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
     # Read each pin in millivolts and print them on one line.
     # "%.1f" shows each number with one decimal place, e.g. 1650.0.
     print(" ".join("%.1f" % mcu.analog_millivolts(name) for name in NAMES))

@@ -12,7 +12,7 @@ import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
 mcu.led.off()  # start with the LED off
 print("Type H to turn the LED on, L to turn it off.")
 
-while True:  # repeats until you press Ctrl-C (or Stop in your editor)
+while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
     char = sys.stdin.read(1)  # wait for one character from the terminal
     if char == "H":
         mcu.led.on()

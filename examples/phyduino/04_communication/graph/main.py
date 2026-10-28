@@ -9,6 +9,6 @@ import time  # sleep_ms() for pauses
 
 import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
 
-while True:  # repeats until you press Ctrl-C (or Stop in your editor)
+while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
     print(mcu.analog_read("A0"))  # one number per line, 0-4095, for the plotter
     time.sleep_ms(20)  # 20 ms apart: 50 readings a second

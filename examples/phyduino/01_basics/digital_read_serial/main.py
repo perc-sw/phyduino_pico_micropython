@@ -10,6 +10,6 @@ import phyduino as mcu  # the Phyduino Pico library, used as mcu.<name>
 
 button = mcu.pin("D2", "in", pull="down")  # D2 as an input, held at 0 until pressed
 
-while True:  # repeats until you press Ctrl-C (or Stop in your editor)
+while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
     print(button.value())  # 1 while the button is pressed, 0 when it is not
     time.sleep(0.1)  # ten readings a second

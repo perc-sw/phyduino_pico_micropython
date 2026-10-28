@@ -66,15 +66,23 @@ A `phyduino.py` on the board takes priority over the built-in one, so delete any
 
 1. Install the **MicroPython Tools** plugin (Settings → Plugins → Marketplace).
 2. Make a project with your `main.py`, and connect to the board from the plugin's tool window.
-3. Run `main.py`, or upload it so it runs at start-up.
+3. Right-click `main.py` in the project tree → **Execute File in REPL** to run it, or upload it with
+   a **MicroPython Tools → Upload** run configuration so it runs at start-up.
+4. Press **Interrupt** in the REPL tab to stop it. Disconnecting, or PyCharm's Stop, leaves it
+   running on the board; connecting again stops it.
+5. If the board still won't run a file, press **Hard reset** in the REPL tab, or RESET on the board.
 
 **Command line (or PyCharm's terminal)**
 
 ```
 pip install mpremote
 mpremote run main.py              # run your file without copying it
+mpremote soft-reset               # stop it
 mpremote cp main.py :             # or copy it so it runs at start-up
 ```
+
+Ctrl-C ends `mpremote run` but leaves your file running on the board. Stop it with
+`mpremote soft-reset`, or just run the next file: `mpremote run` stops the old one first.
 
 ## Pins
 
@@ -165,7 +173,8 @@ header comment says what to connect and what it prints.
 With the Phyduino Pico firmware on the board, either:
 
 - run an example without saving it: run it from PyCharm, or
-  `mpremote run examples/phyduino/01_basics/blink/main.py`;
+  `mpremote run examples/phyduino/01_basics/blink/main.py` (stop it as in
+  [Run your code](#2-run-your-code));
 - or copy its `main.py` to the board so it runs every time the board starts:
   `mpremote cp examples/arduino/01_basics/blink/main.py :` then press RESET.
 
