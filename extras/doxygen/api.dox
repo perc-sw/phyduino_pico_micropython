@@ -50,7 +50,7 @@ case-sensitive. There are no D14-D17.
 | D8, D9 | GPIO16, GPIO17 | |
 | D10-D13 | GPIO13, 11, 12, 14 | SPI1 CS, MOSI, MISO, SCK: spi() |
 | D18 / SDA, D19 / SCL | GPIO24, GPIO25 | I2C0: i2c(). No pull-ups on the board |
-| LED | GPIO5 | Green user LED: `led` |
+| LED | GPIO5 | Green built-in LED: `led` |
 | A0-A2 | GPIO26-28 | RP2040 ADC, 0-3.3 V. Can also be used as digital pins |
 | A3-A5 | MAX11635 AIN0-2 | On-board ADC, 0-2.048 V. Analogue only |
 
@@ -62,10 +62,10 @@ refuses the second pin of a pair until pin() is called on the first.
 /**
 @defgroup led On-board LED
 @ingroup phyduino_api
-@brief The green user LED on GPIO5.
+@brief The green built-in LED on GPIO5.
 
-MicroPython's own `Pin("LED")` is GPIO25, which is the D19 pin on this board;
-use `led` instead.
+The firmware's own `Pin("LED")` is the same pin (GPIO5); `led` adds on(),
+off() and toggle().
 */
 
 /**

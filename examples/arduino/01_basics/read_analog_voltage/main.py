@@ -1,8 +1,8 @@
 # Prints the voltage on every analogue pin, in millivolts, twice a second.
 #
-# analogRead() gives 0-1024 steps of the pin's full scale (3.3 V for A0-A2,
-# 2.048 V for A3-A5), so each pin is scaled with its own, and the numbers can
-# be compared directly.
+# analogRead() gives 0-1023, in steps of 1/1024 of the pin's full scale
+# (3.3 V for A0-A2, 2.048 V for A3-A5), so each reading is scaled with its
+# own pin's full scale, and the numbers can be compared directly.
 
 from arduino import *  # the Arduino-style functions: pinMode(), digitalWrite(), delay(), ...
 

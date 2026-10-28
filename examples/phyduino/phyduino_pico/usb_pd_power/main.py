@@ -33,7 +33,7 @@ report("Profiles: " + ", ".join("%g V %g A" % p for p in usb.profiles()))
 
 while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
     volts, amps = usb.contract()  # what the charger agreed to supply
-    position = usb.contract_position()  # which profile it agreed to; 0 if none
+    position = usb.contract_position()  # which charger offer is in use; 0 if none
     if position:  # 0 counts as false
         report("Contract: offer %d, %.2f A    VBUS %.2f V" % (position, amps, volts))
     else:

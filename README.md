@@ -35,7 +35,7 @@ print(button.value())
 
 ## Set up
 
-The Phyduino Pico runs the `main.py` each time it starts. The firmware has the library,
+The Phyduino Pico runs `main.py` each time it starts. The firmware has the library,
 `phyduino.py`, built in, so your `main.py` is the only file you put on the board.
 
 ### 1. Put the Phyduino Pico firmware on the board (once)
@@ -46,8 +46,7 @@ The Phyduino Pico runs the `main.py` each time it starts. The firmware has the l
    drive named `RPI-RP2`.
 3. Copy the UF2 onto that drive. Slide SW1 to the opposite position and press RESET.
 
-***Installing MicroPython firmware erases the files on the board, back-up any files/code before downloading.***
-(`mpremote cp :main.py .`).
+***Installing the firmware erases the files on the board, so back up your files first*** (`mpremote cp :main.py .`).
 
 The firmware uses the board's full 16 MB flash (about 15 MB for your files), knows the board's pin
 names (`Pin("D7")`, `Pin("LED")`) and has `phyduino.py` built in. To check that it is the one on
@@ -98,7 +97,7 @@ case-sensitive. `mcu.PINS` holds the whole map.
 | D8, D9 | GPIO16, GPIO17 | |
 | D10-D13 | GPIO13, 11, 12, 14 | SPI1 CS, MOSI, MISO, SCK: `mcu.spi()` |
 | D18 / SDA, D19 / SCL | GPIO24, GPIO25 | I2C0: `mcu.i2c()`. No pull-ups on the board |
-| LED | GPIO5 | Green user LED: `mcu.led` |
+| LED | GPIO5 | Green built-in LED: `mcu.led` |
 | A0-A2 | GPIO26-28 | RP2040 ADC, 0-3.3 V. Can also be used as digital pins |
 | A3-A5 | MAX11635 AIN0-2 | On-board ADC, 0-2.048 V. Analogue only |
 

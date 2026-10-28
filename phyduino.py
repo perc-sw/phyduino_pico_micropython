@@ -101,11 +101,15 @@ def _name(name):
 
 
 def gpio(name):
-    """@brief RP2040 GPIO number for a pin name.
+    """@brief Gets the GPIO number from the board header name.
+
+    For MicroPython's own machine module, which numbers pins by GPIO. Two
+    names can share a GPIO: "D18" and "SDA" are both GPIO24.
 
     @param name Pin name, e.g. "D7" (not case-sensitive).
     @return GPIO number, e.g. gpio("D7") is 15.
     @exception ValueError The name is unknown, or is A3-A5 (no RP2040 GPIO).
+    @exception TypeError  The name is not a string.
     @ingroup pins
     """
     key = _name(name)
@@ -119,13 +123,21 @@ _PULLS = {None: None, "up": Pin.PULL_UP, "down": Pin.PULL_DOWN}
 
 
 def pin(name, mode="in", pull=None, value=None):
-    """@brief A machine.Pin for a header pin.
+    """@brief Configures GPIO pin from board header name.
 
-    D19 is set to 12 mA drive, as the schematic requires for GPIO25.
+    Sets the pin up straight away. Read it with .value(); set an output with
+    .value(1) / .value(0), or .on() / .off(). A0-A2 work as digital pins too.
+    An input with no pull floats when nothing drives it and reads 0 or 1 at
+    random: for a button to 3.3 V use pull="down"; for a button to GND use
+    pull="up" (pressed reads 0).
+
+    If the pin was on PWM, pin() takes it off, and its partner pin can then
+    use the PWM output (see pwm()). D19 is set to 12 mA drive, as the
+    schematic requires for GPIO25.
 
     @param name  Pin name: "D0"-"D13", "D18", "D19", "A0"-"A2", "SDA", "SCL" or "LED".
-    @param mode  "in", "out" or "open_drain".
-    @param pull  None, "up" or "down".
+    @param mode  "in", "out" or "open_drain" (drives low for 0, lets go for 1).
+    @param pull  None, "up" or "down": the RP2040's built-in pull resistor.
     @param value Starting level for outputs, 0 or 1; None leaves it unchanged.
     @return A machine.Pin.
     @exception ValueError Unknown name, mode or pull, or an analogue-only pin (A3-A5).
@@ -173,16 +185,22 @@ def _pwm_output(number):
 
 
 def pwm(name, freq=1000, duty_u16=0):
-    """@brief A machine.PWM on a header pin or the LED.
+    """@brief Configures GPIO pin for PWM output.
 
     Pairs of pins share a PWM output and can't run different signals at once:
     D1/D8, D0/D9, D4/D18, D5/D19, D6/A0, D11/A1, D12/A2. Pins next to each
     other on a slice (e.g. D2/D3) can have different duty cycles but share a
     frequency: setting one sets both. Calling pin() on a pin frees its output.
 
+    The signal starts straight away and runs on its own, whatever your code
+    does next, until .duty_u16(0) or pin() stops it. A soft reset stops the
+    signal but leaves the pin at its last level, which can be high: set the
+    duty to 0 before your program ends if that matters (a buzzer or a motor).
+
     @param name     Pin name: "D0"-"D13", "D18", "D19", "A0"-"A2", "SDA", "SCL" or "LED".
     @param freq     Frequency in Hz, 8 Hz and up.
-    @param duty_u16 Starting duty cycle, 0 (always low) to 65535 (always high).
+    @param duty_u16 Starting duty cycle, 0 (always low) to 65535 (always high);
+                    32768 is high half the time.
     @return A machine.PWM; change it with .freq(hz) and .duty_u16(duty).
     @exception ValueError Unknown name, an analogue-only pin (A3-A5), or the
                           pin shares its PWM output with one already in use.
@@ -213,10 +231,11 @@ def pwm(name, freq=1000, duty_u16=0):
 # --- On-board LED -----------------------------------------------------------------
 
 class Led:
-    """@brief The green user LED (D8 on the board, GPIO5). On when the pin is high.
+    """@brief Gives control of the built-in LED (D8) on GPIO5.
 
     Use the ready-made `led` object rather than making another. The pin is
-    set up on first use.
+    set up on first use, with the LED off. After pwm("LED"), on(), off() and
+    toggle() do nothing until pin("LED", "out") takes the pin off PWM.
     @code
     mcu.led.on()
     mcu.led.toggle()
@@ -348,7 +367,8 @@ class MAX11635:
     def set_averaging(self, samples):
         """@brief Sets how many conversions the chip averages for each result.
 
-        @param samples 1 (off), 4, 8, 16 or 32; other values use the next lower one.
+        @param samples 1 (off), 4, 8, 16 or 32; other values use the next lower one
+                       (values below 1 use 1).
         @return The setting used.
         """
         for allowed in (32, 16, 8, 4, 1):
@@ -359,7 +379,7 @@ class MAX11635:
         return allowed
 
     def read(self, channel):
-        """@brief Runs one conversion (averaged if set_averaging() is on).
+        """@brief Runs one conversion (averaged if set with set_averaging()).
 
         @param channel Input 0-3 (0-2 are A3-A5, 3 is VBUS).
         @return 0-4095 (0 V to 2.048 V).
@@ -417,7 +437,11 @@ _ext_adc = None
 
 
 def external_adc():
-    """@brief The board's MAX11635, set up on first use.
+    """@brief Initializes _ext_adc variable for use by the user.
+
+    The first call resets the chip and gives it the analog_averaging()
+    setting. Use it for scan(), read_differential() on A5 - VBUS, or the raw
+    VBUS channel; the analogue functions already cover A3-A5.
 
     @return The MAX11635 object (the same one every call).
     @ingroup ext_adc
@@ -454,8 +478,20 @@ def analog_averaging(samples):
     Steadier readings, but each takes longer. A3-A5 average in the external
     ADC itself; A0-A2 take the samples one after another.
 
-    @param samples 1 (off), 4, 8, 16 or 32; other values use the next lower one.
+    The setting is 1 at start-up and applies to every analogue reading after the call,
+    on all six pins and vbus_volts(); cpu_temperature() is not averaged. On a
+    steady 1 V, going from 1 to 32 cut the spread of 100 readings from about
+    16 codes to 3 on A0, and from about 10 to 1 on A3.
+
+    @param samples 1 (off), 4, 8, 16 or 32; other values use the next lower one
+                   (values below 1 use 1).
     @return The setting used.
+
+    @par Example
+    @code
+    mcu.analog_averaging(16)  # average 16 samples per reading from now on
+    print(mcu.analog_millivolts("A0"))  # a steadier reading
+    @endcode
     @ingroup analog
     """
     global _averaging
@@ -470,6 +506,11 @@ def analog_averaging(samples):
 
 def analog_read(name):
     """@brief Reads an analogue pin as a 12-bit code.
+
+    A0-A2 are read by the RP2040's ADC, A3-A5 by the on-board MAX11635. Each
+    step is 0.8 mV on A0-A2 and 0.5 mV on A3-A5. Keep A3-A5 at or below
+    2.048 V; higher still reads 4095. An unconnected pin drifts. For a
+    voltage, use analog_millivolts() or analog_volts().
 
     @param name "A0"-"A5".
     @return 0-4095. A0-A2: 0 = 0 V, 4095 = 3.3 V. A3-A5: 0 = 0 V, 4095 = 2.048 V.
@@ -503,6 +544,10 @@ def analog_full_scale_millivolts(name):
 def analog_millivolts(name):
     """@brief Reads an analogue pin in millivolts.
 
+    The code from analog_read() times the pin's full scale (3300 or 2048 mV),
+    divided by 4096. A3-A5 are as accurate as the board's LM4040 reference,
+    within 0.5 %; allow about 30 mV on A0-A2, read by the RP2040.
+
     @param name "A0"-"A5".
     @return Voltage in mV (a float).
     @exception ValueError Not an analogue pin.
@@ -532,11 +577,19 @@ def analog_differential_millivolts(plus, minus):
     Range is +/-1024 mV in 0.5 mV steps; a larger difference falls back to two
     separate readings. Any other pair is two readings taken one after the other.
 
+    Each pin must still stay within its own range (A0-A2: 0-3.3 V, A3-A5:
+    0-2.048 V); the result can be negative.
+
     @param plus  "A0"-"A5".
     @param minus "A0"-"A5".
     @return plus - minus in mV (a float).
     @exception ValueError Not an analogue pin.
     @exception OSError    The external ADC did not respond (A3-A5).
+
+    @par Example
+    @code
+    print(mcu.analog_differential_millivolts("A3", "A4"))  # A3 minus A4, sampled together
+    @endcode
     @ingroup analog
     """
     p, m = _analog_key(plus), _analog_key(minus)
@@ -555,6 +608,9 @@ def vbus_volts():
     """@brief The USB-C supply voltage (VBUS, also on the header's VIN pin).
 
     Measured by the MAX11635 (channel 3) through a 100 kOhm / 10.2 kOhm divider.
+    About 5 V from a computer port; 9-20 V from a USB-PD charger once
+    usb_pd() has asked for it. Within about 1 % of a meter, set by the
+    tolerance of the reference and the divider resistors. Averaged as set by analog_averaging().
     @return Voltage in V (a float).
     @exception OSError The external ADC did not respond.
     @ingroup power
@@ -565,6 +621,10 @@ def vbus_volts():
 
 def cpu_temperature():
     """@brief The RP2040's internal temperature sensor.
+
+    This is the chip's own temperature, which runs warmer than the room
+    (about 10 C above it in testing). Single readings jump by a few degrees;
+    average several for a steady value.
 
     @return Temperature in degrees Celsius (roughly +/-2 C).
     @ingroup power
@@ -769,9 +829,11 @@ def i2c(freq=100_000):
     """@brief I2C0 on SDA (D18) and SCL (D19).
 
     There are no pull-up resistors on the board for these pins: use a module
-    that has them, or fit 4.7 kOhm resistors to 3.3 V.
+    that has them, or fit 4.7 kOhm resistors to 3.3 V. The on-board USB-PD
+    controller is on a separate bus and never appears in scan(). Call i2c()
+    once and keep the object.
 
-    @param freq Clock in Hz.
+    @param freq Clock in Hz: 100 kHz works with almost any module; many also run at 400 kHz.
     @return A machine.I2C.
     @par Example
     @code
@@ -786,7 +848,7 @@ def i2c(freq=100_000):
 
 
 def spi(baudrate=1_000_000, polarity=0, phase=0):
-    """@brief SPI1 on D13 (SCK), D11 (MOSI) and D12 (MISO).
+    r"""@brief SPI1 on D13 (SCK), D11 (MOSI) and D12 (MISO).
 
     Chip select is up to you, usually D10.
 
@@ -809,15 +871,24 @@ def spi(baudrate=1_000_000, polarity=0, phase=0):
 
 
 def uart(number=0, baudrate=115200):
-    """@brief A serial port on the header.
+    r"""@brief A serial port on the header.
 
     uart(0): TX on D1, RX on D0. uart(1): TX on D4, RX on D5.
-    print() and input() use the USB connection, not these pins.
+    print() and input() use the USB connection, not these pins. Connect TX
+    to the other device's RX, RX to its TX, and GND to GND; 3.3 V levels
+    only. .read() returns the bytes that have arrived, or None if none have.
 
     @param number   0 or 1.
-    @param baudrate Bits per second.
+    @param baudrate Bits per second; both ends must match.
     @return A machine.UART.
     @exception ValueError number is not 0 or 1.
+
+    @par Example
+    @code
+    serial = mcu.uart(0)
+    serial.write("hello\n")  # sends on D1
+    print(serial.read())  # what has arrived on D0, or None
+    @endcode
     @ingroup buses
     """
     if number == 0:

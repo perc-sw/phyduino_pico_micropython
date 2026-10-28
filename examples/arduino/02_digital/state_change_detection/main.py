@@ -1,5 +1,5 @@
-# Counts presses of a pushbutton on D2 and lights the on-board LED on every
-# fourth press. It acts on the change from released to pressed (an edge),
+# Counts presses of a pushbutton on D2 and lights the on-board LED at the
+# start and on every fourth press. It acts on the change from released to pressed (an edge),
 # not on the button being held down.
 #
 # Connect a pushbutton between D2 and 3.3 V; the pull-down holds D2 at 0
@@ -30,7 +30,7 @@ def loop():
             print("off")
         delay(50)  # let the contacts settle (bounce) before reading again
     last_state = state  # compare against this next time
-    if presses % 4 == 0:  # % is the remainder: true after 4, 8, 12, ... presses
+    if presses % 4 == 0:  # % is the remainder: true at 0, 4, 8, ... presses
         digitalWrite(LED_BUILTIN, HIGH)  # LED on
     else:
         digitalWrite(LED_BUILTIN, LOW)  # LED off
