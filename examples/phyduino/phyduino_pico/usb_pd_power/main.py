@@ -4,7 +4,8 @@
 # A charger takes the only USB-C port, so there is no USB connection to the
 # computer while it is plugged in. Copy this main.py to the board so it runs
 # by itself, and watch the output on UART0 (TX on D1, 115200 baud)
-# with a USB-serial adapter. The green POK2 LED lights at 9 V, POK3 at 20 V.
+# with a USB-serial adapter. The green POK2 LED lights for the second
+# profile (9 V), POK3 for the third (the 12, 15 or 20 V of MAX_VOLTS).
 #
 # VBUS also feeds the VIN pin, so VIN follows the contract: disconnect
 # anything on VIN that can't take the voltage you ask for.

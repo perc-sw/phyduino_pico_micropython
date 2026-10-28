@@ -1,6 +1,8 @@
 # Turns the on-board LED on when it receives "H" and off when it receives "L"
-# from the computer. Type the letters in the REPL terminal (PyCharm's REPL
-# or mpremote) while the script runs.
+# from the computer. Type the letters in the REPL terminal while the script
+# runs: in PyCharm, run it with Execute File in REPL and type in the REPL tab.
+# mpremote run doesn't pass typed letters on, so copy it to the board as
+# main.py, press RESET, then type in mpremote repl.
 #
 # sys.stdin.read(1) waits for the next character, so the loop pauses until
 # one arrives.
