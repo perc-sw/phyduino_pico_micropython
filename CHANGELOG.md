@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0-rc.1 (unreleased)
+## 0.1.0-rc.1 (2026-10-29)
 
 First version.
 
