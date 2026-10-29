@@ -1,7 +1,7 @@
 """@package phyduino
 @brief Phyduino Pico board library for MicroPython.
 
-Built into the Phyduino Pico firmware, so your own main.py can use it:
+Built into the Phyduino Pico MicroPython firmware, so your own main.py can use it:
 @code
 import phyduino as mcu
 
@@ -14,8 +14,8 @@ Pins use the names printed on the board: "D0"-"D13", "D18", "D19", "A0"-"A5",
 plus "SDA", "SCL" and "LED". Names are not case-sensitive.
 
 A0-A2 are read by the RP2040 (0-3.3 V). A3-A5 are read by the on-board
-MAX11635 ADC (0-2.048 V) and are analogue only. The same functions work on
-all six.
+MAX11635 ADC (0-2.048 V) and are analog only. The same functions work on
+all six analog inputs.
 
 Licence: GPL-3.0.
 """
@@ -39,28 +39,28 @@ _EXT = const(0x100)
 # and are not GPIO numbers. Use gpio() to look a name up.
 # @ingroup pins
 PINS = {
-    "D0": 1,     # UART0 RX
-    "D1": 0,     # UART0 TX
+    "D0": 1,  # UART0 RX
+    "D1": 0,  # UART0 TX
     "D2": 6,
     "D3": 7,
-    "D4": 8,     # UART1 TX
-    "D5": 9,     # UART1 RX
+    "D4": 8,  # UART1 TX
+    "D5": 9,  # UART1 RX
     "D6": 10,
     "D7": 15,
     "D8": 16,
     "D9": 17,
-    "D10": 13,   # SPI1 CS
-    "D11": 11,   # SPI1 MOSI
-    "D12": 12,   # SPI1 MISO
-    "D13": 14,   # SPI1 SCK
-    "D18": 24,   # I2C0 SDA
-    "D19": 25,   # I2C0 SCL
+    "D10": 13,  # SPI1 CS
+    "D11": 11,  # SPI1 MOSI
+    "D12": 12,  # SPI1 MISO
+    "D13": 14,  # SPI1 SCK
+    "D18": 24,  # I2C0 SDA
+    "D19": 25,  # I2C0 SCL
     "SDA": 24,
     "SCL": 25,
     "LED": 5,
-    "A0": 26,    # RP2040 ADC0
-    "A1": 27,    # RP2040 ADC1
-    "A2": 28,    # RP2040 ADC2
+    "A0": 26,  # RP2040 ADC0
+    "A1": 27,  # RP2040 ADC1
+    "A2": 28,  # RP2040 ADC2
     "A3": _EXT | 0,  # MAX11635 AIN0
     "A4": _EXT | 1,  # MAX11635 AIN1
     "A5": _EXT | 2,  # MAX11635 AIN2
@@ -79,10 +79,11 @@ def _set_d19_drive_12ma():
     reg = _PADS_BANK0_GPIO0 + 4 * _D19_GPIO
     mem32[reg] = (mem32[reg] & ~_PAD_DRIVE_MASK) | _PAD_DRIVE_12MA
 
-## @brief Full scale of A0-A2 (RP2040 ADC) in millivolts.
+
+## @brief Maximum input voltage of A0-A2 (RP2040 ADC) in millivolts.
 # @ingroup analog
 ADC_FULL_SCALE_MILLIVOLTS = 3300
-## @brief Full scale of A3-A5 (MAX11635, LM4040 reference on AREF) in millivolts.
+## @brief Maximum input voltage A3-A5 (MAX11635, LM4040 reference on AREF) in millivolts.
 # @ingroup analog
 EXT_ADC_FULL_SCALE_MILLIVOLTS = 2048
 
@@ -123,24 +124,40 @@ _PULLS = {None: None, "up": Pin.PULL_UP, "down": Pin.PULL_DOWN}
 
 
 def pin(name, mode="in", pull=None, value=None):
-    """@brief Configures GPIO pin from board header name.
+    """@brief Configures the GPIO pin from board header name.
 
-    Sets the pin up straight away. Read it with .value(); set an output with
-    .value(1) / .value(0), or .on() / .off(). A0-A2 work as digital pins too.
-    An input with no pull floats when nothing drives it and reads 0 or 1 at
-    random: for a button to 3.3 V use pull="down"; for a button to GND use
-    pull="up" (pressed reads 0).
+    Sets the pin configuration and returns GPIO interface. The following functions can be used
+    to set the state of the pin or read.
 
-    If the pin was on PWM, pin() takes it off, and its partner pin can then
-    use the PWM output (see pwm()). D19 is set to 12 mA drive, as the
-    schematic requires for GPIO25.
+     - .value(1) : Sets pin state HIGH
+     - .value(0) : Sets pin state LOW
+     - .on() : Sets pin state HIGH
+     - .off() : Sets pin state LOW
+     - value() : Read the state of the pin.
+
+    A0-A2 can be configured to work as digital pins as well.
+
+    In addition to writing & reading the pin states with the returned Pin class, the GPIO
+    can be configured INPUT/OUTPUT or OPEN DRAIN. Internal pull-ups and pull-down resistors
+    are also available. If function parameters listed below for GPIO configuration are left
+    output of the function all the default setting is : DIRECTION := INPUT, PULL := NONE, and VALUE = 0.
+
+    If the pin was on PWM, calling pin() reverts the GPIO pin back to GPIO control not the peripheral it
+    was attached to.
+
+    @note LED GPIO pin is set to 12 mA drive for proper LED illumination by default.
+
+    Refer to MicroPython documentation for more information about the returned object :
+    https://docs.micropython.org/en/latest/library/machine.Pin.html
 
     @param name  Pin name: "D0"-"D13", "D18", "D19", "A0"-"A2", "SDA", "SCL" or "LED".
     @param mode  "in", "out" or "open_drain" (drives low for 0, lets go for 1).
     @param pull  None, "up" or "down": the RP2040's built-in pull resistor.
     @param value Starting level for outputs, 0 or 1; None leaves it unchanged.
+
     @return A machine.Pin.
-    @exception ValueError Unknown name, mode or pull, or an analogue-only pin (A3-A5).
+
+    @exception ValueError Unknown name, mode or pull, or an analog-only pin (A3-A5).
     @exception TypeError  The name is not a string.
 
     @par Example
@@ -152,29 +169,39 @@ def pin(name, mode="in", pull=None, value=None):
     @ingroup pins
     """
     key = _name(name)
+
     if PINS[key] & _EXT:
         raise ValueError(
             key + " is an analogue-only pin; use analog_read('" + key + "') instead")
+
     if mode not in _MODES:
         raise ValueError("mode must be 'in', 'out' or 'open_drain'")
+
     if pull not in _PULLS:
         raise ValueError("pull must be None, 'up' or 'down'")
+
     number = PINS[key]
     kwargs = {}
+
     if value is not None:
         kwargs["value"] = value
+
     p = Pin(number, _MODES[mode], _PULLS[pull], **kwargs)
+
     if number == _D19_GPIO:
         _set_d19_drive_12ma()
+
     output = _pwm_output(number)
+
     if output in _pwm_users and PINS[_pwm_users[output]] == number:
         del _pwm_users[output]  # this pin is no longer a PWM output
+
     return p
 
 
 # --- PWM --------------------------------------------------------------------------
 
-# RP2040 PWM: GPIOn is output A (even n) or B (odd n) of slice (n >> 1) & 7.
+# RP2040 PWM: GPIOn is output A if n is an even number or B if n is an odd number of slice; (n >> 1) & 7.
 # Two pins on the same output give the same signal; the two outputs of a slice
 # share one frequency.
 _pwm_users = {}  # (slice, output) -> name of the pin last given to pwm()
@@ -187,15 +214,25 @@ def _pwm_output(number):
 def pwm(name, freq=1000, duty_u16=0):
     """@brief Configures GPIO pin for PWM output.
 
-    Pairs of pins share a PWM output and can't run different signals at once:
-    D1/D8, D0/D9, D4/D18, D5/D19, D6/A0, D11/A1, D12/A2. Pins next to each
-    other on a slice (e.g. D2/D3) can have different duty cycles but share a
-    frequency: setting one sets both. Calling pin() on a pin frees its output.
+    PWM generators on the RP2040 are set up in pairs, a PWM sliced with outputs A and B. PWM
+    frequency can set on a per-slice basis. If a 2 PWM pins share the same PWM slice the PWM frequency
+    of both pins will be the same. However, the user can change the duty cycle of each pair
+    separately. PWM that share PWM slices are as follows:
 
-    The signal starts straight away and runs on its own, whatever your code
-    does next, until .duty_u16(0) or pin() stops it. A soft reset stops the
-    signal but leaves the pin at its last level, which can be high: set the
-    duty to 0 before your program ends if that matters (a buzzer or a motor).
+        - D1/D8
+        - D0/D9
+        - D4/D18
+        - D5/D19
+        - D6/A0
+        - D11/A1
+        - D12/A2
+
+    Calling pin() on a pin frees its output.
+
+    @note Set the duty to 0 before your program ends if that matters (a buzzer or a motor).
+
+    Refer to MicroPython documentation for more information about the returned object :
+    https://docs.micropython.org/en/latest/library/machine.PWM.html
 
     @param name     Pin name: "D0"-"D13", "D18", "D19", "A0"-"A2", "SDA", "SCL" or "LED".
     @param freq     Frequency in Hz, 8 Hz and up.
@@ -233,9 +270,13 @@ def pwm(name, freq=1000, duty_u16=0):
 class Led:
     """@brief Gives control of the built-in LED (D8) on GPIO5.
 
-    Use the ready-made `led` object rather than making another. The pin is
-    set up on first use, with the LED off. After pwm("LED"), on(), off() and
-    toggle() do nothing until pin("LED", "out") takes the pin off PWM.
+    Use the class object to control the built-in LED (D8) on GPIO5. When call it
+    sets up the GPIO5 as an OUTPUT and set the drive strength to 12mA. The class
+    will allow you to turn the LED on/off/toggle.
+
+    @note This pin can also be set up as a PWM pin. If you wish to use GPIO again
+    you must call Led() again.
+
     @code
     mcu.led.on()
     mcu.led.toggle()
@@ -279,7 +320,6 @@ class Led:
 # @ingroup led
 led = Led()
 
-
 # --- MAX11635 external ADC (A3-A5, VBUS) ------------------------------------------
 
 # Register select bits (top bits of each command byte).
@@ -289,11 +329,11 @@ _REG_AVERAGING = const(0x20)
 _REG_RESET = const(0x10)
 # Conversion: channel in bits 5:3, scan mode in bits 2:1.
 _SCAN_FROM_ZERO = const(0x00)  # channels 0..N
-_NO_SCAN = const(0x06)         # channel N once
+_NO_SCAN = const(0x06)  # channel N once
 # Setup: clock mode 00 (CNVST start), external single-ended reference.
 _SETUP = const(_REG_SETUP | 0x04)
-_UNIPOLAR_NEXT = const(0x02)   # unipolar-mode byte follows
-_BIPOLAR_NEXT = const(0x03)    # bipolar-mode byte follows
+_UNIPOLAR_NEXT = const(0x02)  # unipolar-mode byte follows
+_BIPOLAR_NEXT = const(0x03)  # bipolar-mode byte follows
 _AVERAGE_ON = const(0x10)
 _RESET_FIFO = const(_REG_RESET | 0x08)
 _RESET_ALL = const(_REG_RESET)
@@ -305,12 +345,14 @@ class MAX11635:
     """@brief Driver for the on-board MAX11635 12-bit ADC (U5).
 
     Channels 0-2 are A3-A5; channel 3 measures VBUS through a divider. Most
-    programs use analog_read() and the other analogue functions instead; use
+    programs use analog_read() and the other analog functions instead; use
     external_adc() to get the board's instance rather than making another.
 
-    Bus: SPI0 at 4 MHz, mode 0 (SCK GPIO22, MOSI GPIO23, MISO GPIO20, CS
-    GPIO21), CNVST GPIO18, EOC GPIO19. External 2.048 V reference, conversions
-    started by CNVST (clock mode 00). Making the object resets the chip.
+    SPI bus configuration: SPI0 at 4 MHz, mode 0 (SCK GPIO22, MOSI GPIO23, MISO GPIO20, CS
+    GPIO21), CNVST GPIO18, EOC GPIO19.
+
+    External 2.048 V reference, conversions started by CNVST (clock mode 00). Making the object resets the chip.
+
     @ingroup ext_adc
     """
 
@@ -505,11 +547,11 @@ def analog_averaging(samples):
 
 
 def analog_read(name):
-    """@brief Reads an analogue pin as a 12-bit code.
+    """@brief Reads an analog pin as a 12-bit data.
 
-    A0-A2 are read by the RP2040's ADC, A3-A5 by the on-board MAX11635. Each
-    step is 0.8 mV on A0-A2 and 0.5 mV on A3-A5. Keep A3-A5 at or below
-    2.048 V; higher still reads 4095. An unconnected pin drifts. For a
+    Inputs A0-A2 are read by the RP2040's ADC, A3-A5 by the on-board MAX11635. Each
+    step is 0.8 mV on A0-A2 and 0.5 mV on A3-A5. The maximum input voltage for A0-A2
+    is 3.3V, and for A3-A5 is 2.048V. An unconnected pin drifts. For a
     voltage, use analog_millivolts() or analog_volts().
 
     @param name "A0"-"A5".
@@ -529,7 +571,7 @@ def analog_read(name):
 
 
 def analog_full_scale_millivolts(name):
-    """@brief The highest voltage a pin can measure.
+    """@brief Returns the maximum input voltage an analog pin can measure.
 
     @param name "A0"-"A5".
     @return 3300 for A0-A2, 2048 for A3-A5.
@@ -542,11 +584,11 @@ def analog_full_scale_millivolts(name):
 
 
 def analog_millivolts(name):
-    """@brief Reads an analogue pin in millivolts.
+    """@brief Reads an analog pin in millivolts.
 
-    The code from analog_read() times the pin's full scale (3300 or 2048 mV),
-    divided by 4096. A3-A5 are as accurate as the board's LM4040 reference,
-    within 0.5 %; allow about 30 mV on A0-A2, read by the RP2040.
+    The voltage is calculated by multiplying the value of analog_read() by the
+    value of analog_full_scale_millivolts() then divided by the maximum 12bit count.
+    Inputs A3-A5 are as accurate as the board's LM4040 reference, within 0.5 %.
 
     @param name "A0"-"A5".
     @return Voltage in mV (a float).
@@ -558,7 +600,7 @@ def analog_millivolts(name):
 
 
 def analog_volts(name):
-    """@brief Reads an analogue pin in volts.
+    """@brief Reads an analog input pin in volts.
 
     @param name "A0"-"A5".
     @return Voltage in V (a float).
@@ -570,15 +612,17 @@ def analog_volts(name):
 
 
 def analog_differential_millivolts(plus, minus):
-    """@brief The voltage of one analogue pin minus another, in millivolts.
+    """@brief The voltage of one analog input pin minus another, in millivolts.
 
-    A3 - A4 (either order) is a true differential reading: the external ADC
-    samples both pins at the same instant, so noise common to both cancels.
-    Range is +/-1024 mV in 0.5 mV steps; a larger difference falls back to two
-    separate readings. Any other pair is two readings taken one after the other.
+    A3/A4 (either order) are a true differential inputs: the external ADC
+    samples both pins at the same instant, so common noise is removed from the
+    measurement. The differential voltage range is +/-1024 mV in 0.5 mV steps
+    for A3/A4; however, each input pins maximum voltage is still 2.048V.
 
-    Each pin must still stay within its own range (A0-A2: 0-3.3 V, A3-A5:
-    0-2.048 V); the result can be negative.
+    Any other combination of analog input pins will be measured in sequence, plus
+    then minus. This may cause error in the measurement depending on how fast the
+    signals are changing voltage. Take this into consideration when using this
+    function.
 
     @param plus  "A0"-"A5".
     @param minus "A0"-"A5".
@@ -593,11 +637,13 @@ def analog_differential_millivolts(plus, minus):
     @ingroup analog
     """
     p, m = _analog_key(plus), _analog_key(minus)
+
     if {p, m} == {"A3", "A4"}:
         code = external_adc().read_differential(0, bipolar=True)
         if -2048 < code < 2047:
             sign = 1 if p == "A3" else -1
             return sign * code * EXT_ADC_FULL_SCALE_MILLIVOLTS / 4096
+
     return analog_millivolts(p) - analog_millivolts(m)
 
 
@@ -605,12 +651,13 @@ _VBUS_DIVIDER = 1102 / 102  # 100 kOhm over 10.2 kOhm
 
 
 def vbus_volts():
-    """@brief The USB-C supply voltage (VBUS, also on the header's VIN pin).
+    """@brief Reads the USB input voltage supply voltage (VBUS, also on the header's VIN pin).
 
-    Measured by the MAX11635 (channel 3) through a 100 kOhm / 10.2 kOhm divider.
-    About 5 V from a computer port; 9-20 V from a USB-PD charger once
-    usb_pd() has asked for it. Within about 1 % of a meter, set by the
-    tolerance of the reference and the divider resistors. Averaged as set by analog_averaging().
+    The USB voltage is measured by the MAX11635 (channel 3) through a
+    100 kOhm / 10.2 kOhm divider. The USB voltage can range between 5V to 20V depending on
+    the power profile negotiated by the USB power delivery controller (STUSB4500). The default
+    voltage is 5V unless another voltage is negotiated.
+
     @return Voltage in V (a float).
     @exception OSError The external ADC did not respond.
     @ingroup power
@@ -620,9 +667,9 @@ def vbus_volts():
 
 
 def cpu_temperature():
-    """@brief The RP2040's internal temperature sensor.
+    """@brief Gets the RP2040's internal temperature.
 
-    This is the chip's own temperature, which runs warmer than the room
+    The RP2040 has its own temperature sensor, which runs warmer than the room
     (about 10 C above it in testing). Single readings jump by a few degrees;
     average several for a steady value.
 
@@ -639,29 +686,28 @@ _PD_ADDRESS = const(0x28)
 _REG_PD_COMMAND_CTRL = const(0x1A)
 _REG_DEVICE_ID = const(0x2F)
 _REG_TX_HEADER_LOW = const(0x51)
-_REG_PDO_COUNT = const(0x70)   # bits 2:0
-_REG_SINK_PDO1 = const(0x85)   # sink PDO1-3, 4 bytes each, little-endian
+_REG_PDO_COUNT = const(0x70)  # bits 2:0
+_REG_SINK_PDO1 = const(0x85)  # sink PDO1-3, 4 bytes each, little-endian
 _REG_RDO_STATUS = const(0x91)  # 4 bytes, little-endian
 _SOFT_RESET_MESSAGE = const(0x0D)
 _SEND_COMMAND = const(0x26)
 _DEVICE_IDS = (0x21, 0x25)
 _VOLTAGE_MASK = const(0x3FF << 10)  # bits 19:10, 50 mV units
-_CURRENT_MASK = const(0x3FF)        # bits 9:0, 10 mA units
+_CURRENT_MASK = const(0x3FF)  # bits 9:0, 10 mA units
 _BOARD_MAX_WATTS = 10
 
 
 class STUSB4500:
     """@brief Driver for the on-board STUSB4500 USB-PD sink controller (U6).
 
-    The chip asks a USB-PD charger for the highest of up to three profiles
-    (volts, amps) that the charger can supply. Profiles are written to the
-    chip's working registers only, never its NVM, so they last until the
-    board loses power. Whatever is negotiated also appears on the VIN pin.
-    Use usb_pd() to get the board's instance rather than making another.
+    The STUSB4500 IC negotiates with USB-PD charger for the highest of up to
+    three profiles (volts, amps) that the charger can supply. Profiles are written
+    to the STUSB4500 IC working registers only, never its NVM registers, so they
+    last until the board loses power. Whatever is negotiated also appears on the
+    VIN pin. Use usb_pd() to get the board's instance rather than making another.
 
-    Bus: I2C1 at 400 kHz (SDA GPIO2, SCL GPIO3), address 0x28; ALERT on
-    GPIO4, RESET on GPIO29 (held low). Making the object raises OSError if
-    the chip does not answer within 50 ms, or another device is at its address.
+    @note Making the object raises OSError if the chip does not answer within 50 ms,
+    or another device is at its address.
 
     @par Example
     @code
@@ -676,7 +722,11 @@ class STUSB4500:
     MAX_PROFILES = 3
 
     def __init__(self):
-        """@brief Sets up I2C1 and the control pins and checks the chip answers.
+        """@brief Configures the I2C1 peripheral and the control pins.
+
+        When constructing the STUSB4500 object this function trys to communicate
+        with STUSB4500 IC through the I2C1 bus. If the STUSB4500 does not respond
+        an OSError exception is thrown.
 
         @exception OSError The chip did not respond within 50 ms, or another
                            device is at its address.
@@ -706,7 +756,7 @@ class STUSB4500:
             ((value >> 0) & 0xFF, (value >> 8) & 0xFF, (value >> 16) & 0xFF, (value >> 24) & 0xFF)))
 
     def profiles(self):
-        """@brief The active profiles.
+        """@brief Gets the current active profiles.
 
         @return A list of (volts, amps), lowest priority first.
         @exception OSError The chip did not respond.
@@ -722,11 +772,11 @@ class STUSB4500:
         return result
 
     def set_profiles(self, profiles):
-        """@brief Loads 1-3 profiles and renegotiates if they changed.
+        """@brief Loads power profiles 1-3 and initiates a renegotiates.
 
-        The first must be 5 V (USB rule). Each must be 5-20 V (50 mV steps),
-        at most 5 A (10 mA steps) and at most 10 W (the board's limit). The
-        last profile has the highest priority.
+        The first power profile must be 5 V (USB-PD specification rule). Each
+        must be between 5V and 20 V (50 mV steps), and the current maximum is 5 A (10 mA steps)
+        and at most 10 W (the board's limit). The last profile has the highest priority.
 
         @param profiles A list of (volts, amps), e.g. [(5, 2), (9, 1)].
         @exception ValueError A profile is out of range, or the first is not 5 V.
@@ -761,10 +811,14 @@ class STUSB4500:
         self.renegotiate()
 
     def request(self, max_volts):
-        """@brief Asks for up to max_volts using the board's standard profiles.
+        """@brief Request renegotiation from USB-PD charger for a voltage up to max_volts.
 
-        5 V at 2 A, then 9 V at 1 A if max_volts >= 9, then max_volts at 10 W if
-        it is above 9 V. The charger picks the highest it can supply.
+        The charger is offered these profiles and picks the highest it can supply:
+        - 5 V at 2 A, always.
+        - 9 V at 1 A, if max_volts is 9 or more.
+        - max_volts at 10 W, if max_volts is more than 9.
+
+        There is nothing between 5 V and 9 V, so request(7) gives 5 V.
 
         @param max_volts Highest voltage to ask for, 5-20 (e.g. 5, 9, 12, 15 or 20).
         @exception ValueError max_volts is above 20 V.
@@ -779,7 +833,7 @@ class STUSB4500:
         self.set_profiles(profiles)
 
     def renegotiate(self):
-        """@brief Asks the charger to negotiate again with the current profiles.
+        """@brief Instructs the STUSB4550 IC renegotiate with the USB-PD charger with the current power profiles.
 
         @exception OSError The chip did not respond.
         """
@@ -787,19 +841,22 @@ class STUSB4500:
         self._i2c.writeto_mem(_PD_ADDRESS, _REG_PD_COMMAND_CTRL, bytes((_SEND_COMMAND,)))
 
     def contract_position(self):
-        """@brief Which charger offer is in use.
+        """@brief Gets with power profile is being used after negotiation with USB-PD charger.
 
         @return 1-7; 0 means no PD contract (a plain USB port or charger).
+
         @exception OSError The chip did not respond.
         """
         return (self._read_u32(_REG_RDO_STATUS) >> 28) & 0x07
 
     def contract(self):
-        """@brief The supply: VBUS measured now, and the agreed current.
+        """@brief Reports which power profile was accepted and its current values.
 
-        The chip reports which offer was accepted but not its voltage, so the
-        voltage is measured (vbus_volts()).
+        The STUSB4500 reports which offered power profile was accepted
+        but not its voltage, so the voltage is measured (vbus_volts()).
+
         @return (volts, amps); amps is 0 when there is no PD contract.
+
         @exception OSError The chip or the external ADC did not respond.
         """
         rdo = self._read_u32(_REG_RDO_STATUS)
@@ -826,20 +883,25 @@ def usb_pd():
 # --- Buses on the header ----------------------------------------------------------
 
 def i2c(freq=100_000):
-    """@brief I2C0 on SDA (D18) and SCL (D19).
+    """@brief Creates I2C object for control on the pins, SDA (D18) and SCL (D19).
 
     There are no pull-up resistors on the board for these pins: use a module
-    that has them, or fit 4.7 kOhm resistors to 3.3 V. The on-board USB-PD
-    controller is on a separate bus and never appears in scan(). Call i2c()
-    once and keep the object.
+    that has them, or attach 4.7 kOhm pull-up resistors to each I2C pins. The
+    on-board USB-PD controller is on a separate bus and never appears in scan().
+    Call i2c() once and keep the object.
+
+    Refer to MicroPython documentation for more information about the returned object :
+    https://docs.micropython.org/en/latest/library/machine.I2C.html
 
     @param freq Clock in Hz: 100 kHz works with almost any module; many also run at 400 kHz.
     @return A machine.I2C.
+
     @par Example
     @code
     bus = mcu.i2c()
     print(bus.scan())
     @endcode
+
     @ingroup buses
     """
     bus = I2C(0, sda=Pin(PINS["SDA"]), scl=Pin(PINS["SCL"]), freq=freq)
@@ -848,9 +910,14 @@ def i2c(freq=100_000):
 
 
 def spi(baudrate=1_000_000, polarity=0, phase=0):
-    r"""@brief SPI1 on D13 (SCK), D11 (MOSI) and D12 (MISO).
+    """@brief Creates SPI1 object to controller the SPI bus on D13 (SCK), D11 (MOSI) and D12 (MISO).
 
-    Chip select is up to you, usually D10.
+    This function creates an SPI1 object to allow access to the SPI internal
+    peripheral on the RP2040. Chipselect or multiple chipselect can be any GPIO
+    pin. The chipselect pin(s) are controlled by the user.
+
+    Refer to MicroPython documentation for more information about the returned object :
+    https://docs.micropython.org/en/latest/library/machine.SPI.html
 
     @param baudrate Clock in Hz.
     @param polarity Clock idle level, 0 or 1.
@@ -871,12 +938,14 @@ def spi(baudrate=1_000_000, polarity=0, phase=0):
 
 
 def uart(number=0, baudrate=115200):
-    r"""@brief A serial port on the header.
+    r"""@brief Creates a UART object for use on the board header.
 
-    uart(0): TX on D1, RX on D0. uart(1): TX on D4, RX on D5.
-    print() and input() use the USB connection, not these pins. Connect TX
-    to the other device's RX, RX to its TX, and GND to GND; 3.3 V levels
-    only. .read() returns the bytes that have arrived, or None if none have.
+    Initializes UART peripheral based on the number parameter. The only valid
+    number are 0 and 1. The default pins for UART0 is TX = D1 and RX = D0. For
+    UART1 the default pins are TX = D4 and RX = D5.
+
+    Refer to MicroPython documentation for more information about the returned object :
+    https://docs.micropython.org/en/latest/library/machine.UART.html
 
     @param number   0 or 1.
     @param baudrate Bits per second; both ends must match.
