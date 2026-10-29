@@ -11,6 +11,10 @@ NETLIST_GPIO = {
 }
 
 
+def test_version_returns_dunder_version(pd):
+    assert pd.version() == pd.__version__
+
+
 def test_gpio_numbers_match_netlist(pd):
     for name, number in NETLIST_GPIO.items():
         assert pd.gpio(name) == number, name

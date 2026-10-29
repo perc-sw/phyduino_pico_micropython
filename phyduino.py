@@ -28,6 +28,20 @@ from micropython import const
 ## Library version, MAJOR.MINOR.PATCH.
 __version__ = "0.1.0-rc.1"
 
+
+def version():
+    """@brief Gets the library version.
+
+    @return The version string, MAJOR.MINOR.PATCH, e.g. "0.1.0-rc.1".
+
+    @par Example
+    @code
+    print(mcu.version())
+    @endcode
+    @ingroup phyduino_api
+    """
+    return __version__
+
 # --- Pin map ----------------------------------------------------------------------
 
 # Markers for A3-A5: these pins have no RP2040 GPIO. They are MAX11635 inputs 0-2.
