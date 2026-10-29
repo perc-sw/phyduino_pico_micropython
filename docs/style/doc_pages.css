@@ -59,7 +59,7 @@
 .doc-page .ds-table td:not(:first-child) { color: var(--text-2); font-size: 13px; }
 
 /* Box-drawing diagrams: IBM Plex Mono lacks these glyphs, so use a font that has them
-   (same stack as the wiring diagrams in development/hardware-checklist.html) */
+   (the stack the hardware checklists use for their wiring diagrams) */
 .doc-page pre.code.diagram { font-family: Consolas, "Cascadia Mono", Menlo, "DejaVu Sans Mono", monospace;
                              line-height: 1.25; }
 

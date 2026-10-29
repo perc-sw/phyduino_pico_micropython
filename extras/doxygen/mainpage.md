@@ -32,6 +32,7 @@ use gpio() to find the RP2040 GPIO behind a pin name.
 | @ref power | vbus_volts(), cpu_temperature(), usb_pd(): STUSB4500.request(), STUSB4500.set_profiles(), STUSB4500.profiles(), STUSB4500.contract(), STUSB4500.contract_position(), STUSB4500.renegotiate() |
 | @ref buses | i2c(), spi(), uart() |
 | @ref ext_adc | external_adc(): MAX11635.read(), MAX11635.scan(), MAX11635.read_differential(), MAX11635.set_averaging(), MAX11635.averaging |
+| @ref phyduino_api "Version" | version() |
 
 ### arduino.py
 
