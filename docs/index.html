@@ -60,7 +60,7 @@
           <span class="spec-pill"><a href="https://micropython.org/">MicroPython</a></span>
           <span class="spec-pill"><a href="https://www.raspberrypi.com/products/rp2040/">RP2040</a></span>
           <span class="spec-pill"><a href="https://www.jetbrains.com/pycharm/">PyCharm</a> · <a href="https://docs.micropython.org/en/latest/reference/mpremote.html">mpremote</a></span>
-          <span class="spec-pill">Windows · Linux · macOS</span>
+          <span class="spec-pill">Windows · macOS · Linux</span>
           <!-- page-version: set from __version__ in phyduino.py by .github/workflows/docs.yml,
                which also links it to the GitHub release once there is one -->
           <span class="spec-pill page-version">v0.1.0-rc.1</span>
@@ -68,42 +68,28 @@
       </div>
     </div>
 
-    <!-- Set up -->
-    <div class="section-head" id="setup"><h2>Set up</h2></div>
-    <ol class="steps">
-      <li class="step">
-        <span class="step-num">1</span>
-        <span class="step-body">
-          Download the <strong>Phyduino Pico firmware</strong>, <code>phyduino_pico-&lt;version&gt;-micropython-&lt;version&gt;.uf2</code>,
-          from the repository's <a href="https://github.com/perc-sw/phyduino_pico_micropython/releases">Releases</a> page. It uses the full 16&nbsp;MB flash,
-          knows the board's pin names and has <code>phyduino.py</code> (and the optional Arduino-style <code>arduino.py</code>) built in.
-        </span>
-      </li>
-      <li class="step">
-        <span class="step-num">2</span>
-        <span class="step-body">
-          Slide the <strong>SW1</strong> BOOTSEL switch to <strong>GND</strong> (UF2) and press reset (<strong>SW2</strong>).
-          Copy the UF2 to the <strong>RPI-RP2</strong> drive that appears, then slide SW1 back to 3.3 V
-          and press reset. This erases the files on the board.
-        </span>
-      </li>
-      <li class="step">
-        <span class="step-num">3</span>
-        <div class="step-body">
-          Write your <code>main.py</code> and run it on the board:
-          <ul>
-            <li><strong>PyCharm</strong>: install the <strong>MicroPython Tools</strong> plugin, then run <code>main.py</code>.</li>
-            <li><strong>Terminal</strong>: <code>mpremote run main.py</code>.</li>
-          </ul>
-          Upload <code>main.py</code> to the board to have it run every time the board starts.
-        </div>
-      </li>
-    </ol>
-    <div class="doc-text">
-      <p>
-        Delete any old copy of <code>phyduino.py</code> from the board, as it takes priority over the
-        one built into the firmware.
-      </p>
+    <!-- Tutorials: articles in ./tutorials/ -->
+    <div class="section-head" id="tutorials"><h2>Tutorials</h2></div>
+    <div class="ds-table-wrap">
+      <table class="ds-table">
+        <tbody>
+          <tr>
+            <td>Installing MicroPython mpremote</td>
+            <td>Set up the MicroPython command-line tool on Windows, macOS or Linux</td>
+            <td><a class="ds-link" href="./tutorials/install_mpremote.html">Open</a></td>
+          </tr>
+          <tr>
+            <td>Setting up the Phyduino Pico</td>
+            <td>Load the Phyduino Pico firmware and check that it is working</td>
+            <td><a class="ds-link" href="./tutorials/setup_phyduino_pico.html">Open</a></td>
+          </tr>
+          <tr>
+            <td>Setting up PyCharm</td>
+            <td>Install PyCharm and the MicroPython Tools plugin, then run your first script on the board</td>
+            <td><a class="ds-link" href="./tutorials/setup_pycharm.html">Open</a></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <!-- Documentation: the API reference is built by Doxygen into ./wiki/ (git-ignored;
@@ -167,9 +153,15 @@
     <span class="doc-nav-head">Navigation</span>
     <ul>
       <li><a href="#top">Overview</a></li>
-      <li><a href="#setup">Set up</a></li>
+      <li><a href="#tutorials">Tutorials</a></li>
       <li><a href="#documentation">Documentation</a></li>
       <li><a href="#repositories">Course Repositories</a></li>
+    </ul>
+    <span class="doc-nav-head">Tutorials</span>
+    <ul class="doc-nav-ext">
+      <li><a href="./tutorials/install_mpremote.html">Installing MicroPython mpremote</a></li>
+      <li><a href="./tutorials/setup_phyduino_pico.html">Setting up the Phyduino Pico</a></li>
+      <li><a href="./tutorials/setup_pycharm.html">Setting up PyCharm</a></li>
     </ul>
     <span class="doc-nav-head">Reference</span>
     <ul class="doc-nav-ext">

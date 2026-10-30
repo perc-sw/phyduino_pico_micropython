@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="https://www.physics.utoronto.ca/static/utphy_themes/favicon/favicon.ico">
+<title>Setting up PyCharm · Phyduino Pico MicroPython · U of T Physics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style/uoft_physics_perc_sw.css">
+<link rel="stylesheet" href="../style/doc_pages.css">
+</head>
+<body>
+
+<!-- ── U of T Physics site header ── -->
+<header class="site-header">
+  <div class="header-inner">
+    <a class="header-logo" href="https://www.physics.utoronto.ca/physics-at-uoft/services/plrs/">
+      <img class="header-logo-img" src="../images/uoft_physics_plrs_logo.png" alt="University of Toronto Department of Physics">
+    </a>
+    <div class="header-title-block">
+      <span class="header-board-title">Phyduino Pico</span>
+      <!-- page-version: set from __version__ in phyduino.py by .github/workflows/docs.yml -->
+      <span class="header-subtitle">MicroPython <span class="page-version">v0.1.0-rc.1</span></span>
+    </div>
+  </div>
+</header>
+
+<!-- breadcrumb -->
+<div class="breadcrumb-bar" aria-label="Breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="https://www.physics.utoronto.ca/">Physics</a>
+    <span class="sep" aria-hidden="true">›</span>
+    <a href="https://www.physics.utoronto.ca/physics-at-uoft/services/plrs/electronic-support-services/">Electronic Support Services</a>
+    <span class="sep" aria-hidden="true">›</span>
+    <a href="https://plrs.physics.utoronto.ca/course-listing/">Introduction to Electronics</a>
+    <span class="sep" aria-hidden="true">›</span>
+    <a href="../index.html">Phyduino Pico MicroPython</a>
+    <span class="sep" aria-hidden="true">›</span>
+    <span class="current" aria-current="page">Setting up PyCharm</span>
+  </div>
+</div>
+
+<!-- ── Page content ── -->
+<div class="page-wrap doc-page has-nav">
+
+  <main class="doc-main">
+
+    <article class="article">
+      <header class="article-header">
+        <h1>Setting up PyCharm</h1>
+        <p class="article-intro">Install PyCharm and the MicroPython Tools plugin, then run your first script on the board.</p>
+        <p class="article-meta">Oct. 30, 2026 · <a href="../index.html">Phyduino Pico MicroPython</a> tutorial</p>
+      </header>
+
+      <div class="article-body">
+
+        <p>
+          PyCharm is a Python editor. With the <strong>MicroPython Tools</strong> plugin it connects to the
+          Phyduino Pico over USB, runs your script on the board and shows what it prints. Before you start,
+          load the firmware onto the board (<a href="setup_phyduino_pico.html">Setting up the Phyduino Pico</a>)
+          and install <a href="https://www.python.org/downloads/">Python</a> 3.10 or later.
+        </p>
+
+        <h2 id="install">1. Install PyCharm</h2>
+        <ul>
+          <li>Download PyCharm from the <a href="https://www.jetbrains.com/pycharm/download/">JetBrains download page</a> and install it.</li>
+          <li>The free version is all you need. The plugin needs PyCharm 2024.3 or newer.</li>
+        </ul>
+
+        <h2 id="plugin">2. Install the MicroPython Tools plugin</h2>
+        <ul>
+          <li>Open the settings: <strong>File → Settings</strong> (on macOS, <strong>PyCharm → Settings</strong>).</li>
+          <li>Go to <strong>Plugins → Marketplace</strong>, search for <strong>MicroPython Tools</strong> and click <strong>Install</strong>.</li>
+          <li>Restart PyCharm if it asks you to.</li>
+        </ul>
+        <!-- Screenshots go in ../images/pycharm/; each .figure-todo is replaced by its <img> -->
+        <figure class="article-figure">
+          <a href="../images/pycharm/01_plugin_marketplace.png" title="Open the full-size screenshot"><img src="../images/pycharm/01_plugin_marketplace.png" width="1111" height="786"
+               alt="PyCharm Settings, Plugins page, with MicroPython Tools by Lukas Kremla selected in the plugin list and its details on the right"></a>
+          <figcaption>
+            MicroPython Tools by Lukas Kremla in <strong>Settings → Plugins</strong>, shown here on the
+            <strong>Installed</strong> tab once it is installed. It is marked Freemium: everything in this
+            tutorial uses the free features.
+          </figcaption>
+        </figure>
+
+        <h2 id="project">3. Make a project for the board</h2>
+        <ul>
+          <li>Create a new project, or open the folder that holds your scripts.</li>
+          <li>Open the settings again and go to <strong>Languages &amp; Frameworks → MicroPython Tools</strong>.</li>
+          <li>Tick <strong>Enable MicroPython support</strong>.</li>
+          <li>
+            Under <strong>Connection</strong>, set <strong>Type</strong> to <strong>Serial</strong>. Set <strong>Port</strong>
+            to <strong>Auto-Detect Port</strong>, or pick the board's port from the list (on Windows a <code>COM</code> port).
+          </li>
+          <li>
+            Under <strong>MicroPython Type Hints</strong>, tick <strong>Enable MicroPython type hints</strong>, then install and
+            select <strong>micropython-rp2-stubs</strong> version <strong>1.29.0</strong>, which matches the firmware.
+            Type hints let PyCharm complete MicroPython names such as <code>machine.Pin</code> as you type.
+            Installing them needs an internet connection.
+          </li>
+          <li>Click <strong>Apply</strong>.</li>
+        </ul>
+        <figure class="article-figure">
+          <a href="../images/pycharm/02_micropython_settings.png" title="Open the full-size screenshot"><img src="../images/pycharm/02_micropython_settings.png" width="1111" height="786"
+               alt="PyCharm Settings, Languages and Frameworks, MicroPython Tools page: Enable MicroPython support ticked, connection type Serial on port COM24, and micropython-rp2-stubs 1.29.0 selected under MicroPython Type Hints"></a>
+          <figcaption>
+            <strong>Languages &amp; Frameworks → MicroPython Tools</strong> with MicroPython support enabled,
+            a <strong>Serial</strong> connection on the board's port, and <strong>micropython-rp2-stubs 1.29.0</strong>
+            selected (green) under <strong>MicroPython Type Hints</strong>.
+          </figcaption>
+        </figure>
+
+        <h2 id="connect">4. Connect to the board</h2>
+        <ul>
+          <li>Plug the board in with a USB cable.</li>
+          <li>
+            Open the <strong>MicroPython Tools</strong> tool window from its icon on the left-hand tool bar.
+            It has a <strong>File System</strong> tab and a <strong>REPL</strong> tab.
+          </li>
+          <li>
+            Click the connect button (the plug icon) at the top left of the tool window. The board's port
+            is shown next to it.
+            <figure class="article-figure">
+              <a href="../images/pycharm/03_tool_window_connect.png" title="Open the full-size screenshot"><img src="../images/pycharm/03_tool_window_connect.png" width="1920" height="445"
+                   alt="The MicroPython Tools tool window at the bottom of PyCharm, File System tab open, with a red arrow pointing to the connect button next to the COM24 port list"></a>
+              <figcaption>
+                The <strong>MicroPython Tools</strong> tool window. The arrow points to the connect button;
+                once connected, the <strong>File System</strong> tab shows the board's files and free space.
+              </figcaption>
+            </figure>
+          </li>
+          <li>
+            Only one program can use the board's port at a time. If PyCharm can't connect, close any
+            <code>mpremote repl</code> left open in a terminal.
+          </li>
+          <li>
+            Auto-Detect needs exactly one MicroPython board plugged in. With more than one, pick the
+            board's port from the list instead.
+          </li>
+        </ul>
+        <div data-os-note="linux">
+          <p>
+            <strong>Linux:</strong> if the board isn't found, your account may need permission to use serial ports.
+            See the Linux note in <a href="setup_phyduino_pico.html#check">Setting up the Phyduino Pico</a>.
+          </p>
+        </div>
+
+        <h2 id="run">5. Run a script</h2>
+        <ul>
+          <li>
+            Create a file called <code>main.py</code> in the project and paste in this script, which blinks the
+            on-board green LED:
+            <pre class="code"><code># Blinks the on-board green LED once a second.
+
+import time  # sleep() for pauses
+
+import phyduino as mcu  # the Phyduino Pico library, used as mcu.&lt;name&gt;
+
+mcu.led.off()  # start with the LED off
+
+while True:  # repeats until stopped: Interrupt in PyCharm, or mpremote soft-reset
+    mcu.led.toggle()  # on if it was off, off if it was on
+    time.sleep(0.5)  # wait half a second, so one on-off cycle takes a second</code></pre>
+          </li>
+          <li>
+            Right-click <code>main.py</code> in the project tree and choose <strong>Execute File in REPL</strong>. The green LED starts blinking.
+            <figure class="article-figure">
+              <a href="../images/pycharm/04_execute_file_in_repl.png" title="Open the full-size screenshot"><img src="../images/pycharm/04_execute_file_in_repl.png" width="1920" height="1032"
+                   alt="PyCharm with main.py selected in the project tree and its right-click menu open, Execute File in REPL highlighted near the bottom, just above Upload to MicroPython Device"></a>
+              <figcaption>
+                <strong>Execute File in REPL</strong> near the bottom of the right-click menu for <code>main.py</code>.
+                <strong>Upload to MicroPython Device</strong>, just below it, is used in step 6.
+              </figcaption>
+            </figure>
+          </li>
+          <li>
+            Press <strong>Interrupt</strong> in the REPL tab to stop it.
+            <figure class="article-figure">
+              <a href="../images/pycharm/05_repl_interrupt.png" title="Open the full-size screenshot"><img src="../images/pycharm/05_repl_interrupt.png" width="1920" height="337"
+                   alt="The REPL tab of the MicroPython Tools tool window, with the mouse on the square Interrupt button in its toolbar and KeyboardInterrupt shown below"></a>
+              <figcaption>
+                The <strong>Interrupt</strong> button (the square) in the <strong>REPL</strong> tab's toolbar. The REPL then
+                shows <code>KeyboardInterrupt</code> and the script has stopped.
+              </figcaption>
+            </figure>
+          </li>
+        </ul>
+        <p>
+          PyCharm's Stop button and disconnecting both leave the script running on the board.
+          Connecting again stops it.
+        </p>
+
+        <h2 id="startup">6. Run it every time the board starts</h2>
+        <p><strong>Execute File in REPL</strong> runs the script without saving it on the board. To have it run on its own:</p>
+        <ul>
+          <li>
+            Right-click <code>main.py</code> in the project tree and choose <strong>Upload to MicroPython Device</strong>,
+            or drag it onto the <strong>File System</strong> tab of the tool window.
+            <figure class="article-figure">
+              <a href="../images/pycharm/06_file_system_main.png" title="Open the full-size screenshot"><img src="../images/pycharm/06_file_system_main.png" width="1920" height="1032"
+                   alt="PyCharm with main.py selected in the project tree and its right-click menu open, Upload to MicroPython Device highlighted at the bottom"></a>
+              <figcaption>
+                <strong>Upload to MicroPython Device</strong> in the right-click menu for <code>main.py</code>. Once uploaded,
+                <code>main.py</code> appears in the <strong>File System</strong> tab.
+              </figcaption>
+            </figure>
+          </li>
+          <li>Press the reset button (<strong>SW2</strong>). The board runs <code>main.py</code> each time it starts, even when it isn't connected to a computer.</li>
+          <li>To stop that, delete <code>main.py</code> from the <strong>File System</strong> tab (right-click it).</li>
+        </ul>
+
+        <h2 id="problems">If something doesn't work</h2>
+        <ul>
+          <li>If the board won't run a file, press <strong>Hard reset</strong> in the REPL tab, or the reset button (<strong>SW2</strong>) on the board.</li>
+          <li>
+            If the board has an old <code>phyduino.py</code> in its <strong>File System</strong> tab, delete it.
+            It takes priority over the one built into the firmware.
+          </li>
+        </ul>
+
+      </div>
+
+      <!-- Sources: where the plugin's steps come from -->
+      <footer class="article-footer" id="sources">
+        Sources
+        <ul>
+          <li><a href="https://github.com/lukaskremla/micropython-tools-jetbrains/blob/main/DOCUMENTATION.md">MicroPython Tools documentation</a>, Lukas Kremla.</li>
+        </ul>
+      </footer>
+    </article>
+
+  </main>
+
+  <!-- Sidebar: links to this page's sections and the other pages -->
+  <nav class="doc-nav" aria-label="On this page">
+    <span class="doc-nav-head">Navigation</span>
+    <ul>
+      <li><a href="#top">Overview</a></li>
+      <li><a href="#install">Install PyCharm</a></li>
+      <li><a href="#plugin">Install the plugin</a></li>
+      <li><a href="#project">Make a project</a></li>
+      <li><a href="#connect">Connect to the board</a></li>
+      <li><a href="#run">Run a script</a></li>
+      <li><a href="#startup">Run at start-up</a></li>
+      <li><a href="#problems">If something doesn't work</a></li>
+    </ul>
+    <span class="doc-nav-head">Tutorials</span>
+    <ul class="doc-nav-ext">
+      <li><a href="install_mpremote.html">Installing MicroPython mpremote</a></li>
+      <li><a href="setup_phyduino_pico.html">Setting up the Phyduino Pico</a></li>
+      <li><a href="setup_pycharm.html">Setting up PyCharm</a></li>
+    </ul>
+    <span class="doc-nav-head">Reference</span>
+    <ul class="doc-nav-ext">
+      <li><a href="../index.html">Phyduino Pico MicroPython</a></li>
+      <li><a href="../wiki/index.html">API reference</a></li>
+      <li><a href="../wiki/examples_arduino.html">Examples: arduino.py</a></li>
+      <li><a href="../wiki/examples_phyduino.html">Examples: phyduino.py</a></li>
+    </ul>
+  </nav>
+
+</div><!-- end page-wrap -->
+
+<!-- ── Footer ── -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <a href="https://www.physics.utoronto.ca">
+    <img class="footer-logo" src="https://www.physics.utoronto.ca/static/utphy_themes/images/Physics-Logo-White.png" alt="University of Toronto Department of Physics">
+    </a>
+    <div class="social-media">
+      <ul class="footer-social-media-list">
+        <li title="send email">
+          <a href="mailto:physics.perc@utoronto.ca" aria-label="send email" class="dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-mail">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z"></path>
+              <path d="M3 7l9 6l9 -6"></path>
+            </svg>
+          </a>
+        </li>
+        <li title="facebook">
+          <a href="https://www.facebook.com/PhysicsUofT/" aria-label="visit facebook page" class="dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-facebook">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3"></path>
+            </svg>
+          </a>
+        </li>
+        <li title="X, formerly known as twitter">
+          <a href="https://twitter.com/uoftphysics" aria-label="visit x formerly known as twitter" class="dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-x">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M4 4l11.733 16h4.267l-11.733 -16z"></path>
+              <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path>
+            </svg>
+          </a>
+        </li>
+        <li title="instagram">
+          <a href="https://www.instagram.com/uoftphysics" aria-label="visit instagram" class="dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-instagram"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 8a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4z"></path><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path><path d="M16.5 7.5v.01"></path></svg>
+          </a>
+        </li>
+        <li title="youtube">
+          <a href="https://www.youtube.com//channel/UCH2J2YJx3nfN1KygnB1ub4w" aria-label="visit youtube" class="dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-youtube"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M2 8a4 4 0 0 1 4 -4h12a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-12a4 4 0 0 1 -4 -4v-8z"></path><path d="M10 9l5 3l-5 3z"></path></svg>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+<script src="../scripts/os_terminals.js"></script>
+</body>
+</html>

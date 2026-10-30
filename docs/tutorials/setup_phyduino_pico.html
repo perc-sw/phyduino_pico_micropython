@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="https://www.physics.utoronto.ca/static/utphy_themes/favicon/favicon.ico">
+<title>Setting up the Phyduino Pico · Phyduino Pico MicroPython · U of T Physics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style/uoft_physics_perc_sw.css">
+<link rel="stylesheet" href="../style/doc_pages.css">
+</head>
+<body>
+
+<!-- ── U of T Physics site header ── -->
+<header class="site-header">
+  <div class="header-inner">
+    <a class="header-logo" href="https://www.physics.utoronto.ca/physics-at-uoft/services/plrs/">
+      <img class="header-logo-img" src="../images/uoft_physics_plrs_logo.png" alt="University of Toronto Department of Physics">
+    </a>
+    <div class="header-title-block">
+      <span class="header-board-title">Phyduino Pico</span>
+      <!-- page-version: set from __version__ in phyduino.py by .github/workflows/docs.yml -->
+      <span class="header-subtitle">MicroPython <span class="page-version">v0.1.0-rc.1</span></span>
+    </div>
+  </div>
+</header>
+
+<!-- breadcrumb -->
+<div class="breadcrumb-bar" aria-label="Breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="https://www.physics.utoronto.ca/">Physics</a>
+    <span class="sep" aria-hidden="true">›</span>
+    <a href="https://www.physics.utoronto.ca/physics-at-uoft/services/plrs/electronic-support-services/">Electronic Support Services</a>
+    <span class="sep" aria-hidden="true">›</span>
+    <a href="https://plrs.physics.utoronto.ca/course-listing/">Introduction to Electronics</a>
+    <span class="sep" aria-hidden="true">›</span>
+    <a href="../index.html">Phyduino Pico MicroPython</a>
+    <span class="sep" aria-hidden="true">›</span>
+    <span class="current" aria-current="page">Setting up the Phyduino Pico</span>
+  </div>
+</div>
+
+<!-- ── Page content ── -->
+<div class="page-wrap doc-page has-nav">
+
+  <main class="doc-main">
+
+    <article class="article">
+      <header class="article-header">
+        <h1>Setting up the Phyduino Pico</h1>
+        <p class="article-intro">Load the Phyduino Pico firmware and check that it is working.</p>
+        <p class="article-meta">Oct. 30, 2026 · <a href="../index.html">Phyduino Pico MicroPython</a> tutorial</p>
+      </header>
+
+      <div class="article-body">
+
+        <p>
+          The Phyduino Pico firmware is MicroPython for this board. It uses the full 16&nbsp;MB flash,
+          knows the board's pin names and has <code>phyduino.py</code> (and the optional Arduino-style
+          <code>arduino.py</code>) built in, so there is nothing else to copy to the board except your
+          Python script.
+        </p>
+
+        <h2 id="download">1. Download the firmware</h2>
+        <ul>
+          <li>
+            Open the GitHub repository's <a href="https://github.com/perc-sw/phyduino_pico_micropython/releases">Releases</a> page.
+          </li>
+          <li>
+            Download the <strong>Phyduino Pico firmware</strong>:
+            <pre class="code"><code>phyduino_pico-&lt;version&gt;-micropython-&lt;version&gt;.uf2</code></pre>
+          </li>
+        </ul>
+
+        <h2 id="load">2. Load the firmware</h2>
+        <p><strong>Loading the firmware erases any code already stored on the board.</strong></p>
+        <ul>
+          <li>Slide the BOOTSEL (<strong>SW1</strong>) switch to UF2 and press the reset button (<strong>SW2</strong>).</li>
+          <li>Slide the BOOTSEL switch away from UF2. This will make sure the Phyduino Pico MicroPython
+            firmware runs after it has been loaded.</li>
+          <li>Copy the UF2 to the <strong>RPI-RP2</strong> drive that appears.</li>
+          <li>If the drive reappears, make sure the BOOTSEL switch is not in the UF2 position and press the reset button (<strong>SW2</strong>) again.</li>
+        </ul>
+
+        <h2 id="check">3. Check the firmware</h2>
+        <p>This needs <a href="install_mpremote.html">mpremote</a> installed on your computer.</p>
+        <ul>
+          <li>
+            With the board connected by USB, open a terminal and connect to the board's REPL:
+            <div class="term term-win" data-os-term><div class="term-bar">Windows PowerShell</div><pre class="term-body"><code><span class="prompt shell">PS C:\Users\student&gt; </span>mpremote repl</code></pre></div>
+            mpremote finds the board by itself and prints <code>Connected to MicroPython at</code> followed by the port.
+          </li>
+          <li>
+            Press <strong>Ctrl-B</strong> to show the firmware banner. It should end in
+            <strong>Phyduino Pico with RP2040</strong>:
+            <div class="term term-win" data-os-term><div class="term-bar">Windows PowerShell</div><pre class="term-body"><code><span class="out">MicroPython v&lt;version&gt; on &lt;date&gt;; Phyduino Pico with RP2040</span>
+<span class="out">Type "help()" for more information.</span>
+<span class="prompt">&gt;&gt;&gt;</span></code></pre></div>
+          </li>
+          <li>
+            Check that the built-in library loads. Type each line at the <code>&gt;&gt;&gt;</code> prompt and press Enter:
+            <div class="term term-win" data-os-term><div class="term-bar">Windows PowerShell</div><pre class="term-body"><code><span class="prompt">&gt;&gt;&gt; </span>import phyduino
+<span class="prompt">&gt;&gt;&gt; </span>phyduino.version()
+<span class="out">'0.1.0-rc.1'</span></code></pre></div>
+            It prints the library version, e.g. <code>'0.1.0-rc.1'</code>.
+          </li>
+          <li>Press <strong>Ctrl-]</strong> or <strong>Ctrl-X</strong> to leave the REPL.</li>
+        </ul>
+        <p>
+          If mpremote can't find the board, or the banner names a different board, load the firmware again (step 2).
+        </p>
+        <!-- Notes for one system each: os_terminals.js shows only the visitor's (all without JavaScript) -->
+        <div data-os-note="linux">
+          <p><strong>Linux</strong></p>
+          <p>
+            If mpremote reports a permission error or can't find the board, add your
+            account to the group that can use serial ports, then log out and back in. This is needed once per computer.
+            The group is <code>dialout</code> on Ubuntu, Debian and Fedora, and <code>uucp</code> on Arch.
+          </p>
+          <div class="term term-linux"><div class="term-bar">student@ubuntu: ~</div><pre class="term-body"><code><span class="prompt"><span class="user">student@ubuntu</span>:<span class="path">~</span>$ </span>sudo usermod -aG dialout $USER</code></pre></div>
+          <p>On Arch, replace <code>dialout</code> with <code>uucp</code>.</p>
+        </div>
+        <div data-os-note="mac">
+          <p><strong>macOS</strong></p>
+          <p>
+            The shortcuts use the <strong>Control</strong> key, not Command:
+            Control-B, Control-] and Control-X.
+          </p>
+        </div>
+      </div>
+    </article>
+
+  </main>
+
+  <!-- Sidebar: links to this page's sections and the other pages -->
+  <nav class="doc-nav" aria-label="On this page">
+    <span class="doc-nav-head">Navigation</span>
+    <ul>
+      <li><a href="#top">Overview</a></li>
+      <li><a href="#download">Download the firmware</a></li>
+      <li><a href="#load">Load the firmware</a></li>
+      <li><a href="#check">Check the firmware</a></li>
+    </ul>
+    <span class="doc-nav-head">Tutorials</span>
+    <ul class="doc-nav-ext">
+      <li><a href="install_mpremote.html">Installing MicroPython mpremote</a></li>
+      <li><a href="setup_phyduino_pico.html">Setting up the Phyduino Pico</a></li>
+      <li><a href="setup_pycharm.html">Setting up PyCharm</a></li>
+    </ul>
+    <span class="doc-nav-head">Reference</span>
+    <ul class="doc-nav-ext">
+      <li><a href="../index.html">Phyduino Pico MicroPython</a></li>
+      <li><a href="../wiki/index.html">API reference</a></li>
+      <li><a href="../wiki/examples_arduino.html">Examples: arduino.py</a></li>
+      <li><a href="../wiki/examples_phyduino.html">Examples: phyduino.py</a></li>
+    </ul>
+  </nav>
+
+</div><!-- end page-wrap -->
+
+<!-- ── Footer ── -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <a href="https://www.physics.utoronto.ca">
+    <img class="footer-logo" src="https://www.physics.utoronto.ca/static/utphy_themes/images/Physics-Logo-White.png" alt="University of Toronto Department of Physics">
+    </a>
+    <div class="social-media">
+      <ul class="footer-social-media-list">
+        <li title="send email">
+          <a href="mailto:physics.perc@utoronto.ca" aria-label="send email" class="dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-mail">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z"></path>
+              <path d="M3 7l9 6l9 -6"></path>
+            </svg>
+          </a>
+        </li>
+        <li title="facebook">
+          <a href="https://www.facebook.com/PhysicsUofT/" aria-label="visit facebook page" class="dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-facebook">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3"></path>
+            </svg>
+          </a>
+        </li>
+        <li title="X, formerly known as twitter">
+          <a href="https://twitter.com/uoftphysics" aria-label="visit x formerly known as twitter" class="dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-x">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M4 4l11.733 16h4.267l-11.733 -16z"></path>
+              <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path>
+            </svg>
+          </a>
+        </li>
+        <li title="instagram">
+          <a href="https://www.instagram.com/uoftphysics" aria-label="visit instagram" class="dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-instagram"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 8a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4z"></path><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path><path d="M16.5 7.5v.01"></path></svg>
+          </a>
+        </li>
+        <li title="youtube">
+          <a href="https://www.youtube.com//channel/UCH2J2YJx3nfN1KygnB1ub4w" aria-label="visit youtube" class="dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-youtube"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M2 8a4 4 0 0 1 4 -4h12a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-12a4 4 0 0 1 -4 -4v-8z"></path><path d="M10 9l5 3l-5 3z"></path></svg>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+<script src="../scripts/os_terminals.js"></script>
+</body>
+</html>
